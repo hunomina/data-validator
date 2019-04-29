@@ -1,22 +1,30 @@
 {
-    "name": "hunomina/json-data-validator",
-    "license": "proprietary",
-    "description": "Library for json schemas validation",
-    "type": "library",
-    "authors": [
-        {
-            "name": "hunomina",
-            "email": "hugo.f972@gmail.com"
-        }
-    ],
-    "minimum-stability": "stable",
-    "require": {},
-    "require-dev": {
-        "phpunit/phpunit": "^8.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "hunomina\\Validator\\Json\\": "src/"
-        }
+  "name": "hunomina/json-data-validator",
+  "license": "proprietary",
+  "description": "Library for json schemas validation",
+  "type": "library",
+  "authors": [
+    {
+      "name": "hunomina",
+      "email": "hugo.f972@gmail.com"
     }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": ">7 <9",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "hunomina\\Validator\\Json\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "hunomina\\Validator\\Json\\Test\\": "tests/"
+    }
+  }
 }
