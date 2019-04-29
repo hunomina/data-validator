@@ -13,7 +13,7 @@ interface DataType
      * @param $data
      * @return DataType
      */
-    public function setData(string $data): self;
+    public function setData(?string $data): self;
 
     /**
      * @param array $data

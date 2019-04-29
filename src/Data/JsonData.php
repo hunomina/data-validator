@@ -24,7 +24,7 @@ class JsonData implements DataType
      * @return DataType
      * @throws InvalidDataException
      */
-    public function setData($data): DataType
+    public function setData(?string $data): DataType
     {
         if ($data === null) {
             $this->data = null;
