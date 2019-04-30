@@ -10,6 +10,7 @@ abstract class Rule
     public const NUMERIC_TYPE = ['numeric', 'number'];
     public const BOOLEAN_TYPES = ['boolean', 'bool'];
     public const CHAR_TYPES = ['char', 'character'];
+    public const TYPED_ARRAY_TYPES = ['numeric-list', 'string-list', 'boolean-list', 'integer-list', 'float-list', 'char-list'];
 
     /**
      * @var bool $null
@@ -56,12 +57,17 @@ abstract class Rule
         }
 
         if (in_array($this->type, self::CHAR_TYPES, true)) {
-            return is_string($data) && strlen($data) === 1;
+            return self::isChar($data);
+        }
+
+        if (in_array($this->type, self::TYPED_ARRAY_TYPES, true)) {
+            return $this->checkTypedList($data);
         }
 
         if ($this->type === 'string') {
             return is_string($data);
         }
+
 
         return false;
     }
@@ -119,5 +125,72 @@ abstract class Rule
     {
         $this->optional = $isOptional;
         return $this;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected static function isChar($data): bool
+    {
+        return is_string($data) && strlen($data) === 1;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function checkTypedList($data): bool
+    {
+        if (!is_array($data)) {
+            return false;
+        }
+
+        $typeCheckerFunction = null;
+
+        switch ($this->type) {
+            case 'integer-list':
+                $typeCheckerFunction = static function ($data): bool {
+                    return is_int($data);
+                };
+                break;
+            case 'float-list':
+                $typeCheckerFunction = static function ($data): bool {
+                    return is_float($data);
+                };
+                break;
+            case 'boolean-list':
+                $typeCheckerFunction = static function ($data): bool {
+                    return is_bool($data);
+                };
+                break;
+            case 'char-list':
+                $typeCheckerFunction = static function ($data): bool {
+                    return self::isChar($data);
+                };
+                break;
+            case 'string-list':
+                $typeCheckerFunction = static function ($data): bool {
+                    return is_string($data);
+                };
+                break;
+            case 'numeric-list':
+                $typeCheckerFunction = static function ($data): bool {
+                    return is_numeric($data) && !is_string($data);
+                };
+                break;
+        }
+
+        if (!is_callable($typeCheckerFunction)) {
+            return false;
+        }
+
+        foreach ($data as $value) {
+            if (!$typeCheckerFunction($value)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
