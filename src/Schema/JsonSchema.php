@@ -83,7 +83,7 @@ class JsonSchema implements DataSchema
 
         foreach ($data as $element) {
             /** @var JsonData $jsonData */
-            $jsonData = (new JsonData())->setDataAsArray($element);
+            $jsonData = (new JsonData())->setDataFromArray($element);
             if (!$this->validateObject($jsonData)) {
                 return false;
             }
@@ -143,7 +143,7 @@ class JsonSchema implements DataSchema
                     if ($value === null) {
                         $childJsonData = (new JsonData())->setData(null);
                     } elseif (is_array($value)) {
-                        $childJsonData = (new JsonData())->setDataAsArray($value);
+                        $childJsonData = (new JsonData())->setDataFromArray($value);
                     } else {
                         $this->lastError = 'Json data must be null or an array';
                         return false;

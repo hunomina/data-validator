@@ -14,7 +14,7 @@ class LengthCheckTest extends TestCase
      */
     public function testBasicStringSchema(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'username' => 'test'
         ]);
 
@@ -30,7 +30,7 @@ class LengthCheckTest extends TestCase
      */
     public function testStringLengthCheck(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'username' => 'test'
         ]);
 
@@ -46,7 +46,7 @@ class LengthCheckTest extends TestCase
      */
     public function testStringFailLengthCheck(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'username' => 'test'
         ]);
 
@@ -62,7 +62,7 @@ class LengthCheckTest extends TestCase
      */
     public function testTypedListLengthCheck(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => [1, 2, 3, 4]
         ]);
 
@@ -78,7 +78,7 @@ class LengthCheckTest extends TestCase
      */
     public function testTypedListFailLengthCheck(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => [1, 2, 3, 4]
         ]);
 

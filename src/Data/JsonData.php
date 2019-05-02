@@ -2,9 +2,10 @@
 
 namespace hunomina\Validator\Json\Data;
 
+use ArrayAccess;
 use hunomina\Validator\Json\Exception\InvalidDataException;
 
-class JsonData implements DataType, \ArrayAccess
+class JsonData implements DataType, ArrayAccess
 {
     /**
      * @var array $data
@@ -24,12 +25,12 @@ class JsonData implements DataType, \ArrayAccess
      * @return DataType
      * @throws InvalidDataException
      */
-    public function setData(?string $data): DataType
+    public function setData($data): DataType
     {
         if ($data === null) {
             $this->data = null;
         } else {
-            $this->setDataAsArray($this->format($data));
+            $this->setDataFromArray($this->format($data));
         }
         return $this;
     }
@@ -38,7 +39,7 @@ class JsonData implements DataType, \ArrayAccess
      * @param array $data
      * @return DataType
      */
-    public function setDataAsArray(array $data): DataType
+    public function setDataFromArray(array $data): DataType
     {
         $this->data = $data;
         return $this;

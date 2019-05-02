@@ -14,7 +14,7 @@ class TypedListTest extends TestCase
      */
     public function testIntList(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => [1, 2, 3, 4]
         ]);
 
@@ -30,7 +30,7 @@ class TypedListTest extends TestCase
      */
     public function testStringList(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => ['hello', 'i', 'am', 'testing']
         ]);
 
@@ -46,7 +46,7 @@ class TypedListTest extends TestCase
      */
     public function testCharList(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => ['a', 'b', 'c', 'd']
         ]);
 
@@ -62,7 +62,7 @@ class TypedListTest extends TestCase
      */
     public function testBooleanList(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => [true, false, false, true]
         ]);
 
@@ -78,7 +78,7 @@ class TypedListTest extends TestCase
      */
     public function testFloatList(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => [1.1, 2.2, 3.3, 4.4]
         ]);
 
@@ -94,7 +94,7 @@ class TypedListTest extends TestCase
      */
     public function testNumericList(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => [1, 2.89, 3.14158, 4.0]
         ]);
 
@@ -110,7 +110,7 @@ class TypedListTest extends TestCase
      */
     public function testWrongTypeList(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => [1, 2.89, 3.14158, 4.0]
         ]);
 
@@ -126,7 +126,7 @@ class TypedListTest extends TestCase
      */
     public function testWrongList(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => [1, 2.89, 3.14158, 4.0]
         ]);
 
@@ -142,7 +142,7 @@ class TypedListTest extends TestCase
      */
     public function testSecondWrongList(): void
     {
-        $data = (new JsonData())->setDataAsArray([
+        $data = (new JsonData())->setDataFromArray([
             'users' => ['a', 'bc', 'd', 'e']
         ]);
 
