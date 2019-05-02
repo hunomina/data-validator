@@ -31,7 +31,7 @@ interface Rule
      * @param bool $null
      * @return Rule
      */
-    public function setNull(bool $null): self;
+    public function setNullable(bool $null): self;
 
     /**
      * @return bool

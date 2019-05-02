@@ -205,7 +205,7 @@ class JsonSchema implements DataSchema
             } else {
                 $this->rules[$property] = (new JsonRule())
                     ->setType($type)
-                    ->setNull($canBeNull)
+                    ->setNullable($canBeNull)
                     ->setOptional($isOptional)
                     ->setLength($length);
             }

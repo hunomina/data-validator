@@ -20,10 +20,10 @@ class JsonRule implements Rule
     protected $type;
 
     /**
-     * @var bool $null
+     * @var bool $nullable
      * Can the value be null in the associated schema
      */
-    protected $null = false;
+    protected $nullable = false;
 
     /**
      * @var bool $isOptionnal
@@ -60,16 +60,16 @@ class JsonRule implements Rule
      */
     public function canBeNull(): bool
     {
-        return $this->null;
+        return $this->nullable;
     }
 
     /**
      * @param bool $null
      * @return Rule
      */
-    public function setNull(bool $null): Rule
+    public function setNullable(bool $null): Rule
     {
-        $this->null = $null;
+        $this->nullable = $null;
         return $this;
     }
 
@@ -127,7 +127,7 @@ class JsonRule implements Rule
      */
     public function validate($data): bool
     {
-        if ($this->null && $data === null) {
+        if ($this->nullable && $data === null) {
             return true;
         }
 
