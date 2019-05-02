@@ -181,6 +181,13 @@ class JsonSchema implements DataSchema
             $isOptional = isset($rule['optional']) ? (bool)$rule['optional'] : false; // can be omitted
             $canBeNull = isset($rule['null']) ? (bool)$rule['null'] : false; // can be omitted
 
+
+            if (isset($rule['length']) && !JsonRule::isTypeWithLengthCheck($type)) {
+                throw new InvalidSchemaException('`' . $type . '` type can not be length checked');
+            }
+
+            $length = $rule['length'] ?? null;
+
             if (in_array($type, JsonRule::ARRAY_TYPES, true) || in_array($type, JsonRule::OBJECT_TYPES, true)) {
                 if (!isset($rule['schema'])) {
                     throw new InvalidSchemaException('`list` or `object` type must have a `schema` property to describe to list or object schema');
@@ -196,7 +203,11 @@ class JsonSchema implements DataSchema
                 $childSchema->setType($type)->setOptional($isOptional)->setNull($canBeNull);
                 $this->children[$property] = $childSchema;
             } else {
-                $this->rules[$property] = (new JsonRule())->setType($type)->setNull($canBeNull)->setOptional($isOptional);
+                $this->rules[$property] = (new JsonRule())
+                    ->setType($type)
+                    ->setNull($canBeNull)
+                    ->setOptional($isOptional)
+                    ->setLength($length);
             }
         }
 
