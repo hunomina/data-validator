@@ -137,18 +137,14 @@ $data = (new JsonData())->setDataFromArray([
 
 As said earlier, rules can be used to validate length or data pattern.
 
-This schema uses length validation on the `geolocation` element and pattern validation on the `name` element :
+This schema uses the pattern validation on the `name` element and the length validation on the `geolocation` element :
 
 ```php
 use hunomina\Validator\Json\Schema\JsonSchema;
 
 $schema = (new JsonSchema())->setSchema([
-    'success' => ['type' => 'bool'],
-    'error' => ['type' => 'string', 'null' => true],
-    'user' => ['type' => 'object', 'null' => true, 'optional' => true, 'schema' => [
-        'name' => ['type' => 'string'],
-        'age' => ['type' => 'int']
-    ]]
+    'name' => ['type' => 'string', 'pattern' => '/^[a-z]+$/'],
+    'geolocation' => ['type' => 'integer-list', 'length' => 2]
 ]);
 ```
 
