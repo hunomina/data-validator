@@ -186,7 +186,12 @@ class JsonSchema implements DataSchema
                 throw new InvalidSchemaException('`' . $type . '` type can not be length checked');
             }
 
+            if (isset($rule['pattern']) && !JsonRule::isTypeWithPatternCheck($type)) {
+                throw new InvalidSchemaException('`' . $type . '` type can not be patterned checked');
+            }
+
             $length = $rule['length'] ?? null;
+            $pattern = $rule['pattern'] ?? null;
 
             if (in_array($type, JsonRule::ARRAY_TYPES, true) || in_array($type, JsonRule::OBJECT_TYPES, true)) {
                 if (!isset($rule['schema'])) {
@@ -207,7 +212,8 @@ class JsonSchema implements DataSchema
                     ->setType($type)
                     ->setNullable($canBeNull)
                     ->setOptional($isOptional)
-                    ->setLength($length);
+                    ->setLength($length)
+                    ->setPattern($pattern);
             }
         }
 

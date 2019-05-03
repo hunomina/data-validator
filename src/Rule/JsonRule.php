@@ -38,6 +38,12 @@ class JsonRule implements Rule
     protected $length;
 
     /**
+     * @var null|string
+     * `null` if pattern does not have to be checked
+     */
+    protected $pattern;
+
+    /**
      * @return string
      */
     public function getType(): string
@@ -112,6 +118,24 @@ class JsonRule implements Rule
     }
 
     /**
+     * @return string|null
+     */
+    public function getPattern(): ?string
+    {
+        return $this->pattern;
+    }
+
+    /**
+     * @param string|null $pattern
+     * @return JsonRule
+     */
+    public function setPattern(?string $pattern): Rule
+    {
+        $this->pattern = $pattern;
+        return $this;
+    }
+
+    /**
      * @param string $type
      * @return bool
      * Does a specific type can be length checked
@@ -119,6 +143,16 @@ class JsonRule implements Rule
     public static function isTypeWithLengthCheck(string $type): bool
     {
         return $type === 'string' || in_array($type, self::TYPED_ARRAY_TYPES, true);
+    }
+
+    /**
+     * @param string $type
+     * @return bool
+     * Does a specific type can be pattern checked
+     */
+    public static function isTypeWithPatternCheck(string $type): bool
+    {
+        return $type === 'string' || $type === 'string-list' || $type === 'char-list' || in_array($type, self::CHAR_TYPES, true);
     }
 
     /**
@@ -136,7 +170,7 @@ class JsonRule implements Rule
         }
 
         if (in_array($this->type, self::ARRAY_TYPES, true)) {
-            return is_array($data) && ($this->length !== null ? count($data) === $this->length : true);
+            return is_array($data);
         }
 
         if (in_array($this->type, self::INT_STRICT_TYPES, true)) {
@@ -152,7 +186,10 @@ class JsonRule implements Rule
         }
 
         if (in_array($this->type, self::CHAR_TYPES, true)) {
-            return is_string($data) && strlen($data) === 1;
+            // pattern can be used to match a range of characters
+            return is_string($data)
+                && strlen($data) === 1
+                && ($this->pattern !== null ? preg_match($this->pattern, $data) : true);
         }
 
         if (in_array($this->type, self::TYPED_ARRAY_TYPES, true)) {
@@ -160,11 +197,14 @@ class JsonRule implements Rule
         }
 
         if ($this->type === 'string') {
-            return is_string($data) && ($this->length !== null ? strlen($data) === $this->length : true);
+            return is_string($data)
+                && ($this->length !== null ? strlen($data) === $this->length : true)
+                && ($this->pattern !== null ? preg_match($this->pattern, $data) : true);
         }
 
-        if (in_array($this->type, self::OBJECT_TYPES, true)) { // json object is a non empty array
-            return is_array($data) && !empty($data) && ($this->length !== null ? count($data) === $this->length : true);
+        if (in_array($this->type, self::OBJECT_TYPES, true)) {
+            // json object is a non empty array
+            return is_array($data) && !empty($data);
         }
 
         return false;
@@ -193,10 +233,10 @@ class JsonRule implements Rule
                 $rule = (new self())->setType('boolean');
                 break;
             case 'char-list':
-                $rule = (new self())->setType('char');
+                $rule = (new self())->setPattern($this->pattern)->setType('char');
                 break;
             case 'string-list':
-                $rule = (new self())->setType('string');
+                $rule = (new self())->setPattern($this->pattern)->setType('string');
                 break;
             case 'numeric-list':
                 $rule = (new self())->setType('numeric');

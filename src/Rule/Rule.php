@@ -46,14 +46,27 @@ interface Rule
 
     /**
      * @return null|int
-     * `null` if if length does have to be checked
+     * `null` if length does have to be checked
      */
     public function getLength(): ?int;
 
     /**
      * @param int $length
      * @return Rule
-     * `null` if if length does have to be checked
+     * `null` if length does have to be checked
      */
     public function setLength(?int $length): self;
+
+    /**
+     * @param string|null $pattern
+     * @return Rule
+     * `null` if pattern does not have to be checked
+     */
+    public function setPattern(?string $pattern): self;
+
+    /**
+     * @return string|null
+     * `null` if pattern does not have to be checked
+     */
+    public function getPattern(): ?string;
 }
