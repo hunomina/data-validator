@@ -22,7 +22,7 @@ Allows to encapsulate the data into an object and format it for [DataSchema](htt
 
 ### [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php)
 
-Allows to validate data unit by checking if the data is null, optional and his length and type.
+Allows to validate data unit by checking if the data is null, optional and his length, pattern and type.
 
 ### [JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php)
 
@@ -40,7 +40,9 @@ Allows to validate data unit by checking if the data is null, optional and his l
 - Object types: entity, object
 - Strings
 
-Only strings and typed arrays can be length checked.
+**Only strings and typed arrays can be length checked.**
+
+**Only strings, characters, string typed arrays and character typed array can be pattern checked.**
 
 An object is a "child" schema and an array typed value is an object list.
 
@@ -66,17 +68,20 @@ Objects are composed of rules and "child" schemas if needed.
 
 This is a schema definition :
 
-
 ```php
-$schema = [
+use hunomina\Validator\Json\Schema\JsonSchema;
+
+$schema = (new JsonSchema())->setSchema([
     'success' => ['type' => 'bool'],
     'error' => ['type' => 'string', 'null' => true],
     'user' => ['type' => 'object', 'null' => true, 'optional' => true, 'schema' => [
         'name' => ['type' => 'string'],
         'age' => ['type' => 'int']
     ]]
-];
+]);
 ```
+
+Schemas are just php arrays passe to `JsonSchema::setSchema()` method.
 
 This schema is composed of 3 elements :
 - a rule `success` which :
@@ -103,31 +108,52 @@ If the data has :
     - a string element `name`
     - an integer element `age`
     
-This php array is valid :
+This data is valid :
 
 ```php
-$user = [
+use hunomina\Validator\Json\Data\JsonData;
+
+$data = (new JsonData())->setDataFromArray([
     'success' => true,
     'error' => null,
     'user' => [
         'name' => 'test',
         'age' => 10
     ]
-];
+]);
 ```
 
 This one is not :
 
 ```php
-$user = [
+use hunomina\Validator\Json\Data\JsonData;
+
+$data = (new JsonData())->setDataFromArray([
     'success' => true,
     'error' => null,
     'user' => 'test'
-];
+]);
 ```
 
-When calling the `JsonSchema::validate()` method, the schema will check recursively all the "child" schemas and check all the rule set. If one rule or one "child" schema is invalid, `JsonSchema::validate()` returns `false`.
+As said earlier, rules can be used to validate length or data pattern.
 
-The first level schema is an `object` typed schema. It could be changed but is not meant to.
+This schema uses length validation on the `geolocation` element and pattern validation on the `name` element :
+
+```php
+use hunomina\Validator\Json\Schema\JsonSchema;
+
+$schema = (new JsonSchema())->setSchema([
+    'success' => ['type' => 'bool'],
+    'error' => ['type' => 'string', 'null' => true],
+    'user' => ['type' => 'object', 'null' => true, 'optional' => true, 'schema' => [
+        'name' => ['type' => 'string'],
+        'age' => ['type' => 'int']
+    ]]
+]);
+```
+
+When calling the `JsonSchema::validate()` method, the schema will recursively check all the rule set and "child" schemas. If one rule or one "child" schema is invalid, `JsonSchema::validate()` returns `false`.
+
+The "first level" schema is an `object` typed schema. It could be changed but is not meant to.
 
 Finally, if a "child" schema is typed as an `object`, the schema will validate it as described above. If it's typed as a `list`, the schema will simply check each element of the data as an `object` type using the given "child" schema.
