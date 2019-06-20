@@ -181,7 +181,6 @@ class JsonSchema implements DataSchema
             $isOptional = isset($rule['optional']) ? (bool)$rule['optional'] : false; // can be omitted
             $canBeNull = isset($rule['null']) ? (bool)$rule['null'] : false; // can be omitted
 
-
             if (isset($rule['length']) && !JsonRule::isTypeWithLengthCheck($type)) {
                 throw new InvalidSchemaException('`' . $type . '` type can not be length checked');
             }
@@ -194,6 +193,7 @@ class JsonSchema implements DataSchema
             $pattern = $rule['pattern'] ?? null;
             $min = $rule['min'] ?? null;
             $max = $rule['max'] ?? null;
+            $enum = (isset($rule['enum']) && is_array($rule['enum'])) ? $rule['enum'] : null;
 
             if (in_array($type, JsonRule::ARRAY_TYPES, true) || in_array($type, JsonRule::OBJECT_TYPES, true)) {
                 if (!isset($rule['schema'])) {
@@ -217,7 +217,8 @@ class JsonSchema implements DataSchema
                     ->setLength($length)
                     ->setPattern($pattern)
                     ->setMin($min)
-                    ->setMax($max);
+                    ->setMax($max)
+                    ->setEnum($enum);
             }
         }
 

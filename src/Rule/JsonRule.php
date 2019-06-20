@@ -64,6 +64,12 @@ class JsonRule implements Rule
     protected $pattern;
 
     /**
+     * @var null|array $enum
+     * `null` if no in_array($value, $enum) check needed
+     */
+    protected $enum;
+
+    /**
      * @return string
      */
     public function getType(): string
@@ -192,6 +198,24 @@ class JsonRule implements Rule
     }
 
     /**
+     * @return array
+     */
+    public function getEnum(): ?array
+    {
+        return $this->enum;
+    }
+
+    /**
+     * @param array|null $enum
+     * @return Rule
+     */
+    public function setEnum(?array $enum): Rule
+    {
+        $this->enum = $enum;
+        return $this;
+    }
+
+    /**
      * @param string $type
      * @return bool
      * Does a specific type can be length checked
@@ -234,13 +258,15 @@ class JsonRule implements Rule
         if (in_array($this->type, self::INT_STRICT_TYPES, true)) {
             return is_int($data)
                 && ($this->min !== null ? $data >= $this->min : true)
-                && ($this->max !== null ? $data <= $this->max : true);
+                && ($this->max !== null ? $data <= $this->max : true)
+                && ($this->enum !== null ? in_array($data, $this->enum, true) : true);
         }
 
         if (in_array($this->type, self::FLOAT_STRICT_TYPES, true)) {
             return is_float($data)
                 && ($this->min !== null ? $data >= $this->min : true)
-                && ($this->max !== null ? $data <= $this->max : true);
+                && ($this->max !== null ? $data <= $this->max : true)
+                && ($this->enum !== null ? in_array($data, $this->enum, true) : true);
         }
 
         if (in_array($this->type, self::BOOLEAN_TYPES, true)) {
@@ -251,11 +277,12 @@ class JsonRule implements Rule
             // pattern can be used to match a range of characters
             return is_string($data)
                 && strlen($data) === 1
-                && ($this->pattern !== null ? preg_match($this->pattern, $data) : true);
+                && ($this->pattern !== null ? preg_match($this->pattern, $data) : true)
+                && ($this->enum !== null ? in_array($data, $this->enum, true) : true);
         }
 
         if (in_array($this->type, self::TYPED_ARRAY_TYPES, true)) {
-            return $this->checkTypedList($data)
+            return $this->checkTypedList($data, $this->enum)
                 && ($this->length !== null ? count($data) === $this->length : true)
                 && ($this->min !== null ? count($data) >= $this->min : true)
                 && ($this->max !== null ? count($data) <= $this->max : true);
@@ -264,7 +291,8 @@ class JsonRule implements Rule
         if ($this->type === 'string') {
             return is_string($data)
                 && ($this->length !== null ? strlen($data) === $this->length : true)
-                && ($this->pattern !== null ? preg_match($this->pattern, $data) : true);
+                && ($this->pattern !== null ? preg_match($this->pattern, $data) : true)
+                && ($this->enum !== null ? in_array($data, $this->enum, true) : true);
         }
 
         if (in_array($this->type, self::OBJECT_TYPES, true)) {
@@ -277,10 +305,11 @@ class JsonRule implements Rule
 
     /**
      * @param $data
+     * @param array|null $enum
      * @return bool
      * $data is not typed in order to prevent exceptions
      */
-    protected function checkTypedList($data): bool
+    protected function checkTypedList($data, ?array $enum): bool
     {
         if (!is_array($data)) {
             return false;
@@ -312,6 +341,8 @@ class JsonRule implements Rule
         if (!($rule instanceof self)) {
             return false;
         }
+
+        $rule->setEnum($enum); // set $enum to check if each element of the typed list is in $enum
 
         foreach ($data as $value) {
             if (!$rule->validate($value)) {

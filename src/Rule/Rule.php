@@ -91,4 +91,15 @@ interface Rule
      * @return Rule
      */
     public function setMax(?int $max): self;
+
+    /**
+     * @return array
+     */
+    public function getEnum(): ?array;
+
+    /**
+     * @param array|null $enum
+     * @return Rule
+     */
+    public function setEnum(?array $enum): self ;
 }
