@@ -192,6 +192,8 @@ class JsonSchema implements DataSchema
 
             $length = $rule['length'] ?? null;
             $pattern = $rule['pattern'] ?? null;
+            $min = $rule['min'] ?? null;
+            $max = $rule['max'] ?? null;
 
             if (in_array($type, JsonRule::ARRAY_TYPES, true) || in_array($type, JsonRule::OBJECT_TYPES, true)) {
                 if (!isset($rule['schema'])) {
@@ -213,7 +215,9 @@ class JsonSchema implements DataSchema
                     ->setNullable($canBeNull)
                     ->setOptional($isOptional)
                     ->setLength($length)
-                    ->setPattern($pattern);
+                    ->setPattern($pattern)
+                    ->setMin($min)
+                    ->setMax($max);
             }
         }
 

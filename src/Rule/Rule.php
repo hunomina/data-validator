@@ -69,4 +69,26 @@ interface Rule
      * `null` if pattern does not have to be checked
      */
     public function getPattern(): ?string;
+
+    /**
+     * @return int|null
+     */
+    public function getMin(): ?int;
+
+    /**
+     * @param int|null $min
+     * @return Rule
+     */
+    public function setMin(?int $min): self;
+
+    /**
+     * @return int|null
+     */
+    public function getMax(): ?int;
+
+    /**
+     * @param int|null $max
+     * @return Rule
+     */
+    public function setMax(?int $max): self;
 }

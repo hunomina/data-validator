@@ -27,15 +27,35 @@ class JsonRule implements Rule
 
     /**
      * @var bool $isOptionnal
-     * Can the value be optional in the associated schema
+     * Is the value optional in the associated schema
      */
     protected $optional = false;
 
     /**
      * @var null|int $length
-     * `null` if if length does have to be checked
+     * `null` if length does have to be checked
      */
     protected $length;
+
+    /**
+     * @var null|int $min
+     * Number : minimum value
+     * List : minimum size
+     */
+    protected $min;
+
+    /**
+     * @var null|int $max
+     * Number : maximum value
+     * List : maximum site
+     */
+    protected $max;
+
+    /**
+     * @var array
+     * Is in_array($value, $in, true)
+     */
+    protected $in = [];
 
     /**
      * @var null|string
@@ -136,6 +156,42 @@ class JsonRule implements Rule
     }
 
     /**
+     * @return int|null
+     */
+    public function getMin(): ?int
+    {
+        return $this->min;
+    }
+
+    /**
+     * @param int|null $min
+     * @return JsonRule
+     */
+    public function setMin(?int $min): Rule
+    {
+        $this->min = $min;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMax(): ?int
+    {
+        return $this->max;
+    }
+
+    /**
+     * @param int|null $max
+     * @return JsonRule
+     */
+    public function setMax(?int $max): Rule
+    {
+        $this->max = $max;
+        return $this;
+    }
+
+    /**
      * @param string $type
      * @return bool
      * Does a specific type can be length checked
@@ -166,7 +222,9 @@ class JsonRule implements Rule
         }
 
         if (in_array($this->type, self::NUMERIC_TYPE, true)) {
-            return is_numeric($data) && !is_string($data);
+            return is_numeric($data) && !is_string($data)
+                && ($this->min !== null ? $data >= $this->min : true)
+                && ($this->max !== null ? $data <= $this->max : true);
         }
 
         if (in_array($this->type, self::ARRAY_TYPES, true)) {
@@ -174,11 +232,15 @@ class JsonRule implements Rule
         }
 
         if (in_array($this->type, self::INT_STRICT_TYPES, true)) {
-            return is_int($data);
+            return is_int($data)
+                && ($this->min !== null ? $data >= $this->min : true)
+                && ($this->max !== null ? $data <= $this->max : true);
         }
 
         if (in_array($this->type, self::FLOAT_STRICT_TYPES, true)) {
-            return is_float($data);
+            return is_float($data)
+                && ($this->min !== null ? $data >= $this->min : true)
+                && ($this->max !== null ? $data <= $this->max : true);
         }
 
         if (in_array($this->type, self::BOOLEAN_TYPES, true)) {
@@ -193,7 +255,10 @@ class JsonRule implements Rule
         }
 
         if (in_array($this->type, self::TYPED_ARRAY_TYPES, true)) {
-            return $this->checkTypedList($data) && ($this->length !== null ? count($data) === $this->length : true);
+            return $this->checkTypedList($data)
+                && ($this->length !== null ? count($data) === $this->length : true)
+                && ($this->min !== null ? count($data) >= $this->min : true)
+                && ($this->max !== null ? count($data) <= $this->max : true);
         }
 
         if ($this->type === 'string') {
@@ -213,6 +278,7 @@ class JsonRule implements Rule
     /**
      * @param $data
      * @return bool
+     * $data is not typed in order to prevent exceptions
      */
     protected function checkTypedList($data): bool
     {
