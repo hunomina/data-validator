@@ -42,9 +42,13 @@ Allows to validate data unit by checking if the data is null, optional and his l
 
 **Only strings and typed arrays can be length checked.**
 
+**Only strings can be date format checked.**
+
 **Only integers, floats, numbers and typed arrays can be min/max checked.**
 
 **Only strings, characters, string typed arrays and character typed array can be pattern checked.**
+
+**Only strings, integers, floats, numbers, typed list can be date format checked.**
 
 An object is a "child" schema and an array typed value is an object list.
 
