@@ -236,6 +236,30 @@ class JsonRule implements Rule
     }
 
     /**
+     * @param string $type
+     * @return bool
+     */
+    public static function isTypeWithMinMaxCheck(string $type): bool
+    {
+        return in_array($type, self::NUMERIC_TYPE, true)
+            || in_array($type, self::INT_STRICT_TYPES, true)
+            || in_array($type, self::FLOAT_STRICT_TYPES, true)
+            || in_array($type, self::TYPED_ARRAY_TYPES, true)
+            || in_array($type, self::ARRAY_TYPES, true);
+    }
+
+    public static function isTypeWithEnumCheck(string $type): bool
+    {
+        return $type === 'string'
+            || in_array($type, self::INT_STRICT_TYPES, true)
+            || in_array($type, self::FLOAT_STRICT_TYPES, true)
+            || in_array($type, self::CHAR_TYPES, true)
+            || in_array($type, self::TYPED_ARRAY_TYPES, true);
+    }
+
+    // todo : use them in JsonSchema::setSchema
+
+    /**
      * @param $data
      * @return bool
      */

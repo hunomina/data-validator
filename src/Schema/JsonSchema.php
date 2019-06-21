@@ -26,8 +26,8 @@ class JsonSchema implements DataSchema
     /** @var bool $optional */
     private $optional = false;
 
-    /** @var bool $null */
-    private $null = false;
+    /** @var bool $nullable */
+    private $nullable = false;
 
     /**
      * @param DataType $dataType
@@ -41,9 +41,8 @@ class JsonSchema implements DataSchema
             throw new InvalidDataTypeException('JsonSchema only check JsonData');
         }
 
-        /** @var null|array $data */
         if ($dataType->getData() === null) {
-            if (!$this->null) {
+            if (!$this->nullable) {
                 $this->lastError = 'This data can not be `null`';
                 return false;
             }
@@ -74,7 +73,7 @@ class JsonSchema implements DataSchema
         $data = $dataType->getData();
 
         if ($data === null) {
-            if (!$this->null) {
+            if (!$this->nullable) {
                 $this->lastError = 'This list can not be `null`';
                 return false;
             }
@@ -127,11 +126,11 @@ class JsonSchema implements DataSchema
                     // $value must be null or an array
                     if (!is_array($value)) {
                         if ($value === null) {
-                            if (!$schema->canBeNull()) {
+                            if (!$schema->isNullable()) {
                                 $this->lastError = '`' . $property . '` property can not be `null`';
                                 return false;
                             }
-                        } else if ($schema->canBeNull()) {
+                        } else if ($schema->isNullable()) {
                             $this->lastError = '`' . $property . '` property must be an array or `null`';
                             return false;
                         } else {
@@ -178,8 +177,8 @@ class JsonSchema implements DataSchema
             }
 
             $type = $rule['type'];
-            $isOptional = isset($rule['optional']) ? (bool)$rule['optional'] : false; // can be omitted
-            $canBeNull = isset($rule['null']) ? (bool)$rule['null'] : false; // can be omitted
+            $isOptional = isset($rule['optional']) ? (bool)$rule['optional'] : false;
+            $canBeNull = isset($rule['null']) ? (bool)$rule['null'] : false;
 
             if (isset($rule['length']) && !JsonRule::isTypeWithLengthCheck($type)) {
                 throw new InvalidSchemaException('`' . $type . '` type can not be length checked');
@@ -187,6 +186,14 @@ class JsonSchema implements DataSchema
 
             if (isset($rule['pattern']) && !JsonRule::isTypeWithPatternCheck($type)) {
                 throw new InvalidSchemaException('`' . $type . '` type can not be patterned checked');
+            }
+
+            if ((isset($rule['min']) || isset($rule['max'])) && !JsonRule::isTypeWithMinMaxCheck($type)) {
+                throw new InvalidSchemaException('`' . $type . '` type can not be min/max checked');
+            }
+
+            if (isset($rule['enum']) && !JsonRule::isTypeWithEnumCheck($type)) {
+                throw new InvalidSchemaException('`' . $type . '` type can not enum checked');
             }
 
             $length = $rule['length'] ?? null;
@@ -207,7 +214,7 @@ class JsonSchema implements DataSchema
 
                 /** @var JsonSchema $childSchema */
                 $childSchema = (new self())->setSchema($s);
-                $childSchema->setType($type)->setOptional($isOptional)->setNull($canBeNull);
+                $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull);
                 $this->children[$property] = $childSchema;
             } else {
                 $this->rules[$property] = (new JsonRule())
@@ -262,18 +269,18 @@ class JsonSchema implements DataSchema
     /**
      * @return bool
      */
-    public function canBeNull(): bool
+    public function isNullable(): bool
     {
-        return $this->null;
+        return $this->nullable;
     }
 
     /**
      * @param bool $canBeNull
      * @return JsonSchema
      */
-    public function setNull(bool $canBeNull): JsonSchema
+    public function setNullable(bool $canBeNull): JsonSchema
     {
-        $this->null = $canBeNull;
+        $this->nullable = $canBeNull;
         return $this;
     }
 
