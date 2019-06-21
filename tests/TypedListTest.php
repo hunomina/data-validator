@@ -18,11 +18,16 @@ class TypedListTest extends TestCase
             'users' => [1, 2, 3, 4]
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'users' => [1, 2.89, 3.14158, 4.0]
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
             'users' => ['type' => 'integer-list']
         ]);
 
         $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -34,11 +39,16 @@ class TypedListTest extends TestCase
             'users' => ['hello', 'i', 'am', 'testing']
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'users' => ['hello', 'i', 'am', 'testing', 'for', 'the', 2, 'time']
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
             'users' => ['type' => 'string-list']
         ]);
 
         $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -50,11 +60,16 @@ class TypedListTest extends TestCase
             'users' => ['a', 'b', 'c', 'd']
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'users' => ['a', 'bc', 'd', 'e']
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
             'users' => ['type' => 'char-list']
         ]);
 
         $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -66,11 +81,16 @@ class TypedListTest extends TestCase
             'users' => [true, false, false, true]
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'users' => [true, false, 0, true]
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
             'users' => ['type' => 'boolean-list']
         ]);
 
         $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -82,11 +102,16 @@ class TypedListTest extends TestCase
             'users' => [1.1, 2.2, 3.3, 4.4]
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'users' => [1, 2.2, 3.3, 4.4]
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
             'users' => ['type' => 'float-list']
         ]);
 
         $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -98,15 +123,21 @@ class TypedListTest extends TestCase
             'users' => [1, 2.89, 3.14158, 4.0]
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'users' => ['a', 2.89, 3.14158, 4.0]
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
             'users' => ['type' => 'numeric-list']
         ]);
 
         $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
      * @throws InvalidSchemaException
+     * Assertion should fail because the `random-list` type simply does not exist
      */
     public function testWrongTypeList(): void
     {
@@ -116,38 +147,6 @@ class TypedListTest extends TestCase
 
         $schema = (new JsonSchema())->setSchema([
             'users' => ['type' => 'random-list']
-        ]);
-
-        $this->assertFalse($schema->validate($data));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testWrongList(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'users' => [1, 2.89, 3.14158, 4.0]
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'int-list']
-        ]);
-
-        $this->assertFalse($schema->validate($data));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testSecondWrongList(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'users' => ['a', 'bc', 'd', 'e']
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'char-list']
         ]);
 
         $this->assertFalse($schema->validate($data));

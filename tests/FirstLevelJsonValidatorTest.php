@@ -14,15 +14,15 @@ class FirstLevelJsonValidatorTest extends TestCase
 {
     /**
      * @dataProvider getSamples
-     * @param string $data
+     * @param array $data
      * @param JsonSchema $schema
      * @param bool $shouldWork
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testValidation(string $data, JsonSchema $schema, bool $shouldWork): void
+    public function testValidation(array $data, JsonSchema $schema, bool $shouldWork): void
     {
-        $jsonData = (new JsonData())->setData($data);
+        $jsonData = (new JsonData())->setDataFromArray($data);
 
         if ($shouldWork) {
             $this->assertTrue($schema->validate($jsonData));
@@ -51,11 +51,11 @@ class FirstLevelJsonValidatorTest extends TestCase
      */
     private static function checkErrorCanBeNullSample(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'code' => 0
-        ]);
+        ];
 
         return [$data, self::getBasicSchema(), true];
     }
@@ -66,11 +66,11 @@ class FirstLevelJsonValidatorTest extends TestCase
      */
     private static function checkIfErrorCanAlsoBeStringSample(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => false,
             'error' => 'error',
             'code' => 10
-        ]);
+        ];
 
         return [$data, self::getBasicSchema(), true];
     }
@@ -81,10 +81,10 @@ class FirstLevelJsonValidatorTest extends TestCase
      */
     private static function checkIfCodeCanBeOmittedSample(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => false,
             'error' => 'error'
-        ]);
+        ];
 
         return [$data, self::getBasicSchema(), true];
     }
@@ -95,11 +95,11 @@ class FirstLevelJsonValidatorTest extends TestCase
      */
     private static function checkThatCodeCanNotBeNull(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => false,
             'error' => 'error',
             'code' => null // wrong type
-        ]);
+        ];
 
         return [$data, self::getBasicSchema(), false];
     }

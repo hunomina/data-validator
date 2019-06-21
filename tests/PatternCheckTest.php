@@ -11,6 +11,7 @@ class PatternCheckTest extends TestCase
 {
     /**
      * @throws InvalidSchemaException
+     * `int` type can not be pattern checked
      */
     public function testInvalidTypeForPattern(): void
     {
@@ -30,19 +31,7 @@ class PatternCheckTest extends TestCase
             'name' => 'test'
         ]);
 
-        $schema = (new JsonSchema())->setSchema([
-            'name' => ['type' => 'string', 'pattern' => '/^[a-z]+$/']
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testWrongPatternOnString(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
+        $data2 = (new JsonData())->setDataFromArray([
             'name' => 'test2'
         ]);
 
@@ -50,7 +39,8 @@ class PatternCheckTest extends TestCase
             'name' => ['type' => 'string', 'pattern' => '/^[a-z]+$/']
         ]);
 
-        $this->assertFalse($schema->validate($data));
+        $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -62,27 +52,16 @@ class PatternCheckTest extends TestCase
             'blood_type' => 'o'
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'blood_type' => 'c'
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
             'blood_type' => ['type' => 'char', 'pattern' => '/^[abo]$/']
         ]);
 
         $this->assertTrue($schema->validate($data));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testWrongPatternOnChar(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'blood_type' => 'o'
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'blood_type' => ['type' => 'char', 'pattern' => '/^[xyz]$/']
-        ]);
-
-        $this->assertFalse($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -98,19 +77,7 @@ class PatternCheckTest extends TestCase
             ]
         ]);
 
-        $schema = (new JsonSchema())->setSchema([
-            'list' => ['type' => 'string-list', 'pattern' => '/^[a-zA-Z]+$/']
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testWrongPatternOnStringList(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
+        $data2 = (new JsonData())->setDataFromArray([
             'list' => [
                 'won\'t',
                 'work',
@@ -122,7 +89,8 @@ class PatternCheckTest extends TestCase
             'list' => ['type' => 'string-list', 'pattern' => '/^[a-zA-Z]+$/']
         ]);
 
-        $this->assertFalse($schema->validate($data));
+        $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -131,37 +99,26 @@ class PatternCheckTest extends TestCase
     public function testPatternOnCharacterList(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'blood_type_list' => [
+            'blood_types' => [
                 'a',
                 'b',
                 'o'
             ]
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'blood_types' => [
+                'a',
+                'b',
+                'c'
+            ]
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
-            'blood_type_list' => ['type' => 'char-list', 'pattern' => '/^[abo]$/']
+            'blood_types' => ['type' => 'char-list', 'pattern' => '/^[abo]$/']
         ]);
 
         $this->assertTrue($schema->validate($data));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testWrongPatternOnCharacterList(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'blood_type_list' => [
-                'a',
-                'b',
-                'o'
-            ]
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'blood_type_list' => ['type' => 'char-list', 'pattern' => '/^[xyz]$/']
-        ]);
-
-        $this->assertFalse($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 }

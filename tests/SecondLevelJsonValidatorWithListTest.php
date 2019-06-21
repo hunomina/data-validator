@@ -14,15 +14,15 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
 {
     /**
      * @dataProvider getSamples
-     * @param string $data
+     * @param array $data
      * @param JsonSchema $schema
      * @param bool $shouldWork
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testValidation(string $data, JsonSchema $schema, bool $shouldWork): void
+    public function testValidation(array $data, JsonSchema $schema, bool $shouldWork): void
     {
-        $jsonData = (new JsonData())->setData($data);
+        $jsonData = (new JsonData())->setDataFromArray($data);
 
         if ($shouldWork) {
             $this->assertTrue($schema->validate($jsonData));
@@ -52,14 +52,14 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
      */
     private static function checkWithPerfectData(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => [
                 ['name' => 'test', 'age' => 10, 'gender' => 'male'],
                 ['name' => 'test2', 'age' => 12]
             ]
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), true];
     }
@@ -70,14 +70,14 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
      */
     private static function checkWithoutAge(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => [
                 ['name' => 'test'],
                 ['name' => 'test2']
             ]
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), false];
     }
@@ -88,11 +88,11 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
      */
     private static function checkWithEmptyUserList(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => []
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), true];
     }
@@ -103,11 +103,11 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
      */
     private static function checkThatShouldNotWorkWithoutUserList(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => null
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), false];
     }
@@ -118,11 +118,11 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
      */
     private static function checkThatShouldWorkWithoutUserList(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => null
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchemaWithNullableList(), true];
     }

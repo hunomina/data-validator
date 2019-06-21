@@ -6,7 +6,6 @@ use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
-use hunomina\Validator\Json\Schema\DataSchema;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
@@ -14,15 +13,15 @@ class ThirdLevelJsonValidatorTest extends TestCase
 {
     /**
      * @dataProvider getSamples
-     * @param string $data
+     * @param array $data
      * @param JsonSchema $schema
      * @param bool $shouldWork
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testValidation(string $data, JsonSchema $schema, bool $shouldWork): void
+    public function testValidation(array $data, JsonSchema $schema, bool $shouldWork): void
     {
-        $jsonData = (new JsonData())->setData($data);
+        $jsonData = (new JsonData())->setDataFromArray($data);
 
         if ($shouldWork) {
             $this->assertTrue($schema->validate($jsonData));
@@ -56,7 +55,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
      */
     private static function checkPerfectData(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => [
@@ -77,7 +76,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
                     ]
                 ]
             ]
-        ]);
+        ];
 
         return [$data, self::getThirdLevelSchema(), true];
     }
@@ -88,7 +87,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
      */
     private static function checkWithOnlyOneBirthDate(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => [
@@ -105,7 +104,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
                     'gender' => 'female'
                 ]
             ]
-        ]);
+        ];
 
         return [$data, self::getThirdLevelSchema(), false];
     }
@@ -116,7 +115,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
      */
     private static function checkWithOneNullBirthDate(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => [
@@ -134,7 +133,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
                     'birth_date' => null
                 ]
             ]
-        ]);
+        ];
 
         return [$data, self::getThirdLevelSchema(), true];
     }
@@ -145,7 +144,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
      */
     private static function checkWithOptionalTime(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => [
@@ -164,7 +163,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
                     ]
                 ]
             ]
-        ]);
+        ];
 
         return [$data, self::getThirdLevelSchema(), true];
     }
@@ -175,7 +174,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
      */
     private static function checkWithOnlyOneGender(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => [
@@ -195,7 +194,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
                     ]
                 ]
             ]
-        ]);
+        ];
 
         return [$data, self::getThirdLevelSchema(), true];
     }
@@ -206,7 +205,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
      */
     private static function checkWithOnlyOneUser(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => [
@@ -219,7 +218,7 @@ class ThirdLevelJsonValidatorTest extends TestCase
                     ]
                 ]
             ]
-        ]);
+        ];
 
         return [$data, self::getThirdLevelSchema(), true];
     }
@@ -230,11 +229,11 @@ class ThirdLevelJsonValidatorTest extends TestCase
      */
     private static function checkWithoutUser(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => []
-        ]);
+        ];
 
         return [$data, self::getThirdLevelSchema(), true];
     }
@@ -245,11 +244,11 @@ class ThirdLevelJsonValidatorTest extends TestCase
      */
     private static function checkWithNullUserList(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'users' => null
-        ]);
+        ];
 
         return [$data, self::getThirdLevelSchema(), false];
     }
@@ -260,19 +259,19 @@ class ThirdLevelJsonValidatorTest extends TestCase
      */
     private static function checkWithOptionalUserList(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null
-        ]);
+        ];
 
         return [$data, self::getThirdLevelSchema(), true];
     }
 
     /**
-     * @return DataSchema
+     * @return JsonSchema
      * @throws InvalidSchemaException
      */
-    private static function getThirdLevelSchema(): DataSchema
+    private static function getThirdLevelSchema(): JsonSchema
     {
         $schema = [
             'success' => ['type' => 'bool'],

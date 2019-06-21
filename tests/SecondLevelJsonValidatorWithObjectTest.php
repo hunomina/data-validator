@@ -14,15 +14,15 @@ class SecondLevelJsonValidatorWithObjectTest extends TestCase
 {
     /**
      * @dataProvider getSamples
-     * @param string $data
+     * @param array $data
      * @param JsonSchema $schema
      * @param bool $shouldWork
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testValidation(string $data, JsonSchema $schema, bool $shouldWork): void
+    public function testValidation(array $data, JsonSchema $schema, bool $shouldWork): void
     {
-        $jsonData = (new JsonData())->setData($data);
+        $jsonData = (new JsonData())->setDataFromArray($data);
 
         if ($shouldWork) {
             $this->assertTrue($schema->validate($jsonData));
@@ -54,14 +54,14 @@ class SecondLevelJsonValidatorWithObjectTest extends TestCase
      */
     private static function checkPerfectData(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'user' => [
                 'name' => 'test',
                 'age' => 10
             ]
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), true];
     }
@@ -73,11 +73,11 @@ class SecondLevelJsonValidatorWithObjectTest extends TestCase
      */
     private static function checkWithNullObject(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'user' => null
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), true];
     }
@@ -89,10 +89,10 @@ class SecondLevelJsonValidatorWithObjectTest extends TestCase
      */
     private static function checkWithObjectNotSet(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), true];
     }
@@ -103,10 +103,10 @@ class SecondLevelJsonValidatorWithObjectTest extends TestCase
      */
     private static function checkWithoutUser(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), true];
     }
@@ -117,13 +117,13 @@ class SecondLevelJsonValidatorWithObjectTest extends TestCase
      */
     private static function checkWithWrongUser(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'user' => [
                 'pseudo' => 'test'
             ]
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), false];
     }
@@ -134,11 +134,11 @@ class SecondLevelJsonValidatorWithObjectTest extends TestCase
      */
     private static function checkWithWrongTypeUser(): array
     {
-        $data = json_encode([
+        $data = [
             'success' => true,
             'error' => null,
             'user' => 'test'
-        ]);
+        ];
 
         return [$data, self::getSecondLevelSchema(), false];
     }
