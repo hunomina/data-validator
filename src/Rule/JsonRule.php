@@ -395,7 +395,7 @@ class JsonRule implements Rule
         if ($this->dateFormat !== null) {
             $d = DateTime::createFromFormat($this->dateFormat, $data);
             if (!($d instanceof DateTime) || $d->format($this->dateFormat) !== $data) {
-                $this->error = 'Invalid date format';
+                $this->error = "Must match the '" . $this->dateFormat . "' date format";
                 return false;
             }
         }
