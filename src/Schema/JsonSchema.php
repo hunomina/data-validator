@@ -273,13 +273,18 @@ class JsonSchema implements DataSchema
             }
 
             if (isset($rule['enum']) && !JsonRule::isTypeWithEnumCheck($type)) {
-                throw new InvalidSchemaException('`' . $type . '` type can not enum checked');
+                throw new InvalidSchemaException('`' . $type . '` type can not be enum checked');
+            }
+
+            if (isset($rule['date-format']) && !JsonRule::isTypeWithDateFormatCheck($type)) {
+                throw new InvalidSchemaException('`' . $type . '` type can not be date format checked');
             }
 
             $length = $rule['length'] ?? null;
             $pattern = $rule['pattern'] ?? null;
             $min = $rule['min'] ?? null;
             $max = $rule['max'] ?? null;
+            $dateFormat = $rule['date-format'] ?? null;
             $enum = (isset($rule['enum']) && is_array($rule['enum'])) ? $rule['enum'] : null;
 
             if (in_array($type, JsonRule::LIST_TYPES, true) || in_array($type, JsonRule::OBJECT_TYPES, true)) {
@@ -305,7 +310,8 @@ class JsonSchema implements DataSchema
                     ->setPattern($pattern)
                     ->setMin($min)
                     ->setMax($max)
-                    ->setEnum($enum);
+                    ->setEnum($enum)
+                    ->setDateFormat($dateFormat);
             }
         }
 

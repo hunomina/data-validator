@@ -13,6 +13,7 @@ interface Rule
 
     /**
      * @return string
+     * The data type
      */
     public function getType(): string;
 
@@ -24,6 +25,7 @@ interface Rule
 
     /**
      * @return bool
+     * Can the data equals `null`
      */
     public function canBeNull(): bool;
 
@@ -35,6 +37,7 @@ interface Rule
 
     /**
      * @return bool
+     * Is the data optional <=> is it mandatory in the parent schema
      */
     public function isOptional(): bool;
 
@@ -46,32 +49,34 @@ interface Rule
 
     /**
      * @return null|int
-     * `null` if length does have to be checked
+     * `null` if does not have to be checked
+     * Length of the data (string, lists...)
      */
     public function getLength(): ?int;
 
     /**
      * @param int $length
      * @return Rule
-     * `null` if length does have to be checked
      */
     public function setLength(?int $length): self;
 
     /**
-     * @param string|null $pattern
-     * @return Rule
-     * `null` if pattern does not have to be checked
-     */
-    public function setPattern(?string $pattern): self;
-
-    /**
      * @return string|null
      * `null` if pattern does not have to be checked
+     * Regex that the data must match
      */
     public function getPattern(): ?string;
 
     /**
+     * @param string|null $pattern
+     * @return Rule
+     */
+    public function setPattern(?string $pattern): self;
+
+    /**
      * @return int|null
+     * `null` if minimum value does not have to be checked
+     * Minimum value of the data (list length, number value...)
      */
     public function getMin(): ?int;
 
@@ -83,6 +88,8 @@ interface Rule
 
     /**
      * @return int|null
+     * `null` if does not have to be checked
+     * Maximum value of the data (list length, number value...)
      */
     public function getMax(): ?int;
 
@@ -94,6 +101,8 @@ interface Rule
 
     /**
      * @return array
+     * `null` if does not have to be checked
+     * List of value available for the tested data
      */
     public function getEnum(): ?array;
 
@@ -101,5 +110,31 @@ interface Rule
      * @param array|null $enum
      * @return Rule
      */
-    public function setEnum(?array $enum): self ;
+    public function setEnum(?array $enum): self;
+
+    /**
+     * @return string|null
+     * `null` if no error
+     * Error message if the data does not match the rule
+     */
+    public function getError(): ?string;
+
+    /**
+     * @param string|null $error
+     * @return JsonRule
+     */
+    public function setError(?string $error): self;
+
+    /**
+     * @return string|null
+     * `null` if does not have to be checked
+     * Date format to test the data with
+     */
+    public function getDateFormat(): ?string;
+
+    /**
+     * @param string|null $dateFormat
+     * @return Rule
+     */
+    public function setDateFormat(?string $dateFormat): Rule;
 }

@@ -2,6 +2,8 @@
 
 namespace hunomina\Validator\Json\Rule;
 
+use DateTime;
+
 class JsonRule implements Rule
 {
     public const LIST_TYPES = ['list', 'array'];
@@ -68,6 +70,12 @@ class JsonRule implements Rule
      * Error message when the data does not match the rule
      */
     protected $error;
+
+    /**
+     * @var null|string $dateFormat
+     * Date format of the data
+     */
+    protected $dateFormat;
 
     /**
      * @return string
@@ -227,9 +235,29 @@ class JsonRule implements Rule
      * @param string|null $error
      * @return JsonRule
      */
-    public function setError(?string $error): JsonRule
+    public function setError(?string $error): Rule
     {
         $this->error = $error;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     * `null` if does not have to be checked
+     * Date format to test the data with
+     */
+    public function getDateFormat(): ?string
+    {
+        return $this->dateFormat;
+    }
+
+    /**
+     * @param string|null $dateFormat
+     * @return Rule
+     */
+    public function setDateFormat(?string $dateFormat): Rule
+    {
+        $this->dateFormat = $dateFormat;
         return $this;
     }
 
@@ -266,6 +294,10 @@ class JsonRule implements Rule
             || in_array($type, self::LIST_TYPES, true);
     }
 
+    /**
+     * @param string $type
+     * @return bool
+     */
     public static function isTypeWithEnumCheck(string $type): bool
     {
         return $type === 'string'
@@ -273,6 +305,15 @@ class JsonRule implements Rule
             || in_array($type, self::FLOAT_STRICT_TYPES, true)
             || in_array($type, self::CHAR_TYPES, true)
             || in_array($type, self::TYPED_ARRAY_TYPES, true);
+    }
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public static function isTypeWithDateFormatCheck(string $type): bool
+    {
+        return $type === 'string';
     }
 
     /**
@@ -349,6 +390,14 @@ class JsonRule implements Rule
         if ($this->enum !== null && !in_array($data, $this->enum, true)) {
             $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
             return false;
+        }
+
+        if ($this->dateFormat !== null) {
+            $d = DateTime::createFromFormat($this->dateFormat, $data);
+            if (!($d instanceof DateTime) || $d->format($this->dateFormat) !== $data) {
+                $this->error = 'Invalid date format';
+                return false;
+            }
         }
 
         return true;
