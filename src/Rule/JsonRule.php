@@ -4,7 +4,7 @@ namespace hunomina\Validator\Json\Rule;
 
 class JsonRule implements Rule
 {
-    public const ARRAY_TYPES = ['list', 'array'];
+    public const LIST_TYPES = ['list', 'array'];
     public const INT_STRICT_TYPES = ['int', 'integer', 'long'];
     public const FLOAT_STRICT_TYPES = ['float', 'double'];
     public const NUMERIC_TYPE = ['numeric', 'number'];
@@ -52,12 +52,6 @@ class JsonRule implements Rule
     protected $max;
 
     /**
-     * @var array
-     * Is in_array($value, $in, true)
-     */
-    protected $in = [];
-
-    /**
      * @var null|string
      * `null` if pattern does not have to be checked
      */
@@ -68,6 +62,12 @@ class JsonRule implements Rule
      * `null` if no in_array($value, $enum) check needed
      */
     protected $enum;
+
+    /**
+     * @var null|string $error
+     * Error message when the data does not match the rule
+     */
+    protected $error;
 
     /**
      * @return string
@@ -216,6 +216,24 @@ class JsonRule implements Rule
     }
 
     /**
+     * @return string|null
+     */
+    public function getError(): ?string
+    {
+        return $this->error;
+    }
+
+    /**
+     * @param string|null $error
+     * @return JsonRule
+     */
+    public function setError(?string $error): JsonRule
+    {
+        $this->error = $error;
+        return $this;
+    }
+
+    /**
      * @param string $type
      * @return bool
      * Does a specific type can be length checked
@@ -245,7 +263,7 @@ class JsonRule implements Rule
             || in_array($type, self::INT_STRICT_TYPES, true)
             || in_array($type, self::FLOAT_STRICT_TYPES, true)
             || in_array($type, self::TYPED_ARRAY_TYPES, true)
-            || in_array($type, self::ARRAY_TYPES, true);
+            || in_array($type, self::LIST_TYPES, true);
     }
 
     public static function isTypeWithEnumCheck(string $type): bool
@@ -256,8 +274,6 @@ class JsonRule implements Rule
             || in_array($type, self::CHAR_TYPES, true)
             || in_array($type, self::TYPED_ARRAY_TYPES, true);
     }
-
-    // todo : use them in JsonSchema::setSchema
 
     /**
      * @param $data
@@ -270,61 +286,258 @@ class JsonRule implements Rule
         }
 
         if (in_array($this->type, self::NUMERIC_TYPE, true)) {
-            return is_numeric($data) && !is_string($data)
-                && ($this->min !== null ? $data >= $this->min : true)
-                && ($this->max !== null ? $data <= $this->max : true);
+            return $this->isValidNumber($data);
         }
 
-        if (in_array($this->type, self::ARRAY_TYPES, true)) {
-            return is_array($data);
+        if (in_array($this->type, self::LIST_TYPES, true)) {
+            return $this->isValidList($data);
         }
 
         if (in_array($this->type, self::INT_STRICT_TYPES, true)) {
-            return is_int($data)
-                && ($this->min !== null ? $data >= $this->min : true)
-                && ($this->max !== null ? $data <= $this->max : true)
-                && ($this->enum !== null ? in_array($data, $this->enum, true) : true);
+            return $this->isValidInteger($data);
         }
 
         if (in_array($this->type, self::FLOAT_STRICT_TYPES, true)) {
-            return is_float($data)
-                && ($this->min !== null ? $data >= $this->min : true)
-                && ($this->max !== null ? $data <= $this->max : true)
-                && ($this->enum !== null ? in_array($data, $this->enum, true) : true);
+            return $this->isValidFloat($data);
         }
 
         if (in_array($this->type, self::BOOLEAN_TYPES, true)) {
-            return is_bool($data);
+            return $this->isValidBoolean($data);
         }
 
         if (in_array($this->type, self::CHAR_TYPES, true)) {
-            // pattern can be used to match a range of characters
-            return is_string($data)
-                && strlen($data) === 1
-                && ($this->pattern !== null ? preg_match($this->pattern, $data) : true)
-                && ($this->enum !== null ? in_array($data, $this->enum, true) : true);
+            return $this->isValidCharacter($data);
         }
 
         if (in_array($this->type, self::TYPED_ARRAY_TYPES, true)) {
-            return $this->checkTypedList($data, $this->enum)
-                && ($this->length !== null ? count($data) === $this->length : true)
-                && ($this->min !== null ? count($data) >= $this->min : true)
-                && ($this->max !== null ? count($data) <= $this->max : true);
+            return $this->isValidTypedList($data);
         }
 
         if ($this->type === 'string') {
-            return is_string($data)
-                && ($this->length !== null ? strlen($data) === $this->length : true)
-                && ($this->pattern !== null ? preg_match($this->pattern, $data) : true)
-                && ($this->enum !== null ? in_array($data, $this->enum, true) : true);
+            return $this->isValidString($data);
         }
 
         if (in_array($this->type, self::OBJECT_TYPES, true)) {
-            // json object is a non empty array
-            return is_array($data) && !empty($data);
+            return $this->isValidObject($data);
         }
 
+        $this->error = 'Invalid type to check';
         return false;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function isValidString($data): bool
+    {
+        if (!is_string($data)) {
+            $this->error = 'Must be a string';
+            return false;
+        }
+
+        if ($this->length !== null && strlen($data) !== $this->length) {
+            $this->error = 'Invalid length: Must be ' . $this->length . '. Is ' . strlen($data);
+            return false;
+        }
+
+        if ($this->pattern !== null && !preg_match($this->pattern, $data)) {
+            $this->error = 'Must match the pattern ' . $this->pattern;
+            return false;
+        }
+
+        if ($this->enum !== null && !in_array($data, $this->enum, true)) {
+            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function isValidInteger($data): bool
+    {
+        if (!is_int($data)) {
+            $this->error = 'Must be an integer';
+            return false;
+        }
+
+        if ($this->min !== null && $data < $this->min) {
+            $this->error = 'Must be higher than ' . $this->min;
+            return false;
+        }
+
+        if ($this->max !== null && $data > $this->max) {
+            $this->error = 'Must be lower than ' . $this->max;
+            return false;
+        }
+
+        if ($this->enum !== null && !in_array($data, $this->enum, true)) {
+            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function isValidFloat($data): bool
+    {
+        if (!is_float($data)) {
+            $this->error = 'Must be a floating number';
+            return false;
+        }
+
+        if ($this->min !== null && $data < $this->min) {
+            $this->error = 'Must be higher than ' . $this->min;
+            return false;
+        }
+
+        if ($this->max !== null && $data > $this->max) {
+            $this->error = 'Must be lower than ' . $this->max;
+            return false;
+        }
+
+        if ($this->enum !== null && !in_array($data, $this->enum, true)) {
+            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function isValidNumber($data): bool
+    {
+        if (!is_numeric($data) || is_string($data)) {
+            $this->error = 'Must be a non string numeric number';
+            return false;
+        }
+
+        if ($this->min !== null && $data < $this->min) {
+            $this->error = 'Must be higher than ' . $this->min;
+            return false;
+        }
+
+        if ($this->max !== null && $data > $this->max) {
+            $this->error = 'Must be lower than ' . $this->max;
+            return false;
+        }
+
+        if ($this->enum !== null && !in_array($data, $this->enum, true)) {
+            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function isValidTypedList($data): bool
+    {
+        if (!is_array($data)) {
+            $this->error = 'Must be an array';
+            return false;
+        }
+
+        if (!$this->checkTypedListValues($data, $this->enum)) {
+            $this->error = 'Invalid elements for a ' . $this->type;
+            if ($this->enum !== null) {
+                $this->error .= ' Only those elements can be in the list : ' . implode(', ', $this->enum);
+            }
+            return false;
+        }
+
+        if ($this->length !== null && count($data) !== $this->length) {
+            $this->error = 'Invalid length: Must be ' . $this->length . '. Is ' . count($data);
+            return false;
+        }
+
+        if ($this->min !== null && count($data) < $this->min) {
+            $this->error = 'Must contain at least ' . $this->min . ' elements';
+            return false;
+        }
+
+        if ($this->max !== null && count($data) > $this->max) {
+            $this->error = 'Must contain at most ' . $this->max . ' elements';
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function isValidCharacter($data): bool
+    {
+        if (!is_string($data) || strlen($data) !== 1) {
+            $this->error = 'Must be a character';
+            return false;
+        }
+
+        if ($this->pattern !== null && !preg_match($this->pattern, $data)) {
+            $this->error = 'Must match the pattern ' . $this->pattern;
+            return false;
+        }
+
+        if ($this->enum !== null && !in_array($data, $this->enum, true)) {
+            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function isValidBoolean($data): bool
+    {
+        if (!is_bool($data)) {
+            $this->error = 'Must be a boolean';
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function isValidList($data): bool
+    {
+        if (!is_array($data)) {
+            $this->error = 'Must be an array';
+        }
+        return true;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    protected function isValidObject($data): bool
+    {
+        if (!is_array($data) || empty($data)) {
+            $this->error = 'Must be a non empty array';
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -333,14 +546,9 @@ class JsonRule implements Rule
      * @return bool
      * $data is not typed in order to prevent exceptions
      */
-    protected function checkTypedList($data, ?array $enum): bool
+    protected function checkTypedListValues($data, ?array $enum): bool
     {
-        if (!is_array($data)) {
-            return false;
-        }
-
         $rule = null;
-
         switch ($this->type) {
             case 'integer-list':
                 $rule = (new self())->setType('integer');
@@ -352,10 +560,10 @@ class JsonRule implements Rule
                 $rule = (new self())->setType('boolean');
                 break;
             case 'char-list':
-                $rule = (new self())->setPattern($this->pattern)->setType('char');
+                $rule = (new self())->setType('char')->setPattern($this->pattern);
                 break;
             case 'string-list':
-                $rule = (new self())->setPattern($this->pattern)->setType('string');
+                $rule = (new self())->setType('string')->setPattern($this->pattern);
                 break;
             case 'numeric-list':
                 $rule = (new self())->setType('numeric');

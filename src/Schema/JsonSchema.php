@@ -30,6 +30,86 @@ class JsonSchema implements DataSchema
     private $nullable = false;
 
     /**
+     * @return JsonRule[]
+     */
+    public function getRules(): array
+    {
+        return $this->rules;
+    }
+
+    /**
+     * @return JsonSchema[]
+     */
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOptional(): bool
+    {
+        return $this->optional;
+    }
+
+    /**
+     * @param bool $optional
+     * @return JsonSchema
+     */
+    public function setOptional(bool $optional): JsonSchema
+    {
+        $this->optional = $optional;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNullable(): bool
+    {
+        return $this->nullable;
+    }
+
+    /**
+     * @param bool $canBeNull
+     * @return JsonSchema
+     */
+    public function setNullable(bool $canBeNull): JsonSchema
+    {
+        $this->nullable = $canBeNull;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return JsonSchema
+     */
+    public function setType(string $type): JsonSchema
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     * When validate fail, an error must be set, not returned or thrown
+     * User can access it using this method
+     */
+    public function getLastError(): ?string
+    {
+        return $this->lastError;
+    }
+
+    /**
      * @param DataType $dataType
      * @return bool
      * @throws InvalidDataException
@@ -105,7 +185,7 @@ class JsonSchema implements DataSchema
                 if ($property === $key) {
                     $found = true;
                     if (!$rule->validate($value)) {
-                        $this->lastError = '`' . $property . '` does not validate the schema';
+                        $this->lastError = '`' . $property . '` does not validate the schema. ' . $rule->getError();
                         return false;
                     }
                 }
@@ -202,7 +282,7 @@ class JsonSchema implements DataSchema
             $max = $rule['max'] ?? null;
             $enum = (isset($rule['enum']) && is_array($rule['enum'])) ? $rule['enum'] : null;
 
-            if (in_array($type, JsonRule::ARRAY_TYPES, true) || in_array($type, JsonRule::OBJECT_TYPES, true)) {
+            if (in_array($type, JsonRule::LIST_TYPES, true) || in_array($type, JsonRule::OBJECT_TYPES, true)) {
                 if (!isset($rule['schema'])) {
                     throw new InvalidSchemaException('`list` or `object` type must have a `schema` property to describe to list or object schema');
                 }
@@ -230,85 +310,5 @@ class JsonSchema implements DataSchema
         }
 
         return $this;
-    }
-
-    /**
-     * @return JsonRule[]
-     */
-    public function getRules(): array
-    {
-        return $this->rules;
-    }
-
-    /**
-     * @return JsonSchema[]
-     */
-    public function getChildren(): array
-    {
-        return $this->children;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isOptional(): bool
-    {
-        return $this->optional;
-    }
-
-    /**
-     * @param bool $optional
-     * @return JsonSchema
-     */
-    public function setOptional(bool $optional): JsonSchema
-    {
-        $this->optional = $optional;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isNullable(): bool
-    {
-        return $this->nullable;
-    }
-
-    /**
-     * @param bool $canBeNull
-     * @return JsonSchema
-     */
-    public function setNullable(bool $canBeNull): JsonSchema
-    {
-        $this->nullable = $canBeNull;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     * @return JsonSchema
-     */
-    public function setType(string $type): JsonSchema
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * @return string
-     * When validate fail, an error must be set, not returned or thrown
-     * User can access it using this method
-     */
-    public function getLastError(): ?string
-    {
-        return $this->lastError;
     }
 }
