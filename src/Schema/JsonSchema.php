@@ -229,7 +229,7 @@ class JsonSchema implements DataSchema
                     }
 
                     if (!$schema->validate($childJsonData)) {
-                        $this->lastError = 'The data passed does not validate the `' . $property . '` schema';
+                        $this->lastError = 'The data passed does not validate the `' . $property . '` schema. ' . $schema->getLastError();
                         return false;
                     }
                 }
