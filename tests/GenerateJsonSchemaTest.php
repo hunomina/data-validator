@@ -3,6 +3,7 @@
 namespace hunomina\Validator\Json\Test;
 
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
@@ -14,9 +15,9 @@ class GenerateJsonSchemaTest extends TestCase
     public function testGenerateOneLevelSchema(): void
     {
         $s = [
-            'success' => ['type' => 'bool'],
-            'error' => ['type' => 'string', 'null' => true],
-            'code' => ['type' => 'int', 'null' => false, 'optional' => true]
+            'success' => ['type' => JsonRule::BOOLEAN_TYPE],
+            'error' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
+            'code' => ['type' => JsonRule::INTEGER_TYPE, 'null' => false, 'optional' => true]
         ];
 
         /** @var JsonSchema $schema */
@@ -31,12 +32,12 @@ class GenerateJsonSchemaTest extends TestCase
     public function testGenerateSchemaWithList(): void
     {
         $s = [
-            'success' => ['type' => 'bool'],
-            'error' => ['type' => 'string', 'null' => true],
-            'users' => ['type' => 'list', 'null' => false, 'optional' => false, 'schema' => [
-                'name' => ['type' => 'string', 'null' => false, 'optional' => false],
-                'age' => ['type' => 'int', 'null' => false, 'optional' => true],
-                'birthplace' => ['type' => 'string', 'null' => true, 'optional' => true],
+            'success' => ['type' => JsonRule::BOOLEAN_TYPE],
+            'error' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
+            'users' => ['type' => JsonRule::LIST_TYPE, 'null' => false, 'optional' => false, 'schema' => [
+                'name' => ['type' => JsonRule::STRING_TYPE, 'null' => false, 'optional' => false],
+                'age' => ['type' => JsonRule::INTEGER_TYPE, 'null' => false, 'optional' => true],
+                'birthplace' => ['type' => JsonRule::STRING_TYPE, 'null' => true, 'optional' => true],
             ]]
         ];
 
@@ -54,12 +55,12 @@ class GenerateJsonSchemaTest extends TestCase
     public function testGenerateSchemaWithObject(): void
     {
         $s = [
-            'success' => ['type' => 'bool'],
-            'error' => ['type' => 'string', 'null' => true],
-            'user' => ['type' => 'object', 'null' => false, 'optional' => false, 'schema' => [
-                'name' => ['type' => 'string', 'null' => false, 'optional' => false],
-                'age' => ['type' => 'int', 'null' => false, 'optional' => true],
-                'birthplace' => ['type' => 'string', 'null' => true, 'optional' => true],
+            'success' => ['type' => JsonRule::BOOLEAN_TYPE],
+            'error' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
+            'user' => ['type' => JsonRule::OBJECT_TYPE, 'null' => false, 'optional' => false, 'schema' => [
+                'name' => ['type' => JsonRule::STRING_TYPE, 'null' => false, 'optional' => false],
+                'age' => ['type' => JsonRule::INTEGER_TYPE, 'null' => false, 'optional' => true],
+                'birthplace' => ['type' => JsonRule::STRING_TYPE, 'null' => true, 'optional' => true],
             ]]
         ];
 
@@ -77,13 +78,13 @@ class GenerateJsonSchemaTest extends TestCase
     public function testGenerateThirdLevelSchema(): void
     {
         $s = [
-            'success' => ['type' => 'bool'],
-            'error' => ['type' => 'string', 'null' => true],
-            'users' => ['type' => 'list', 'null' => false, 'optional' => false, 'schema' => [
-                'name' => ['type' => 'string', 'null' => false, 'optional' => false],
-                'age' => ['type' => 'object', 'null' => false, 'optional' => true, 'schema' => [
-                    'day' => ['type' => 'string', 'null' => false, 'optional' => false],
-                    'hour' => ['type' => 'string', 'null' => false, 'optional' => false]
+            'success' => ['type' => JsonRule::BOOLEAN_TYPE],
+            'error' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
+            'users' => ['type' => JsonRule::LIST_TYPE, 'null' => false, 'optional' => false, 'schema' => [
+                'name' => ['type' => JsonRule::STRING_TYPE, 'null' => false, 'optional' => false],
+                'age' => ['type' => JsonRule::OBJECT_TYPE, 'null' => false, 'optional' => true, 'schema' => [
+                    'day' => ['type' => JsonRule::STRING_TYPE, 'null' => false, 'optional' => false],
+                    'hour' => ['type' => JsonRule::STRING_TYPE, 'null' => false, 'optional' => false]
                 ]]
             ]]
         ];
@@ -122,7 +123,7 @@ class GenerateJsonSchemaTest extends TestCase
     public function testErrorListWithNoSchema(): void
     {
         $s = [
-            'user' => ['type' => 'object', 'null' => false, 'optional' => false]
+            'user' => ['type' => JsonRule::OBJECT_TYPE, 'null' => false, 'optional' => false]
         ];
 
         $this->expectException(InvalidSchemaException::class);
@@ -135,7 +136,7 @@ class GenerateJsonSchemaTest extends TestCase
     public function testErrorListWithInvalidSubSchema(): void
     {
         $s = [
-            'user' => ['type' => 'object', 'null' => false, 'optional' => false, 'schema' => 'schema must be an array']
+            'user' => ['type' => JsonRule::OBJECT_TYPE, 'null' => false, 'optional' => false, 'schema' => 'schema must be an array']
         ];
 
         $this->expectException(InvalidSchemaException::class);

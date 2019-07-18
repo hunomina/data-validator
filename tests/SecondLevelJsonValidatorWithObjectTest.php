@@ -6,6 +6,7 @@ use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\DataSchema;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -150,11 +151,11 @@ class SecondLevelJsonValidatorWithObjectTest extends TestCase
     private static function getSecondLevelSchema(): DataSchema
     {
         $schema = [
-            'success' => ['type' => 'bool'],
-            'error' => ['type' => 'string', 'null' => true],
-            'user' => ['type' => 'object', 'null' => true, 'optional' => true, 'schema' => [
-                'name' => ['type' => 'string'],
-                'age' => ['type' => 'int']
+            'success' => ['type' => JsonRule::BOOLEAN_TYPE],
+            'error' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
+            'user' => ['type' => JsonRule::OBJECT_TYPE, 'null' => true, 'optional' => true, 'schema' => [
+                'name' => ['type' => JsonRule::STRING_TYPE],
+                'age' => ['type' => JsonRule::INTEGER_TYPE]
             ]]
         ];
 

@@ -4,6 +4,7 @@ namespace hunomina\Validator\Json\Test;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +19,7 @@ class PatternCheckTest extends TestCase
         $this->expectException(InvalidSchemaException::class);
 
         (new JsonSchema())->setSchema([
-            'age' => ['type' => 'int', 'pattern' => '/^nop$/']
+            'age' => ['type' => JsonRule::INTEGER_TYPE, 'pattern' => '/^nop$/']
         ]);
     }
 
@@ -36,7 +37,7 @@ class PatternCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'name' => ['type' => 'string', 'pattern' => '/^[a-z]+$/']
+            'name' => ['type' => JsonRule::STRING_TYPE, 'pattern' => '/^[a-z]+$/']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -57,7 +58,7 @@ class PatternCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'blood_type' => ['type' => 'char', 'pattern' => '/^[abo]$/']
+            'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'pattern' => '/^[abo]$/']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -86,7 +87,7 @@ class PatternCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'list' => ['type' => 'string-list', 'pattern' => '/^[a-zA-Z]+$/']
+            'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'pattern' => '/^[a-zA-Z]+$/']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -115,7 +116,7 @@ class PatternCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'blood_types' => ['type' => 'char-list', 'pattern' => '/^[abo]$/']
+            'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[abo]$/']
         ]);
 
         $this->assertTrue($schema->validate($data));

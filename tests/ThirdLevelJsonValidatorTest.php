@@ -6,6 +6,7 @@ use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
@@ -274,14 +275,14 @@ class ThirdLevelJsonValidatorTest extends TestCase
     private static function getThirdLevelSchema(): JsonSchema
     {
         $schema = [
-            'success' => ['type' => 'bool'],
-            'error' => ['type' => 'string', 'null' => true],
-            'users' => ['type' => 'list', 'optional' => true, 'schema' => [
-                'name' => ['type' => 'string'],
-                'gender' => ['type' => 'string', 'optional' => true],
-                'birth_date' => ['type' => 'object', 'null' => true, 'schema' => [
-                    'date' => ['type' => 'string'],
-                    'time' => ['type' => 'string', 'optional' => true],
+            'success' => ['type' => JsonRule::BOOLEAN_TYPE],
+            'error' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
+            'users' => ['type' => JsonRule::LIST_TYPE, 'optional' => true, 'schema' => [
+                'name' => ['type' => JsonRule::STRING_TYPE],
+                'gender' => ['type' => JsonRule::STRING_TYPE, 'optional' => true],
+                'birth_date' => ['type' => JsonRule::OBJECT_TYPE, 'null' => true, 'schema' => [
+                    'date' => ['type' => JsonRule::STRING_TYPE],
+                    'time' => ['type' => JsonRule::STRING_TYPE, 'optional' => true],
                 ]]
             ]]
         ];

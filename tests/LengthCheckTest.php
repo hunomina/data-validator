@@ -4,27 +4,12 @@ namespace hunomina\Validator\Json\Test;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
 class LengthCheckTest extends TestCase
 {
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testBasicStringSchema(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'username' => 'test'
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'username' => ['type' => 'string']
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-    }
-
     /**
      * @throws InvalidSchemaException
      */
@@ -34,27 +19,16 @@ class LengthCheckTest extends TestCase
             'username' => 'test'
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'username' => 'test2'
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
-            'username' => ['type' => 'string', 'length' => 4]
+            'username' => ['type' => JsonRule::STRING_TYPE, 'length' => 4]
         ]);
 
         $this->assertTrue($schema->validate($data));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testStringFailLengthCheck(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'username' => 'test'
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'username' => ['type' => 'string', 'length' => 5]
-        ]);
-
-        $this->assertFalse($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -66,27 +40,16 @@ class LengthCheckTest extends TestCase
             'users' => [1, 2, 3, 4]
         ]);
 
+        $data2 = (new JsonData())->setDataFromArray([
+            'users' => [1, 2, 3, 4, 5]
+        ]);
+
         $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'integer-list', 'length' => 4]
+            'users' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'length' => 4]
         ]);
 
         $this->assertTrue($schema->validate($data));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testTypedListFailLengthCheck(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'users' => [1, 2, 3, 4]
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'integer-list', 'length' => 5]
-        ]);
-
-        $this->assertFalse($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
     }
 
     /**
@@ -103,7 +66,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'integer' => ['type' => 'integer', 'min' => 3]
+            'integer' => ['type' => JsonRule::INTEGER_TYPE, 'min' => 3]
         ]);
 
         $this->assertFalse($schema->validate($data));
@@ -124,7 +87,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'float' => ['type' => 'float', 'min' => 3.0]
+            'float' => ['type' => JsonRule::FLOAT_TYPE, 'min' => 3.0]
         ]);
 
         $this->assertFalse($schema->validate($data));
@@ -145,7 +108,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'number' => ['type' => 'number', 'min' => 3]
+            'number' => ['type' => JsonRule::NUMERIC_TYPE, 'min' => 3]
         ]);
 
         $this->assertFalse($schema->validate($data));
@@ -166,7 +129,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'integer' => ['type' => 'integer', 'max' => 3]
+            'integer' => ['type' => JsonRule::INTEGER_TYPE, 'max' => 3]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -187,7 +150,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'float' => ['type' => 'float', 'max' => 3.0]
+            'float' => ['type' => JsonRule::FLOAT_TYPE, 'max' => 3.0]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -208,7 +171,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'number' => ['type' => 'number', 'max' => 3]
+            'number' => ['type' => JsonRule::NUMERIC_TYPE, 'max' => 3]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -233,7 +196,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'integer' => ['type' => 'integer', 'min' => 2, 'max' => 4]
+            'integer' => ['type' => JsonRule::INTEGER_TYPE, 'min' => 2, 'max' => 4]
         ]);
 
         $this->assertFalse($schema->validate($data));
@@ -259,7 +222,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'float' => ['type' => 'float', 'min' => 2.0, 'max' => 4]
+            'float' => ['type' => JsonRule::FLOAT_TYPE, 'min' => 2.0, 'max' => 4]
         ]);
 
         $this->assertFalse($schema->validate($data));
@@ -285,7 +248,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'number' => ['type' => 'number', 'min' => 2.0, 'max' => 4]
+            'number' => ['type' => JsonRule::NUMERIC_TYPE, 'min' => 2.0, 'max' => 4]
         ]);
 
         $this->assertFalse($schema->validate($data));
@@ -308,7 +271,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'list' => ['type' => 'integer-list', 'min' => 1]
+            'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'min' => 1]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -329,7 +292,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'list' => ['type' => 'integer-list', 'max' => 1]
+            'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'max' => 1]
         ]);
 
         $this->assertFalse($schema->validate($data));
@@ -354,7 +317,7 @@ class LengthCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'list' => ['type' => 'integer-list', 'min' => 2, 'max' => 4]
+            'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'min' => 2, 'max' => 4]
         ]);
 
         $this->assertFalse($schema->validate($data));

@@ -4,6 +4,7 @@ namespace hunomina\Validator\Json\Test;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +24,7 @@ class TypedListTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'integer-list']
+            'users' => ['type' => JsonRule::INTEGER_LIST_TYPE]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -44,7 +45,7 @@ class TypedListTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'string-list']
+            'users' => ['type' => JsonRule::STRING_LIST_TYPE]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -65,7 +66,7 @@ class TypedListTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'char-list']
+            'users' => ['type' => JsonRule::CHAR_LIST_TYPE]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -86,7 +87,7 @@ class TypedListTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'boolean-list']
+            'users' => ['type' => JsonRule::BOOLEAN_LIST_TYPE]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -107,7 +108,7 @@ class TypedListTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'float-list']
+            'users' => ['type' => JsonRule::FLOAT_LIST_TYPE]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -128,7 +129,7 @@ class TypedListTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'users' => ['type' => 'numeric-list']
+            'users' => ['type' => JsonRule::NUMERIC_LIST_TYPE]
         ]);
 
         $this->assertTrue($schema->validate($data));

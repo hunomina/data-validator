@@ -4,6 +4,7 @@ namespace hunomina\Validator\Json\Test;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +17,7 @@ class DateFormatTest extends TestCase
     {
         $this->expectException(InvalidSchemaException::class);
         (new JsonSchema())->setSchema([
-            'timestamp' => ['type' => 'int', 'date-format' => 'U']
+            'timestamp' => ['type' => JsonRule::INTEGER_TYPE, 'date-format' => 'U']
         ]);
     }
 
@@ -34,7 +35,7 @@ class DateFormatTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'birthday' => ['type' => 'string', 'date-format' => 'Y-m-d']
+            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'Y-m-d']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -55,7 +56,7 @@ class DateFormatTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'birthday' => ['type' => 'string', 'date-format' => 'U']
+            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'U']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -77,7 +78,7 @@ class DateFormatTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'birthday' => ['type' => 'string', 'date-format' => 'D d F Y']
+            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -98,7 +99,7 @@ class DateFormatTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'birthday' => ['type' => 'string', 'date-format' => 'D d F Y']
+            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
         ]);
 
         $this->assertTrue($schema->validate($data));

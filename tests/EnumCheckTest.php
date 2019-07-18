@@ -4,6 +4,7 @@ namespace hunomina\Validator\Json\Test;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +24,7 @@ class EnumCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'gender' => ['type' => 'string', 'enum' => ['male', 'female']]
+            'gender' => ['type' => JsonRule::STRING_TYPE, 'enum' => ['male', 'female']]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -44,7 +45,7 @@ class EnumCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'feet' => ['type' => 'integer', 'enum' => [2, 3, 4]]
+            'feet' => ['type' => JsonRule::INTEGER_TYPE, 'enum' => [2, 3, 4]]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -65,7 +66,7 @@ class EnumCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'feet' => ['type' => 'float', 'enum' => [2.0, 3.0, 4.0]]
+            'feet' => ['type' => JsonRule::FLOAT_TYPE, 'enum' => [2.0, 3.0, 4.0]]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -86,7 +87,7 @@ class EnumCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'blood_type' => ['type' => 'char', 'enum' => ['A', 'B', 'O']]
+            'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'enum' => ['A', 'B', 'O']]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -107,7 +108,7 @@ class EnumCheckTest extends TestCase
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'blood_types' => ['type' => 'char-list', 'enum' => ['A', 'B', 'O']]
+            'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'enum' => ['A', 'B', 'O']]
         ]);
 
         $this->assertTrue($schema->validate($data));
