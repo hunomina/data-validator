@@ -6,14 +6,30 @@ use DateTime;
 
 class JsonRule implements Rule
 {
-    public const LIST_TYPES = ['list', 'array'];
-    public const INT_STRICT_TYPES = ['int', 'integer', 'long'];
-    public const FLOAT_STRICT_TYPES = ['float', 'double'];
-    public const NUMERIC_TYPE = ['numeric', 'number'];
-    public const BOOLEAN_TYPES = ['boolean', 'bool'];
-    public const CHAR_TYPES = ['char', 'character'];
-    public const TYPED_ARRAY_TYPES = ['numeric-list', 'string-list', 'boolean-list', 'integer-list', 'float-list', 'char-list'];
-    public const OBJECT_TYPES = ['entity', 'object'];
+    /* Scalar types */
+    public const STRING_TYPE = 'string';
+    public const INTEGER_TYPE = 'integer';
+    public const FLOAT_TYPE = 'float';
+    public const BOOLEAN_TYPE = 'boolean';
+    public const CHAR_TYPE = 'character';
+    public const NUMERIC_TYPE = 'numeric';
+
+    /* List Types */
+    public const NUMERIC_LIST_TYPE = 'numeric-list';
+    public const STRING_LIST_TYPE = 'string-list';
+    public const BOOLEAN_LIST_TYPE = 'boolean-list';
+    public const INTEGER_LIST_TYPE = 'integer-list';
+    public const FLOAT_LIST_TYPE = 'float-list';
+    public const CHAR_LIST_TYPE = 'character-list';
+
+    public const TYPED_ARRAY_TYPES = [
+        self::NUMERIC_LIST_TYPE, self::STRING_LIST_TYPE, self::BOOLEAN_LIST_TYPE,
+        self::INTEGER_LIST_TYPE, self::FLOAT_LIST_TYPE, self::CHAR_LIST_TYPE
+    ];
+
+    /* Complex types */
+    public const LIST_TYPE = 'list';
+    public const OBJECT_TYPE = 'object';
 
     /**
      * @var string $type
@@ -268,7 +284,7 @@ class JsonRule implements Rule
      */
     public static function isTypeWithLengthCheck(string $type): bool
     {
-        return $type === 'string' || in_array($type, self::TYPED_ARRAY_TYPES, true);
+        return $type === self::STRING_TYPE || in_array($type, self::TYPED_ARRAY_TYPES, true);
     }
 
     /**
@@ -278,7 +294,7 @@ class JsonRule implements Rule
      */
     public static function isTypeWithPatternCheck(string $type): bool
     {
-        return $type === 'string' || $type === 'string-list' || $type === 'char-list' || in_array($type, self::CHAR_TYPES, true);
+        return $type === self::STRING_TYPE || $type === self::STRING_LIST_TYPE || $type === self::CHAR_TYPE || $type === self::CHAR_LIST_TYPE;
     }
 
     /**
@@ -287,11 +303,11 @@ class JsonRule implements Rule
      */
     public static function isTypeWithMinMaxCheck(string $type): bool
     {
-        return in_array($type, self::NUMERIC_TYPE, true)
-            || in_array($type, self::INT_STRICT_TYPES, true)
-            || in_array($type, self::FLOAT_STRICT_TYPES, true)
-            || in_array($type, self::TYPED_ARRAY_TYPES, true)
-            || in_array($type, self::LIST_TYPES, true);
+        return $type === self::NUMERIC_TYPE
+            || $type === self::INTEGER_TYPE
+            || $type === self::FLOAT_TYPE
+            || $type === self::LIST_TYPE
+            || in_array($type, self::TYPED_ARRAY_TYPES, true);
     }
 
     /**
@@ -300,10 +316,10 @@ class JsonRule implements Rule
      */
     public static function isTypeWithEnumCheck(string $type): bool
     {
-        return $type === 'string'
-            || in_array($type, self::INT_STRICT_TYPES, true)
-            || in_array($type, self::FLOAT_STRICT_TYPES, true)
-            || in_array($type, self::CHAR_TYPES, true)
+        return $type === self::STRING_TYPE
+            || $type === self::INTEGER_TYPE
+            || $type === self::FLOAT_TYPE
+            || $type === self::CHAR_TYPE
             || in_array($type, self::TYPED_ARRAY_TYPES, true);
     }
 
@@ -313,7 +329,7 @@ class JsonRule implements Rule
      */
     public static function isTypeWithDateFormatCheck(string $type): bool
     {
-        return $type === 'string';
+        return $type === self::STRING_TYPE;
     }
 
     /**
@@ -326,40 +342,40 @@ class JsonRule implements Rule
             return true;
         }
 
-        if (in_array($this->type, self::NUMERIC_TYPE, true)) {
+        if ($this->type === self::STRING_TYPE) {
+            return $this->isValidString($data);
+        }
+
+        if ($this->type === self::NUMERIC_TYPE) {
             return $this->isValidNumber($data);
         }
 
-        if (in_array($this->type, self::LIST_TYPES, true)) {
-            return $this->isValidList($data);
-        }
-
-        if (in_array($this->type, self::INT_STRICT_TYPES, true)) {
+        if ($this->type === self::INTEGER_TYPE) {
             return $this->isValidInteger($data);
         }
 
-        if (in_array($this->type, self::FLOAT_STRICT_TYPES, true)) {
+        if ($this->type === self::FLOAT_TYPE) {
             return $this->isValidFloat($data);
         }
 
-        if (in_array($this->type, self::BOOLEAN_TYPES, true)) {
+        if ($this->type === self::BOOLEAN_TYPE) {
             return $this->isValidBoolean($data);
         }
 
-        if (in_array($this->type, self::CHAR_TYPES, true)) {
+        if ($this->type === self::CHAR_TYPE) {
             return $this->isValidCharacter($data);
+        }
+
+        if ($this->type === self::OBJECT_TYPE) {
+            return $this->isValidObject($data);
+        }
+
+        if ($this->type === self::LIST_TYPE) {
+            return $this->isValidList($data);
         }
 
         if (in_array($this->type, self::TYPED_ARRAY_TYPES, true)) {
             return $this->isValidTypedList($data);
-        }
-
-        if ($this->type === 'string') {
-            return $this->isValidString($data);
-        }
-
-        if (in_array($this->type, self::OBJECT_TYPES, true)) {
-            return $this->isValidObject($data);
         }
 
         $this->error = 'Invalid type to check';
@@ -395,7 +411,7 @@ class JsonRule implements Rule
         if ($this->dateFormat !== null) {
             $d = DateTime::createFromFormat($this->dateFormat, $data);
             if (!($d instanceof DateTime) || $d->format($this->dateFormat) !== $data) {
-                $this->error = "Must match the '" . $this->dateFormat . "' date format";
+                $this->error = "Must match the '" . $this->dateFormat . "' date format. See available format here : https://www.php.net/manual/fr/datetime.createfromformat.php";
                 return false;
             }
         }
@@ -599,23 +615,23 @@ class JsonRule implements Rule
     {
         $rule = null;
         switch ($this->type) {
-            case 'integer-list':
-                $rule = (new self())->setType('integer');
+            case self::INTEGER_LIST_TYPE:
+                $rule = (new self())->setType(self::INTEGER_TYPE);
                 break;
-            case 'float-list':
-                $rule = (new self())->setType('float');
+            case self::FLOAT_LIST_TYPE:
+                $rule = (new self())->setType(self::FLOAT_TYPE);
                 break;
-            case 'boolean-list':
-                $rule = (new self())->setType('boolean');
+            case self::BOOLEAN_LIST_TYPE:
+                $rule = (new self())->setType(self::BOOLEAN_TYPE);
                 break;
-            case 'char-list':
-                $rule = (new self())->setType('char')->setPattern($this->pattern);
+            case self::CHAR_LIST_TYPE:
+                $rule = (new self())->setType(self::CHAR_TYPE)->setPattern($this->pattern);
                 break;
-            case 'string-list':
-                $rule = (new self())->setType('string')->setPattern($this->pattern);
+            case self::STRING_LIST_TYPE:
+                $rule = (new self())->setType(self::STRING_TYPE)->setPattern($this->pattern);
                 break;
-            case 'numeric-list':
-                $rule = (new self())->setType('numeric');
+            case self::NUMERIC_LIST_TYPE:
+                $rule = (new self())->setType(self::NUMERIC_TYPE);
                 break;
         }
 
