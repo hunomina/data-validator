@@ -287,7 +287,7 @@ class JsonSchema implements DataSchema
             $dateFormat = $rule['date-format'] ?? null;
             $enum = (isset($rule['enum']) && is_array($rule['enum'])) ? $rule['enum'] : null;
 
-            if (in_array($type, JsonRule::LIST_TYPES, true) || in_array($type, JsonRule::OBJECT_TYPES, true)) {
+            if ($type === JsonRule::LIST_TYPE || $type === JsonRule::OBJECT_TYPE) {
                 if (!isset($rule['schema'])) {
                     throw new InvalidSchemaException('`list` or `object` type must have a `schema` property to describe to list or object schema');
                 }
