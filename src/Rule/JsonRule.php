@@ -518,10 +518,8 @@ class JsonRule implements Rule
         }
 
         if (!$this->checkTypedListValues($data, $this->enum)) {
-            $this->error = 'Invalid elements for a ' . $this->type;
-            if ($this->enum !== null) {
-                $this->error .= ' Only those elements can be in the list : ' . implode(', ', $this->enum);
-            }
+            // $this->error is modified by $this->checkTypedListValues() in order to get the error message for the invalid element
+            $this->error = 'Invalid elements for a ' . $this->type . '. ' . $this->error;
             return false;
         }
 
@@ -641,8 +639,9 @@ class JsonRule implements Rule
 
         $rule->setEnum($enum); // set $enum to check if each element of the typed list is in $enum
 
-        foreach ($data as $value) {
+        foreach ($data as $key => $value) {
             if (!$rule->validate($value)) {
+                $this->error = 'Element at index ' . $key . ' is invalid : ' . $rule->getError();
                 return false;
             }
         }
