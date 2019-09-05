@@ -161,8 +161,15 @@ class JsonSchema implements DataSchema
         }
 
         foreach ($data as $element) {
-            /** @var JsonData $jsonData */
-            $jsonData = (new JsonData())->setDataFromArray($element);
+
+            if (!is_array($element)) {
+                $this->lastError = 'A list can only be composed of objects <=> arrays';
+                return false;
+            }
+
+            $jsonData = new JsonData();
+            $jsonData->setDataFromArray($element);
+
             if (!$this->validateObject($jsonData)) {
                 return false;
             }
@@ -297,9 +304,8 @@ class JsonSchema implements DataSchema
                     throw new InvalidSchemaException('`schema` must be a valid schema');
                 }
 
-                /** @var JsonSchema $childSchema */
-                $childSchema = (new self())->setSchema($s);
-                $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull);
+                $childSchema = new self();
+                $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull)->setSchema($s);
                 $this->children[$property] = $childSchema;
             } else {
                 $this->rules[$property] = (new JsonRule())
