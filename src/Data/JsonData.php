@@ -21,7 +21,7 @@ class JsonData implements DataType, ArrayAccess
     }
 
     /**
-     * @param string $data
+     * @param $data
      * @return DataType
      * @throws InvalidDataException
      */
@@ -29,17 +29,22 @@ class JsonData implements DataType, ArrayAccess
     {
         if ($data === null) {
             $this->data = null;
+        } else if (is_string($data)) {
+            $this->data = $this->format($data);
+        } else if (is_array($data)) {
+            $this->data = $data;
         } else {
-            $this->setDataFromArray($this->format($data));
+            throw new InvalidDataException('Invalid data to set');
         }
+
         return $this;
     }
 
     /**
      * @param array $data
-     * @return DataType
+     * @return JsonData
      */
-    public function setDataFromArray(array $data): DataType
+    public function setDataFromArray(array $data): JsonData
     {
         $this->data = $data;
         return $this;
@@ -47,7 +52,7 @@ class JsonData implements DataType, ArrayAccess
 
     /**
      * @param $data
-     * @return mixed
+     * @return array
      * @throws InvalidDataException
      */
     public function format($data): array
