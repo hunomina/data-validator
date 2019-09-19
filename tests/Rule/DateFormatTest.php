@@ -13,17 +13,6 @@ class DateFormatTest extends TestCase
     /**
      * @throws InvalidSchemaException
      */
-    public function testValidTypeCheckable(): void
-    {
-        $this->expectException(InvalidSchemaException::class);
-        (new JsonSchema())->setSchema([
-            'timestamp' => ['type' => JsonRule::INTEGER_TYPE, 'date-format' => 'U']
-        ]);
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testYmd(): void
     {
         $data = (new JsonData())->setDataFromArray([

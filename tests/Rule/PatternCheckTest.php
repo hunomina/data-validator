@@ -12,19 +12,6 @@ class PatternCheckTest extends TestCase
 {
     /**
      * @throws InvalidSchemaException
-     * `int` type can not be pattern checked
-     */
-    public function testInvalidTypeForPattern(): void
-    {
-        $this->expectException(InvalidSchemaException::class);
-
-        (new JsonSchema())->setSchema([
-            'age' => ['type' => JsonRule::INTEGER_TYPE, 'pattern' => '/^nop$/']
-        ]);
-    }
-
-    /**
-     * @throws InvalidSchemaException
      */
     public function testPatternOnString(): void
     {
