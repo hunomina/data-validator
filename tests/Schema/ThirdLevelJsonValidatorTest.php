@@ -3,7 +3,6 @@
 namespace hunomina\Validator\Json\Test\Schema;
 
 use hunomina\Validator\Json\Data\JsonData;
-use hunomina\Validator\Json\Exception\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\JsonRule;
@@ -17,7 +16,6 @@ class ThirdLevelJsonValidatorTest extends TestCase
      * @param array $data
      * @param JsonSchema $schema
      * @param bool $shouldWork
-     * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
     public function testValidation(array $data, JsonSchema $schema, bool $shouldWork): void
@@ -287,6 +285,9 @@ class ThirdLevelJsonValidatorTest extends TestCase
             ]]
         ];
 
-        return (new JsonSchema())->setSchema($schema);
+        $s = new JsonSchema();
+        $s->setSchema($schema);
+
+        return $s;
     }
 }

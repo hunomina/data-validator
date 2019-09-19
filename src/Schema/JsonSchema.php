@@ -112,7 +112,6 @@ class JsonSchema implements DataSchema
     /**
      * @param DataType $dataType
      * @return bool
-     * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
     public function validate(DataType $dataType): bool
@@ -144,7 +143,6 @@ class JsonSchema implements DataSchema
     /**
      * @param DataType $dataType
      * @return bool
-     * @throws InvalidDataException
      * @throws InvalidDataTypeException
      * Each element must validate the schema
      */
@@ -180,7 +178,6 @@ class JsonSchema implements DataSchema
     /**
      * @param JsonData $dataType
      * @return bool
-     * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
     private function validateObject(JsonData $dataType): bool
@@ -226,12 +223,10 @@ class JsonSchema implements DataSchema
                         }
                     }
 
-                    if ($value === null) {
-                        $childJsonData = (new JsonData())->setData(null);
-                    } elseif (is_array($value)) {
-                        $childJsonData = (new JsonData())->setDataFromArray($value);
-                    } else {
-                        $this->lastError = 'Json data must be null or an array';
+                    try {
+                        $childJsonData = (new JsonData())->setData($value);
+                    } catch (InvalidDataException $e) {
+                        $this->lastError = $e->getMessage();
                         return false;
                     }
 
