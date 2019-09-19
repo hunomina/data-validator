@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test;
+namespace hunomina\Validator\Json\Test\Rule;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
@@ -8,23 +8,36 @@ use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class EnumCheckTest extends TestCase
+class PatternCheckTest extends TestCase
 {
     /**
      * @throws InvalidSchemaException
+     * `int` type can not be pattern checked
      */
-    public function testEnumForString(): void
+    public function testInvalidTypeForPattern(): void
+    {
+        $this->expectException(InvalidSchemaException::class);
+
+        (new JsonSchema())->setSchema([
+            'age' => ['type' => JsonRule::INTEGER_TYPE, 'pattern' => '/^nop$/']
+        ]);
+    }
+
+    /**
+     * @throws InvalidSchemaException
+     */
+    public function testPatternOnString(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'gender' => 'female'
+            'name' => 'test'
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'gender' => 'fish'
+            'name' => 'test2'
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'gender' => ['type' => JsonRule::STRING_TYPE, 'enum' => ['male', 'female']]
+            'name' => ['type' => JsonRule::STRING_TYPE, 'pattern' => '/^[a-z]+$/']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -34,18 +47,18 @@ class EnumCheckTest extends TestCase
     /**
      * @throws InvalidSchemaException
      */
-    public function testEnumForInteger(): void
+    public function testPatternOnChar(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'feet' => 2
+            'blood_type' => 'o'
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'feet' => 5
+            'blood_type' => 'c'
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'feet' => ['type' => JsonRule::INTEGER_TYPE, 'enum' => [2, 3, 4]]
+            'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'pattern' => '/^[abo]$/']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -55,18 +68,26 @@ class EnumCheckTest extends TestCase
     /**
      * @throws InvalidSchemaException
      */
-    public function testEnumForFloat(): void
+    public function testPatternOnStringList(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'feet' => 2.0
+            'list' => [
+                'hello',
+                'love',
+                'test'
+            ]
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'feet' => 5.0
+            'list' => [
+                'won\'t',
+                'work',
+                'sorry'
+            ]
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'feet' => ['type' => JsonRule::FLOAT_TYPE, 'enum' => [2.0, 3.0, 4.0]]
+            'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'pattern' => '/^[a-zA-Z]+$/']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -76,39 +97,26 @@ class EnumCheckTest extends TestCase
     /**
      * @throws InvalidSchemaException
      */
-    public function testEnumForCharacter(): void
+    public function testPatternOnCharacterList(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'blood_type' => 'A'
+            'blood_types' => [
+                'a',
+                'b',
+                'o'
+            ]
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'blood_type' => 'C'
+            'blood_types' => [
+                'a',
+                'b',
+                'c'
+            ]
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'enum' => ['A', 'B', 'O']]
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testEnumForTypedArray(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'blood_types' => ['A', 'B', 'O']
-        ]);
-
-        $data2 = (new JsonData())->setDataFromArray([
-            'blood_types' => ['A', 'B', 'C']
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'enum' => ['A', 'B', 'O']]
+            'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[abo]$/']
         ]);
 
         $this->assertTrue($schema->validate($data));

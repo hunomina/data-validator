@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test;
+namespace hunomina\Validator\Json\Test\Schema;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidDataException;
@@ -11,7 +11,7 @@ use hunomina\Validator\Json\Schema\DataSchema;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class SecondLevelJsonValidatorWithListTest extends TestCase
+class SecondLevelJsonValidatorWithObjectTest extends TestCase
 {
     /**
      * @dataProvider getSamples
@@ -39,26 +39,28 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
     public function getSamples(): array
     {
         return [
-            self::checkWithPerfectData(),
-            self::checkWithoutAge(),
-            self::checkWithEmptyUserList(),
-            self::checkThatShouldWorkWithoutUserList(),
-            self::checkThatShouldNotWorkWithoutUserList()
+            self::checkPerfectData(),
+            self::checkWithNullObject(),
+            self::checkWithObjectNotSet(),
+            self::checkWithoutUser(),
+            self::checkWithWrongUser(),
+            self::checkWithWrongTypeUser()
         ];
     }
 
     /**
      * @return array
      * @throws InvalidSchemaException
+     * `user` is an object
      */
-    private static function checkWithPerfectData(): array
+    private static function checkPerfectData(): array
     {
         $data = [
             'success' => true,
             'error' => null,
-            'users' => [
-                ['name' => 'test', 'age' => 10, 'gender' => 'male'],
-                ['name' => 'test2', 'age' => 12]
+            'user' => [
+                'name' => 'test',
+                'age' => 10
             ]
         ];
 
@@ -68,15 +70,59 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
     /**
      * @return array
      * @throws InvalidSchemaException
+     * `user` is null
      */
-    private static function checkWithoutAge(): array
+    private static function checkWithNullObject(): array
     {
         $data = [
             'success' => true,
             'error' => null,
-            'users' => [
-                ['name' => 'test'],
-                ['name' => 'test2']
+            'user' => null
+        ];
+
+        return [$data, self::getSecondLevelSchema(), true];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidSchemaException
+     * `user` not set
+     */
+    private static function checkWithObjectNotSet(): array
+    {
+        $data = [
+            'success' => true,
+            'error' => null
+        ];
+
+        return [$data, self::getSecondLevelSchema(), true];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidSchemaException
+     */
+    private static function checkWithoutUser(): array
+    {
+        $data = [
+            'success' => true,
+            'error' => null
+        ];
+
+        return [$data, self::getSecondLevelSchema(), true];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidSchemaException
+     */
+    private static function checkWithWrongUser(): array
+    {
+        $data = [
+            'success' => true,
+            'error' => null,
+            'user' => [
+                'pseudo' => 'test'
             ]
         ];
 
@@ -87,45 +133,15 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
      * @return array
      * @throws InvalidSchemaException
      */
-    private static function checkWithEmptyUserList(): array
+    private static function checkWithWrongTypeUser(): array
     {
         $data = [
             'success' => true,
             'error' => null,
-            'users' => []
-        ];
-
-        return [$data, self::getSecondLevelSchema(), true];
-    }
-
-    /**
-     * @return array
-     * @throws InvalidSchemaException
-     */
-    private static function checkThatShouldNotWorkWithoutUserList(): array
-    {
-        $data = [
-            'success' => true,
-            'error' => null,
-            'users' => null
+            'user' => 'test'
         ];
 
         return [$data, self::getSecondLevelSchema(), false];
-    }
-
-    /**
-     * @return array
-     * @throws InvalidSchemaException
-     */
-    private static function checkThatShouldWorkWithoutUserList(): array
-    {
-        $data = [
-            'success' => true,
-            'error' => null,
-            'users' => null
-        ];
-
-        return [$data, self::getSecondLevelSchemaWithNullableList(), true];
     }
 
     /**
@@ -137,29 +153,9 @@ class SecondLevelJsonValidatorWithListTest extends TestCase
         $schema = [
             'success' => ['type' => JsonRule::BOOLEAN_TYPE],
             'error' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
-            'users' => ['type' => JsonRule::LIST_TYPE, 'optional' => true, 'schema' => [
+            'user' => ['type' => JsonRule::OBJECT_TYPE, 'null' => true, 'optional' => true, 'schema' => [
                 'name' => ['type' => JsonRule::STRING_TYPE],
-                'age' => ['type' => JsonRule::INTEGER_TYPE],
-                'gender' => ['type' => JsonRule::STRING_TYPE, 'optional' => true]
-            ]]
-        ];
-
-        return (new JsonSchema())->setSchema($schema);
-    }
-
-    /**
-     * @return DataSchema
-     * @throws InvalidSchemaException
-     */
-    private static function getSecondLevelSchemaWithNullableList(): DataSchema
-    {
-        $schema = [
-            'success' => ['type' => JsonRule::BOOLEAN_TYPE],
-            'error' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
-            'users' => ['type' => JsonRule::LIST_TYPE, 'optional' => true, 'null' => true, 'schema' => [
-                'name' => ['type' => JsonRule::STRING_TYPE],
-                'age' => ['type' => JsonRule::INTEGER_TYPE],
-                'gender' => ['type' => JsonRule::STRING_TYPE, 'optional' => true]
+                'age' => ['type' => JsonRule::INTEGER_TYPE]
             ]]
         ];
 

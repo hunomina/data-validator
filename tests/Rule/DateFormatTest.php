@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test;
+namespace hunomina\Validator\Json\Test\Rule;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
@@ -8,36 +8,34 @@ use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class PatternCheckTest extends TestCase
+class DateFormatTest extends TestCase
 {
     /**
      * @throws InvalidSchemaException
-     * `int` type can not be pattern checked
      */
-    public function testInvalidTypeForPattern(): void
+    public function testValidTypeCheckable(): void
     {
         $this->expectException(InvalidSchemaException::class);
-
         (new JsonSchema())->setSchema([
-            'age' => ['type' => JsonRule::INTEGER_TYPE, 'pattern' => '/^nop$/']
+            'timestamp' => ['type' => JsonRule::INTEGER_TYPE, 'date-format' => 'U']
         ]);
     }
 
     /**
      * @throws InvalidSchemaException
      */
-    public function testPatternOnString(): void
+    public function testYmd(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'name' => 'test'
+            'birthday' => '2000-01-01'
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'name' => 'test2'
+            'birthday' => 'January the first in 2000'
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'name' => ['type' => JsonRule::STRING_TYPE, 'pattern' => '/^[a-z]+$/']
+            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'Y-m-d']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -47,18 +45,40 @@ class PatternCheckTest extends TestCase
     /**
      * @throws InvalidSchemaException
      */
-    public function testPatternOnChar(): void
+    public function testTimestamp(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'blood_type' => 'o'
+            'birthday' => '1234567890'
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'blood_type' => 'c'
+            'birthday' => '2000-01-01'
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'pattern' => '/^[abo]$/']
+            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'U']
+        ]);
+
+        $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
+    }
+
+    /**
+     * @throws InvalidSchemaException
+     * @see https://www.w3.org/TR/NOTE-datetime
+     */
+    public function testAdvancedFormat(): void
+    {
+        $data = (new JsonData())->setDataFromArray([
+            'birthday' => 'Sat 01 January 2000'
+        ]);
+
+        $data2 = (new JsonData())->setDataFromArray([
+            'birthday' => '2000-01-01'
+        ]);
+
+        $schema = (new JsonSchema())->setSchema([
+            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -68,55 +88,18 @@ class PatternCheckTest extends TestCase
     /**
      * @throws InvalidSchemaException
      */
-    public function testPatternOnStringList(): void
+    public function testExistingDate(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'list' => [
-                'hello',
-                'love',
-                'test'
-            ]
+            'birthday' => 'Sat 01 January 2000' // valid day
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'list' => [
-                'won\'t',
-                'work',
-                'sorry'
-            ]
+            'birthday' => 'Mon 01 January 2000' // invalid day
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'pattern' => '/^[a-zA-Z]+$/']
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testPatternOnCharacterList(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'blood_types' => [
-                'a',
-                'b',
-                'o'
-            ]
-        ]);
-
-        $data2 = (new JsonData())->setDataFromArray([
-            'blood_types' => [
-                'a',
-                'b',
-                'c'
-            ]
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[abo]$/']
+            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
         ]);
 
         $this->assertTrue($schema->validate($data));

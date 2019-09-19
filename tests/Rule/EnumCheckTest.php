@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test;
+namespace hunomina\Validator\Json\Test\Rule;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
@@ -8,34 +8,23 @@ use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class DateFormatTest extends TestCase
+class EnumCheckTest extends TestCase
 {
     /**
      * @throws InvalidSchemaException
      */
-    public function testValidTypeCheckable(): void
-    {
-        $this->expectException(InvalidSchemaException::class);
-        (new JsonSchema())->setSchema([
-            'timestamp' => ['type' => JsonRule::INTEGER_TYPE, 'date-format' => 'U']
-        ]);
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     */
-    public function testYmd(): void
+    public function testEnumForString(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'birthday' => '2000-01-01'
+            'gender' => 'female'
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'birthday' => 'January the first in 2000'
+            'gender' => 'fish'
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'Y-m-d']
+            'gender' => ['type' => JsonRule::STRING_TYPE, 'enum' => ['male', 'female']]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -45,40 +34,18 @@ class DateFormatTest extends TestCase
     /**
      * @throws InvalidSchemaException
      */
-    public function testTimestamp(): void
+    public function testEnumForInteger(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'birthday' => '1234567890'
+            'feet' => 2
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'birthday' => '2000-01-01'
+            'feet' => 5
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'U']
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
-    }
-
-    /**
-     * @throws InvalidSchemaException
-     * @see https://www.w3.org/TR/NOTE-datetime
-     */
-    public function testAdvancedFormat(): void
-    {
-        $data = (new JsonData())->setDataFromArray([
-            'birthday' => 'Sat 01 January 2000'
-        ]);
-
-        $data2 = (new JsonData())->setDataFromArray([
-            'birthday' => '2000-01-01'
-        ]);
-
-        $schema = (new JsonSchema())->setSchema([
-            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
+            'feet' => ['type' => JsonRule::INTEGER_TYPE, 'enum' => [2, 3, 4]]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -88,18 +55,60 @@ class DateFormatTest extends TestCase
     /**
      * @throws InvalidSchemaException
      */
-    public function testExistingDate(): void
+    public function testEnumForFloat(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'birthday' => 'Sat 01 January 2000' // valid day
+            'feet' => 2.0
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'birthday' => 'Mon 01 January 2000' // invalid day
+            'feet' => 5.0
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
+            'feet' => ['type' => JsonRule::FLOAT_TYPE, 'enum' => [2.0, 3.0, 4.0]]
+        ]);
+
+        $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
+    }
+
+    /**
+     * @throws InvalidSchemaException
+     */
+    public function testEnumForCharacter(): void
+    {
+        $data = (new JsonData())->setDataFromArray([
+            'blood_type' => 'A'
+        ]);
+
+        $data2 = (new JsonData())->setDataFromArray([
+            'blood_type' => 'C'
+        ]);
+
+        $schema = (new JsonSchema())->setSchema([
+            'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'enum' => ['A', 'B', 'O']]
+        ]);
+
+        $this->assertTrue($schema->validate($data));
+        $this->assertFalse($schema->validate($data2));
+    }
+
+    /**
+     * @throws InvalidSchemaException
+     */
+    public function testEnumForTypedArray(): void
+    {
+        $data = (new JsonData())->setDataFromArray([
+            'blood_types' => ['A', 'B', 'O']
+        ]);
+
+        $data2 = (new JsonData())->setDataFromArray([
+            'blood_types' => ['A', 'B', 'C']
+        ]);
+
+        $schema = (new JsonSchema())->setSchema([
+            'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'enum' => ['A', 'B', 'O']]
         ]);
 
         $this->assertTrue($schema->validate($data));
