@@ -1,6 +1,7 @@
 # Json Data Validator
 
 [![Build Status](https://travis-ci.com/hunomina/json-data-validator.svg?branch=master)](https://travis-ci.com/hunomina/json-data-validator)
+[![codecov](https://codecov.io/gh/hunomina/json-data-validator/branch/master/graph/badge.svg)](https://codecov.io/gh/hunomina/json-data-validator)
 
 Description : Library for json schemas validation
 
