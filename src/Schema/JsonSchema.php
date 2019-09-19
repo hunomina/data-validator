@@ -117,7 +117,7 @@ class JsonSchema implements DataSchema
     public function validate(DataType $dataType): bool
     {
         if (!($dataType instanceof JsonData)) {
-            throw new InvalidDataTypeException('JsonSchema only check JsonData');
+            throw new InvalidDataTypeException('JsonSchema only check JsonData', InvalidDataTypeException::INVALID_DATA_TYPE_USED);
         }
 
         if ($dataType->getData() === null) {
