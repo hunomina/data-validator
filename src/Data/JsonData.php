@@ -76,6 +76,7 @@ class JsonData implements DataType, ArrayAccess
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
      * @since 5.0.0
+     * @codeCoverageIgnore
      */
     public function offsetExists($offset): bool
     {
@@ -90,6 +91,7 @@ class JsonData implements DataType, ArrayAccess
      * </p>
      * @return mixed Can return all value types.
      * @since 5.0.0
+     * @codeCoverageIgnore
      */
     public function offsetGet($offset)
     {
@@ -110,6 +112,7 @@ class JsonData implements DataType, ArrayAccess
      * </p>
      * @return void
      * @since 5.0.0
+     * @codeCoverageIgnore
      */
     public function offsetSet($offset, $value): void
     {
@@ -124,6 +127,7 @@ class JsonData implements DataType, ArrayAccess
      * </p>
      * @return void
      * @since 5.0.0
+     * @codeCoverageIgnore
      */
     public function offsetUnset($offset): void
     {
