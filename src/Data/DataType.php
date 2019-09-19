@@ -16,12 +16,6 @@ interface DataType
     public function setData($data): self;
 
     /**
-     * @param array $data
-     * @return DataType
-     */
-    public function setDataFromArray(array $data): self;
-
-    /**
      * @param $data
      * @return mixed
      * Process to transform data into an actual data type
