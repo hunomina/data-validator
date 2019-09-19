@@ -110,10 +110,13 @@ class GenerateJsonSchemaTest extends TestCase
      */
     public function testErrorRuleWithNoType(): void
     {
+        $this->expectException(InvalidSchemaException::class);
+        $this->expectExceptionCode(InvalidSchemaException::MISSING_TYPE);
+
         $s = [
             'success' => [],
         ];
-        $this->expectException(InvalidSchemaException::class);
+
         (new JsonSchema())->setSchema($s);
     }
 
@@ -122,11 +125,13 @@ class GenerateJsonSchemaTest extends TestCase
      */
     public function testErrorListWithNoSchema(): void
     {
+        $this->expectException(InvalidSchemaException::class);
+        $this->expectExceptionCode(InvalidSchemaException::MISSING_SCHEMA);
+
         $s = [
             'user' => ['type' => JsonRule::OBJECT_TYPE, 'null' => false, 'optional' => false]
         ];
 
-        $this->expectException(InvalidSchemaException::class);
         (new JsonSchema())->setSchema($s);
     }
 
@@ -135,11 +140,13 @@ class GenerateJsonSchemaTest extends TestCase
      */
     public function testErrorListWithInvalidSubSchema(): void
     {
+        $this->expectException(InvalidSchemaException::class);
+        $this->expectExceptionCode(InvalidSchemaException::INVALID_OBJECT_SCHEMA);
+
         $s = [
             'user' => ['type' => JsonRule::OBJECT_TYPE, 'null' => false, 'optional' => false, 'schema' => 'schema must be an array']
         ];
 
-        $this->expectException(InvalidSchemaException::class);
         (new JsonSchema())->setSchema($s);
     }
 }

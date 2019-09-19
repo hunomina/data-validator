@@ -11,12 +11,14 @@ class InstantiationThrowOnInvalidRuleSetTest extends TestCase
 {
     /**
      * @param array $schema
+     * @param int $exceptionCode
      * @throws InvalidSchemaException
      * @dataProvider getInvalidRuleSets
      */
-    public function testThrowOnInvalidRuleSet(array $schema): void
+    public function testThrowOnInvalidRuleSet(array $schema, int $exceptionCode): void
     {
         $this->expectException(InvalidSchemaException::class);
+        $this->expectExceptionCode($exceptionCode);
 
         (new JsonSchema())->setSchema($schema);
     }
@@ -26,7 +28,7 @@ class InstantiationThrowOnInvalidRuleSetTest extends TestCase
      */
     public function getInvalidLengthRule(): array
     {
-        return ['age' => ['type' => JsonRule::INTEGER_TYPE, 'length' => 2]];
+        return [['age' => ['type' => JsonRule::INTEGER_TYPE, 'length' => 2]], InvalidSchemaException::INVALID_LENGTH_RULE];
     }
 
     /**
@@ -34,7 +36,7 @@ class InstantiationThrowOnInvalidRuleSetTest extends TestCase
      */
     public function getInvalidPatternRule(): array
     {
-        return ['age' => ['type' => JsonRule::INTEGER_TYPE, 'pattern' => '/[0-9]+/']];
+        return [['age' => ['type' => JsonRule::INTEGER_TYPE, 'pattern' => '/[0-9]+/']], InvalidSchemaException::INVALID_PATTERN_RULE];
     }
 
     /**
@@ -42,7 +44,7 @@ class InstantiationThrowOnInvalidRuleSetTest extends TestCase
      */
     public function getInvalidMinRule(): array
     {
-        return ['name' => ['type' => JsonRule::STRING_TYPE, 'min' => 'c']];
+        return [['name' => ['type' => JsonRule::STRING_TYPE, 'min' => 'c']], InvalidSchemaException::INVALID_MIN_RULE];
     }
 
     /**
@@ -50,7 +52,7 @@ class InstantiationThrowOnInvalidRuleSetTest extends TestCase
      */
     public function getInvalidMaxRule(): array
     {
-        return ['name' => ['type' => JsonRule::STRING_TYPE, 'max' => 'w']];
+        return [['name' => ['type' => JsonRule::STRING_TYPE, 'max' => 'w']], InvalidSchemaException::INVALID_MAX_RULE];
     }
 
     /**
@@ -58,7 +60,7 @@ class InstantiationThrowOnInvalidRuleSetTest extends TestCase
      */
     public function getInvalidEnumRule(): array
     {
-        return ['success' => ['type' => JsonRule::BOOLEAN_TYPE, 'enum' => [true, false]]];
+        return [['success' => ['type' => JsonRule::BOOLEAN_TYPE, 'enum' => [true, false]]], InvalidSchemaException::INVALID_ENUM_RULE];
     }
 
     /**
@@ -66,7 +68,7 @@ class InstantiationThrowOnInvalidRuleSetTest extends TestCase
      */
     public function getInvalidDateFormatRule(): array
     {
-        return ['data' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'Ymd']];
+        return [['date' => ['type' => JsonRule::INTEGER_TYPE, 'date-format' => 'Ymd']], InvalidSchemaException::INVALID_DATE_FORMAT_RULE];
     }
 
     /**
