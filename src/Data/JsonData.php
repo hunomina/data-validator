@@ -34,7 +34,7 @@ class JsonData implements DataType, ArrayAccess
         } else if (is_array($data)) {
             $this->data = $data;
         } else {
-            throw new InvalidDataException('Invalid data to set');
+            throw new InvalidDataException('Invalid data type', InvalidDataException::INVALID_DATA_TYPE);
         }
 
         return $this;
@@ -58,13 +58,13 @@ class JsonData implements DataType, ArrayAccess
     public function format($data): array
     {
         if (!is_string($data)) {
-            throw new InvalidDataException('Can only parse string to json data');
+            throw new InvalidDataException('Can only parse string to json data', InvalidDataException::INVALID_DATA_TYPE);
         }
 
         $jsonData = json_decode($data, true);
 
         if (!is_array($jsonData)) {
-            throw new InvalidDataException('Invalid string to parse to json data');
+            throw new InvalidDataException('Invalid string to parse to json data', InvalidDataException::INVALID_JSON_DATA);
         }
 
         return $jsonData;
