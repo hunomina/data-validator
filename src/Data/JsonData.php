@@ -14,6 +14,7 @@ class JsonData implements DataType, ArrayAccess
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getData(): ?array
     {
@@ -43,6 +44,7 @@ class JsonData implements DataType, ArrayAccess
     /**
      * @param array $data
      * @return JsonData
+     * @codeCoverageIgnore
      */
     public function setDataFromArray(array $data): JsonData
     {
