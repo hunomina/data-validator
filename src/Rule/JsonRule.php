@@ -35,63 +35,63 @@ class JsonRule implements Rule
      * @var string $type
      * Type of the data in the associated schema
      */
-    protected $type;
+    protected string $type;
 
     /**
      * @var bool $nullable
      * Can the value be null in the associated schema
      */
-    protected $nullable = false;
+    protected bool $nullable = false;
 
     /**
      * @var bool $isOptionnal
      * Is the value optional in the associated schema
      */
-    protected $optional = false;
+    protected bool $optional = false;
 
     /**
      * @var null|int $length
      * `null` if length does have to be checked
      */
-    protected $length;
+    protected ?int $length = null;
 
     /**
      * @var null|int $min
      * Number : minimum value
      * List : minimum size
      */
-    protected $min;
+    protected ?int $min = null;
 
     /**
      * @var null|int $max
      * Number : maximum value
      * List : maximum site
      */
-    protected $max;
+    protected ?int $max = null;
 
     /**
      * @var null|string
      * `null` if pattern does not have to be checked
      */
-    protected $pattern;
+    protected ?string $pattern = null;
 
     /**
      * @var null|array $enum
      * `null` if no in_array($value, $enum) check needed
      */
-    protected $enum;
+    protected ?array $enum = null;
 
     /**
-     * @var null|string $error
+     * @var string|null $error
      * Error message when the data does not match the rule
      */
-    protected $error;
+    protected ?string $error = null;
 
     /**
      * @var null|string $dateFormat
      * Date format of the data
      */
-    protected $dateFormat;
+    protected ?string $dateFormat = null;
 
     /**
      * @return string

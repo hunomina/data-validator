@@ -12,25 +12,26 @@ use hunomina\Validator\Json\Rule\JsonRule;
 class JsonSchema implements DataSchema
 {
     /** @var string $lastError */
-    private $lastError;
+    private string $lastError;
 
     /** @var string $type */
-    private $type = 'object';
+    private string $type = 'object';
 
     /** @var JsonRule[] $rule */
-    private $rules = [];
+    private array $rules = [];
 
     /** @var JsonSchema[] $children */
-    private $children = [];
+    private array $children = [];
 
     /** @var bool $optional */
-    private $optional = false;
+    private bool $optional = false;
 
     /** @var bool $nullable */
-    private $nullable = false;
+    private bool $nullable = false;
 
     /**
      * @return JsonRule[]
+     * @codeCoverageIgnore
      */
     public function getRules(): array
     {

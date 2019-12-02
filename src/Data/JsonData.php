@@ -4,13 +4,14 @@ namespace hunomina\Validator\Json\Data;
 
 use ArrayAccess;
 use hunomina\Validator\Json\Exception\InvalidDataException;
+use JsonException;
 
 class JsonData implements DataType, ArrayAccess
 {
     /**
      * @var array $data
      */
-    private $data;
+    private ?array $data = null;
 
     /**
      * @return array
