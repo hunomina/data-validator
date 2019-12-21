@@ -4,16 +4,18 @@ namespace hunomina\Validator\Json\Data;
 
 use ArrayAccess;
 use hunomina\Validator\Json\Exception\InvalidDataException;
+use JsonException;
 
 class JsonData implements DataType, ArrayAccess
 {
     /**
      * @var array $data
      */
-    private $data;
+    private ?array $data = null;
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getData(): ?array
     {
@@ -43,6 +45,7 @@ class JsonData implements DataType, ArrayAccess
     /**
      * @param array $data
      * @return JsonData
+     * @codeCoverageIgnore
      */
     public function setDataFromArray(array $data): JsonData
     {
@@ -61,7 +64,11 @@ class JsonData implements DataType, ArrayAccess
             throw new InvalidDataException('Can only parse string to json data', InvalidDataException::INVALID_DATA_TYPE);
         }
 
-        $jsonData = json_decode($data, true);
+        try {
+            $jsonData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw new InvalidDataException('Invalid string to parse to json data : ' . $e->getMessage(), InvalidDataException::INVALID_JSON_DATA);
+        }
 
         if (!is_array($jsonData)) {
             throw new InvalidDataException('Invalid string to parse to json data', InvalidDataException::INVALID_JSON_DATA);

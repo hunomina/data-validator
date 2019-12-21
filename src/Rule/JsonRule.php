@@ -35,66 +35,67 @@ class JsonRule implements Rule
      * @var string $type
      * Type of the data in the associated schema
      */
-    protected $type;
+    protected string $type;
 
     /**
      * @var bool $nullable
      * Can the value be null in the associated schema
      */
-    protected $nullable = false;
+    protected bool $nullable = false;
 
     /**
      * @var bool $isOptionnal
      * Is the value optional in the associated schema
      */
-    protected $optional = false;
+    protected bool $optional = false;
 
     /**
      * @var null|int $length
      * `null` if length does have to be checked
      */
-    protected $length;
+    protected ?int $length = null;
 
     /**
      * @var null|int $min
      * Number : minimum value
      * List : minimum size
      */
-    protected $min;
+    protected ?int $min = null;
 
     /**
      * @var null|int $max
      * Number : maximum value
      * List : maximum site
      */
-    protected $max;
+    protected ?int $max = null;
 
     /**
      * @var null|string
      * `null` if pattern does not have to be checked
      */
-    protected $pattern;
+    protected ?string $pattern = null;
 
     /**
      * @var null|array $enum
      * `null` if no in_array($value, $enum) check needed
      */
-    protected $enum;
+    protected ?array $enum = null;
 
     /**
-     * @var null|string $error
+     * @var string|null $error
      * Error message when the data does not match the rule
      */
-    protected $error;
+    protected ?string $error = null;
 
     /**
      * @var null|string $dateFormat
      * Date format of the data
      */
-    protected $dateFormat;
+    protected ?string $dateFormat = null;
 
     /**
      * @return string
+     * @codeCoverageIgnore
      */
     public function getType(): string
     {
@@ -104,6 +105,7 @@ class JsonRule implements Rule
     /**
      * @param string $type
      * @return Rule
+     * @codeCoverageIgnore
      */
     public function setType(string $type): Rule
     {
@@ -113,6 +115,7 @@ class JsonRule implements Rule
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      */
     public function canBeNull(): bool
     {
@@ -122,6 +125,7 @@ class JsonRule implements Rule
     /**
      * @param bool $null
      * @return Rule
+     * @codeCoverageIgnore
      */
     public function setNullable(bool $null): Rule
     {
@@ -131,6 +135,7 @@ class JsonRule implements Rule
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      */
     public function isOptional(): bool
     {
@@ -140,6 +145,7 @@ class JsonRule implements Rule
     /**
      * @param bool $isOptional
      * @return Rule
+     * @codeCoverageIgnore
      */
     public function setOptional(bool $isOptional): Rule
     {
@@ -150,6 +156,7 @@ class JsonRule implements Rule
     /**
      * @return null|int
      * `null` if if length does have to be checked
+     * @codeCoverageIgnore
      */
     public function getLength(): ?int
     {
@@ -160,6 +167,7 @@ class JsonRule implements Rule
      * @param int $length
      * @return Rule
      * `null` if if length does have to be checked
+     * @codeCoverageIgnore
      */
     public function setLength(?int $length): Rule
     {
@@ -169,6 +177,7 @@ class JsonRule implements Rule
 
     /**
      * @return string|null
+     * @codeCoverageIgnore
      */
     public function getPattern(): ?string
     {
@@ -178,6 +187,7 @@ class JsonRule implements Rule
     /**
      * @param string|null $pattern
      * @return JsonRule
+     * @codeCoverageIgnore
      */
     public function setPattern(?string $pattern): Rule
     {
@@ -187,6 +197,7 @@ class JsonRule implements Rule
 
     /**
      * @return int|null
+     * @codeCoverageIgnore
      */
     public function getMin(): ?int
     {
@@ -196,6 +207,7 @@ class JsonRule implements Rule
     /**
      * @param int|null $min
      * @return JsonRule
+     * @codeCoverageIgnore
      */
     public function setMin(?int $min): Rule
     {
@@ -205,6 +217,7 @@ class JsonRule implements Rule
 
     /**
      * @return int|null
+     * @codeCoverageIgnore
      */
     public function getMax(): ?int
     {
@@ -214,6 +227,7 @@ class JsonRule implements Rule
     /**
      * @param int|null $max
      * @return JsonRule
+     * @codeCoverageIgnore
      */
     public function setMax(?int $max): Rule
     {
@@ -223,6 +237,7 @@ class JsonRule implements Rule
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getEnum(): ?array
     {
@@ -232,6 +247,7 @@ class JsonRule implements Rule
     /**
      * @param array|null $enum
      * @return Rule
+     * @codeCoverageIgnore
      */
     public function setEnum(?array $enum): Rule
     {
@@ -241,6 +257,7 @@ class JsonRule implements Rule
 
     /**
      * @return string|null
+     * @codeCoverageIgnore
      */
     public function getError(): ?string
     {
@@ -250,6 +267,7 @@ class JsonRule implements Rule
     /**
      * @param string|null $error
      * @return JsonRule
+     * @codeCoverageIgnore
      */
     public function setError(?string $error): Rule
     {
@@ -261,6 +279,7 @@ class JsonRule implements Rule
      * @return string|null
      * `null` if does not have to be checked
      * Date format to test the data with
+     * @codeCoverageIgnore
      */
     public function getDateFormat(): ?string
     {
@@ -270,6 +289,7 @@ class JsonRule implements Rule
     /**
      * @param string|null $dateFormat
      * @return Rule
+     * @codeCoverageIgnore
      */
     public function setDateFormat(?string $dateFormat): Rule
     {

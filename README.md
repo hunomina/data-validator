@@ -3,9 +3,11 @@
 [![Build Status](https://travis-ci.com/hunomina/json-data-validator.svg?branch=master)](https://travis-ci.com/hunomina/json-data-validator)
 [![codecov](https://codecov.io/gh/hunomina/json-data-validator/branch/master/graph/badge.svg)](https://codecov.io/gh/hunomina/json-data-validator)
 
-Description : Library for json schemas validation
+__Description :__ Library for json schemas validation
 
 This library is mainly composed of 3 interfaces and 3 classes implementing them.
+
+This project is licensed under the terms of the MIT license.
 
 ## Interfaces and classes
 

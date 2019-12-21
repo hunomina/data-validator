@@ -12,25 +12,26 @@ use hunomina\Validator\Json\Rule\JsonRule;
 class JsonSchema implements DataSchema
 {
     /** @var string $lastError */
-    private $lastError;
+    private string $lastError;
 
     /** @var string $type */
-    private $type = 'object';
+    private string $type = 'object';
 
     /** @var JsonRule[] $rule */
-    private $rules = [];
+    private array $rules = [];
 
     /** @var JsonSchema[] $children */
-    private $children = [];
+    private array $children = [];
 
     /** @var bool $optional */
-    private $optional = false;
+    private bool $optional = false;
 
     /** @var bool $nullable */
-    private $nullable = false;
+    private bool $nullable = false;
 
     /**
      * @return JsonRule[]
+     * @codeCoverageIgnore
      */
     public function getRules(): array
     {
@@ -39,6 +40,7 @@ class JsonSchema implements DataSchema
 
     /**
      * @return JsonSchema[]
+     * @codeCoverageIgnore
      */
     public function getChildren(): array
     {
@@ -47,6 +49,7 @@ class JsonSchema implements DataSchema
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      */
     public function isOptional(): bool
     {
@@ -56,6 +59,7 @@ class JsonSchema implements DataSchema
     /**
      * @param bool $optional
      * @return JsonSchema
+     * @codeCoverageIgnore
      */
     public function setOptional(bool $optional): JsonSchema
     {
@@ -65,6 +69,7 @@ class JsonSchema implements DataSchema
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      */
     public function isNullable(): bool
     {
@@ -74,6 +79,7 @@ class JsonSchema implements DataSchema
     /**
      * @param bool $canBeNull
      * @return JsonSchema
+     * @codeCoverageIgnore
      */
     public function setNullable(bool $canBeNull): JsonSchema
     {
@@ -83,6 +89,7 @@ class JsonSchema implements DataSchema
 
     /**
      * @return string
+     * @codeCoverageIgnore
      */
     public function getType(): string
     {
@@ -92,6 +99,7 @@ class JsonSchema implements DataSchema
     /**
      * @param string $type
      * @return JsonSchema
+     * @codeCoverageIgnore
      */
     public function setType(string $type): JsonSchema
     {
@@ -103,6 +111,7 @@ class JsonSchema implements DataSchema
      * @return string
      * When validate fail, an error must be set, not returned or thrown
      * User can access it using this method
+     * @codeCoverageIgnore
      */
     public function getLastError(): ?string
     {
