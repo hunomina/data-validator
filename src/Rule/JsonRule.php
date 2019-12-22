@@ -94,6 +94,12 @@ class JsonRule implements Rule
     protected ?string $dateFormat = null;
 
     /**
+     * @var bool $empty
+     * Is the data allowed to be empty
+     */
+    protected bool $empty = true;
+
+    /**
      * @return string
      * @codeCoverageIgnore
      */
@@ -298,6 +304,24 @@ class JsonRule implements Rule
     }
 
     /**
+     * @return bool
+     */
+    public function canBeEmpty(): bool
+    {
+        return $this->empty;
+    }
+
+    /**
+     * @param bool $empty
+     * @return JsonRule
+     */
+    public function setEmpty(bool $empty): JsonRule
+    {
+        $this->empty = $empty;
+        return $this;
+    }
+
+    /**
      * @param string $type
      * @return bool
      * Does a specific type can be length checked
@@ -349,7 +373,15 @@ class JsonRule implements Rule
      */
     public static function isTypeWithDateFormatCheck(string $type): bool
     {
+        // todo : add date format check for string typed list
         return $type === self::STRING_TYPE;
+    }
+
+    public static function isTypeWithEmptyCheck(string $type): bool
+    {
+        return $type === self::STRING_TYPE
+            || $type === self::CHAR_TYPE
+            || in_array($type, self::TYPED_ARRAY_TYPES, true);
     }
 
     /**
@@ -413,8 +445,13 @@ class JsonRule implements Rule
             return false;
         }
 
+        if ($this->empty === false && $data === '') {
+            $this->error = 'Invalid string : Can not be empty';
+            return false;
+        }
+
         if ($this->length !== null && strlen($data) !== $this->length) {
-            $this->error = 'Invalid length: Must be ' . $this->length . '. Is ' . strlen($data);
+            $this->error = 'Invalid string length: Must be ' . $this->length . '. Is ' . strlen($data);
             return false;
         }
 
@@ -504,7 +541,7 @@ class JsonRule implements Rule
     protected function isValidNumber($data): bool
     {
         if (!is_numeric($data) || is_string($data)) {
-            $this->error = 'Must be a non string numeric number';
+            $this->error = 'Must be a non string number';
             return false;
         }
 
@@ -537,24 +574,31 @@ class JsonRule implements Rule
             return false;
         }
 
-        if (!$this->checkTypedListValues($data, $this->enum)) {
-            // $this->error is modified by $this->checkTypedListValues() in order to get the error message for the invalid element
-            $this->error = 'Invalid elements for a ' . $this->type . '. ' . $this->error;
+        $length = count($data);
+
+        if ($this->empty === false && $length === 0) {
+            $this->error = 'Invalid list : Can not be empty';
             return false;
         }
 
-        if ($this->length !== null && count($data) !== $this->length) {
-            $this->error = 'Invalid length: Must be ' . $this->length . '. Is ' . count($data);
+        if ($this->length !== null && $length !== $this->length) {
+            $this->error = 'Invalid list length: Must be ' . $this->length . '. Is ' . $length;
             return false;
         }
 
-        if ($this->min !== null && count($data) < $this->min) {
+        if ($this->min !== null && $length < $this->min) {
             $this->error = 'Must contain at least ' . $this->min . ' elements';
             return false;
         }
 
-        if ($this->max !== null && count($data) > $this->max) {
+        if ($this->max !== null && $length > $this->max) {
             $this->error = 'Must contain at most ' . $this->max . ' elements';
+            return false;
+        }
+
+        if (!$this->checkTypedListValues($data, $this->enum)) {
+            // $this->error is modified by $this->checkTypedListValues() in order to get the error message for the invalid element
+            $this->error = 'Invalid elements for a ' . $this->type . '. ' . $this->error;
             return false;
         }
 
@@ -627,7 +671,6 @@ class JsonRule implements Rule
      * @param $data
      * @param array|null $enum
      * @return bool
-     * $data is not typed in order to prevent exceptions
      */
     protected function checkTypedListValues($data, ?array $enum): bool
     {
