@@ -137,7 +137,7 @@ class JsonSchema implements DataSchema
             return true;
         }
 
-        // $dataType->getData() is an array
+        // Here $dataType->getData() is an array
         if ($this->type === 'object') {
             return $this->validateObject($dataType);
         }
@@ -295,12 +295,17 @@ class JsonSchema implements DataSchema
                 throw new InvalidSchemaException('`' . $type . '` type can not be date format checked', InvalidSchemaException::INVALID_DATE_FORMAT_RULE);
             }
 
+            if (isset($rule['empty']) && !JsonRule::isTypeWithEmptyCheck($type)) {
+                throw new InvalidSchemaException('`' . $type . '` type can not be empty checked', InvalidSchemaException::INVALID_EMPTY_RULE);
+            }
+
             $length = $rule['length'] ?? null;
             $pattern = $rule['pattern'] ?? null;
             $min = $rule['min'] ?? null;
             $max = $rule['max'] ?? null;
             $dateFormat = $rule['date-format'] ?? null;
             $enum = (isset($rule['enum']) && is_array($rule['enum'])) ? $rule['enum'] : null;
+            $canBeEmpty = $rule['empty'] ?? true;
 
             if ($type === JsonRule::LIST_TYPE || $type === JsonRule::OBJECT_TYPE) {
                 if (!isset($rule['schema'])) {
@@ -325,7 +330,8 @@ class JsonSchema implements DataSchema
                     ->setMin($min)
                     ->setMax($max)
                     ->setEnum($enum)
-                    ->setDateFormat($dateFormat);
+                    ->setDateFormat($dateFormat)
+                    ->setEmpty($canBeEmpty);
             }
         }
 
