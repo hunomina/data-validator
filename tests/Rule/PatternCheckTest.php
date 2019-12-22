@@ -3,6 +3,8 @@
 namespace hunomina\Validator\Json\Test\Rule;
 
 use hunomina\Validator\Json\Data\JsonData;
+use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Exception\InvalidDataTypeException;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
@@ -12,18 +14,20 @@ class PatternCheckTest extends TestCase
 {
     /**
      * @throws InvalidSchemaException
+     * @throws InvalidDataException
+     * @throws InvalidDataTypeException
      */
     public function testPatternOnString(): void
     {
-        $data = (new JsonData())->setDataFromArray([
+        $data = new JsonData([
             'name' => 'test'
         ]);
 
-        $data2 = (new JsonData())->setDataFromArray([
+        $data2 = new JsonData([
             'name' => 'test2'
         ]);
 
-        $schema = (new JsonSchema())->setSchema([
+        $schema = new JsonSchema([
             'name' => ['type' => JsonRule::STRING_TYPE, 'pattern' => '/^[a-z]+$/']
         ]);
 
@@ -33,18 +37,20 @@ class PatternCheckTest extends TestCase
 
     /**
      * @throws InvalidSchemaException
+     * @throws InvalidDataException
+     * @throws InvalidDataTypeException
      */
     public function testPatternOnChar(): void
     {
-        $data = (new JsonData())->setDataFromArray([
+        $data = new JsonData([
             'blood_type' => 'o'
         ]);
 
-        $data2 = (new JsonData())->setDataFromArray([
+        $data2 = new JsonData([
             'blood_type' => 'c'
         ]);
 
-        $schema = (new JsonSchema())->setSchema([
+        $schema = new JsonSchema([
             'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'pattern' => '/^[abo]$/']
         ]);
 
@@ -54,10 +60,12 @@ class PatternCheckTest extends TestCase
 
     /**
      * @throws InvalidSchemaException
+     * @throws InvalidDataException
+     * @throws InvalidDataTypeException
      */
     public function testPatternOnStringList(): void
     {
-        $data = (new JsonData())->setDataFromArray([
+        $data = new JsonData([
             'list' => [
                 'hello',
                 'love',
@@ -65,7 +73,7 @@ class PatternCheckTest extends TestCase
             ]
         ]);
 
-        $data2 = (new JsonData())->setDataFromArray([
+        $data2 = new JsonData([
             'list' => [
                 'won\'t',
                 'work',
@@ -73,7 +81,7 @@ class PatternCheckTest extends TestCase
             ]
         ]);
 
-        $schema = (new JsonSchema())->setSchema([
+        $schema = new JsonSchema([
             'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'pattern' => '/^[a-zA-Z]+$/']
         ]);
 
@@ -83,10 +91,12 @@ class PatternCheckTest extends TestCase
 
     /**
      * @throws InvalidSchemaException
+     * @throws InvalidDataException
+     * @throws InvalidDataTypeException
      */
     public function testPatternOnCharacterList(): void
     {
-        $data = (new JsonData())->setDataFromArray([
+        $data = new JsonData([
             'blood_types' => [
                 'a',
                 'b',
@@ -94,7 +104,7 @@ class PatternCheckTest extends TestCase
             ]
         ]);
 
-        $data2 = (new JsonData())->setDataFromArray([
+        $data2 = new JsonData([
             'blood_types' => [
                 'a',
                 'b',
@@ -102,7 +112,7 @@ class PatternCheckTest extends TestCase
             ]
         ]);
 
-        $schema = (new JsonSchema())->setSchema([
+        $schema = new JsonSchema([
             'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[abo]$/']
         ]);
 

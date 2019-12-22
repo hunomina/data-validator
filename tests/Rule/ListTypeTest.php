@@ -3,6 +3,7 @@
 namespace hunomina\Validator\Json\Test\Rule;
 
 use hunomina\Validator\Json\Data\JsonData;
+use hunomina\Validator\Json\Exception\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\JsonRule;
@@ -14,11 +15,12 @@ class ListTypeTest extends TestCase
     /**
      * @throws InvalidDataTypeException
      * @throws InvalidSchemaException
+     * @throws InvalidDataException
+     * @throws InvalidDataException
      */
     public function testValidData(): void
     {
-        $data = new JsonData();
-        $data->setDataFromArray([
+        $data = new JsonData([
             'users' => [
                 ['id' => 0, 'name' => 'test0'],
                 ['id' => 1, 'name' => 'test1']
@@ -31,11 +33,12 @@ class ListTypeTest extends TestCase
     /**
      * @throws InvalidDataTypeException
      * @throws InvalidSchemaException
+     * @throws InvalidDataException
+     * @throws InvalidDataException
      */
     public function testExceptionThrownOnObjectPassedAsAList(): void
     {
-        $data = new JsonData();
-        $data->setDataFromArray([
+        $data = new JsonData([
             'users' => [
                 'id' => 0, 'name' => 'test0'
             ]
@@ -50,14 +53,11 @@ class ListTypeTest extends TestCase
      */
     private function getSchema(): JsonSchema
     {
-        $schema = new JsonSchema();
-        $schema->setSchema([
+        return new JsonSchema([
             'users' => ['type' => JsonRule::LIST_TYPE, 'schema' => [
                 'id' => ['type' => JsonRule::INTEGER_TYPE],
                 'name' => ['type' => JsonRule::STRING_TYPE]
             ]]
         ]);
-
-        return $schema;
     }
 }

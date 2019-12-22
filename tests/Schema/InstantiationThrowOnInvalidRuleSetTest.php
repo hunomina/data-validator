@@ -20,7 +20,7 @@ class InstantiationThrowOnInvalidRuleSetTest extends TestCase
         $this->expectException(InvalidSchemaException::class);
         $this->expectExceptionCode($exceptionCode);
 
-        (new JsonSchema())->setSchema($schema);
+        new JsonSchema($schema);
     }
 
     /**
