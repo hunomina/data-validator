@@ -30,6 +30,19 @@ class JsonSchema implements DataSchema
     private bool $nullable = false;
 
     /**
+     * Reset properties to avoid keeping previous rules or children
+     */
+    private function reset(): void
+    {
+        $this->lastError = null;
+        $this->type = 'object';
+        $this->rules = [];
+        $this->children = [];
+        $this->optional = false;
+        $this->nullable = false;
+    }
+
+    /**
      * @return JsonRule[]
      * @codeCoverageIgnore
      */
@@ -122,6 +135,7 @@ class JsonSchema implements DataSchema
      * @param DataType $dataType
      * @return bool
      * @throws InvalidDataTypeException
+     * @throws InvalidDataException
      */
     public function validate(DataType $dataType): bool
     {
@@ -262,6 +276,8 @@ class JsonSchema implements DataSchema
      */
     public function setSchema(array $schema): DataSchema
     {
+        $this->reset();
+
         foreach ($schema as $property => $rule) {
             if (!isset($rule['type'])) {
                 throw new InvalidSchemaException('Each property of the schema must have a type', InvalidSchemaException::MISSING_TYPE);
