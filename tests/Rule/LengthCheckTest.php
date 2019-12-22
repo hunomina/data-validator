@@ -263,15 +263,15 @@ class LengthCheckTest extends TestCase
     public function testMinSizeTypedList(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'list' => [1, 2]
+            'list' => [1, 2, 3]
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'list' => []
+            'list' => [1]
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'min' => 1]
+            'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'min' => 2]
         ]);
 
         $this->assertTrue($schema->validate($data));
@@ -284,15 +284,15 @@ class LengthCheckTest extends TestCase
     public function testMaxSizeTypedList(): void
     {
         $data = (new JsonData())->setDataFromArray([
-            'list' => [1, 2]
+            'list' => [1, 2, 3]
         ]);
 
         $data2 = (new JsonData())->setDataFromArray([
-            'list' => []
+            'list' => [1]
         ]);
 
         $schema = (new JsonSchema())->setSchema([
-            'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'max' => 1]
+            'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'max' => 2]
         ]);
 
         $this->assertFalse($schema->validate($data));
