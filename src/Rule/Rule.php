@@ -137,4 +137,16 @@ interface Rule
      * @return Rule
      */
     public function setDateFormat(?string $dateFormat): Rule;
+
+    /**
+     * @return bool
+     */
+    public function canBeEmpty(): bool;
+
+    /**
+     * @param bool $empty
+     * @return JsonRule
+     * Can the data be empty (string, list)
+     */
+    public function setEmpty(bool $empty): self;
 }
