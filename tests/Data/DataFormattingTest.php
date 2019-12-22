@@ -19,18 +19,6 @@ class DataFormattingTest extends TestCase
         $data = new JsonData();
         $data->setData(1234567890);
     }
-    
-    /**
-     * @throws InvalidDataException
-     */
-    public function testThrowOnInvalidFormatParameter(): void
-    {
-        $this->expectException(InvalidDataException::class);
-        $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
-
-        $data = new JsonData();
-        $data->format(1234567890);
-    }
 
     /**
      * @throws InvalidDataException
