@@ -12,7 +12,7 @@ use hunomina\Validator\Json\Rule\JsonRule;
 class JsonSchema implements DataSchema
 {
     /** @var string $lastError */
-    private string $lastError;
+    private ?string $lastError = null;
 
     /** @var string $type */
     private string $type = 'object';
