@@ -16,4 +16,5 @@ class InvalidSchemaException extends Exception
     public const INVALID_MAX_RULE = 14;
     public const INVALID_ENUM_RULE = 15;
     public const INVALID_DATE_FORMAT_RULE = 16;
+    public const INVALID_EMPTY_RULE = 17;
 }
