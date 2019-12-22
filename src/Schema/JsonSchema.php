@@ -188,8 +188,7 @@ class JsonSchema implements DataSchema
                 return false;
             }
 
-            $jsonData = new JsonData();
-            $jsonData->setDataFromArray($element);
+            $jsonData = new JsonData($element);
 
             if (!$this->validateObject($jsonData)) {
                 return false;
@@ -247,7 +246,7 @@ class JsonSchema implements DataSchema
                     }
 
                     try {
-                        $childJsonData = (new JsonData())->setData($value);
+                        $childJsonData = new JsonData($value);
                     } catch (InvalidDataException $e) {
                         $this->lastError = $e->getMessage();
                         return false;
