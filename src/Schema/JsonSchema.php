@@ -161,7 +161,7 @@ class JsonSchema implements DataSchema
             return true;
         }
 
-        // Here $dataType->getData() is an array
+        // From here $dataType->getData() is an array
         if ($this->type === 'object') {
             return $this->validateObject($dataType);
         }
@@ -174,12 +174,13 @@ class JsonSchema implements DataSchema
     }
 
     /**
-     * @param DataType $dataType
+     * @param JsonData $dataType
      * @return bool
+     * @throws InvalidDataException
      * @throws InvalidDataTypeException
      * Each element must validate the schema
      */
-    private function validateList(DataType $dataType): bool
+    private function validateList(JsonData $dataType): bool
     {
         $data = $dataType->getData();
 
@@ -211,6 +212,7 @@ class JsonSchema implements DataSchema
      * @param JsonData $dataType
      * @return bool
      * @throws InvalidDataTypeException
+     * @throws InvalidDataException
      */
     private function validateObject(JsonData $dataType): bool
     {
@@ -280,10 +282,10 @@ class JsonSchema implements DataSchema
 
     /**
      * @param array $schema
-     * @return DataSchema
+     * @return JsonSchema
      * @throws InvalidSchemaException
      */
-    public function setSchema(array $schema): DataSchema
+    public function setSchema(array $schema): JsonSchema
     {
         $this->reset();
 
@@ -329,7 +331,7 @@ class JsonSchema implements DataSchema
             $min = $rule['min'] ?? null;
             $max = $rule['max'] ?? null;
             $dateFormat = $rule['date-format'] ?? null;
-            $enum = (isset($rule['enum']) && is_array($rule['enum'])) ? $rule['enum'] : null;
+            $enum = isset($rule['enum']) && is_array($rule['enum']) ? $rule['enum'] : null;
             $canBeEmpty = $rule['empty'] ?? true;
 
             if ($type === JsonRule::LIST_TYPE || $type === JsonRule::OBJECT_TYPE) {
