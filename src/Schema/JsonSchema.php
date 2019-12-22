@@ -30,6 +30,16 @@ class JsonSchema implements DataSchema
     private bool $nullable = false;
 
     /**
+     * JsonSchema constructor.
+     * @param array $schema
+     * @throws InvalidSchemaException
+     */
+    public function __construct(array $schema = [])
+    {
+        $this->setSchema($schema);
+    }
+
+    /**
      * Reset properties to avoid keeping previous rules or children
      */
     private function reset(): void
@@ -332,8 +342,8 @@ class JsonSchema implements DataSchema
                     throw new InvalidSchemaException('`schema` must be a valid schema', InvalidSchemaException::INVALID_OBJECT_SCHEMA);
                 }
 
-                $childSchema = new self();
-                $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull)->setSchema($s);
+                $childSchema = new self($s);
+                $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull);
                 $this->children[$property] = $childSchema;
             } else {
                 $this->rules[$property] = (new JsonRule())
