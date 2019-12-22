@@ -16,8 +16,7 @@ class DataFormattingTest extends TestCase
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
 
-        $data = new JsonData();
-        $data->setData(1234567890);
+        new JsonData(1234567890);
     }
 
     /**
@@ -28,7 +27,6 @@ class DataFormattingTest extends TestCase
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionCode(InvalidDataException::INVALID_JSON_DATA);
 
-        $data = new JsonData();
-        $data->format('invalid json string');
+        new JsonData('invalid json string');
     }
 }

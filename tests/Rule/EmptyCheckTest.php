@@ -3,6 +3,8 @@
 namespace hunomina\Validator\Json\Test\Rule;
 
 use hunomina\Validator\Json\Data\JsonData;
+use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Exception\InvalidDataTypeException;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
@@ -18,7 +20,7 @@ class EmptyCheckTest extends TestCase
         $this->expectException(InvalidSchemaException::class);
         $this->expectExceptionCode(InvalidSchemaException::INVALID_EMPTY_RULE);
 
-        (new JsonSchema())->setSchema([
+        new JsonSchema([
             'success' => ['type' => JsonRule::BOOLEAN_TYPE],
             'error' => ['type' => JsonRule::INTEGER_TYPE, 'empty' => false]
         ]);
@@ -26,18 +28,20 @@ class EmptyCheckTest extends TestCase
 
     /**
      * @throws InvalidSchemaException
+     * @throws InvalidDataException
+     * @throws InvalidDataTypeException
      */
     public function testSchemaWithEmptyRuleOnString(): void
     {
-        $data = (new JsonData())->setDataFromArray([
+        $data = new JsonData([
             'name' => ''
         ]);
 
-        $schema = (new JsonSchema())->setSchema([
+        $schema = new JsonSchema([
             'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => false]
         ]);
 
-        $schema2 = (new JsonSchema())->setSchema([
+        $schema2 = new JsonSchema([
             'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => true] // empty: true is default
         ]);
 
@@ -47,18 +51,20 @@ class EmptyCheckTest extends TestCase
 
     /**
      * @throws InvalidSchemaException
+     * @throws InvalidDataException
+     * @throws InvalidDataTypeException
      */
     public function testSchemaWithEmptyRuleOnStringList(): void
     {
-        $data = (new JsonData())->setDataFromArray([
+        $data = new JsonData([
             'list' => []
         ]);
 
-        $schema = (new JsonSchema())->setSchema([
+        $schema = new JsonSchema([
             'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'empty' => false]
         ]);
 
-        $schema2 = (new JsonSchema())->setSchema([
+        $schema2 = new JsonSchema([
             'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'empty' => true] // empty: true is default
         ]);
 

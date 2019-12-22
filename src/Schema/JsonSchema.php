@@ -12,7 +12,7 @@ use hunomina\Validator\Json\Rule\JsonRule;
 class JsonSchema implements DataSchema
 {
     /** @var string $lastError */
-    private string $lastError;
+    private ?string $lastError = null;
 
     /** @var string $type */
     private string $type = 'object';
@@ -28,6 +28,29 @@ class JsonSchema implements DataSchema
 
     /** @var bool $nullable */
     private bool $nullable = false;
+
+    /**
+     * JsonSchema constructor.
+     * @param array $schema
+     * @throws InvalidSchemaException
+     */
+    public function __construct(array $schema = [])
+    {
+        $this->setSchema($schema);
+    }
+
+    /**
+     * Reset properties to avoid keeping previous rules or children
+     */
+    private function reset(): void
+    {
+        $this->lastError = null;
+        $this->type = 'object';
+        $this->rules = [];
+        $this->children = [];
+        $this->optional = false;
+        $this->nullable = false;
+    }
 
     /**
      * @return JsonRule[]
@@ -122,6 +145,7 @@ class JsonSchema implements DataSchema
      * @param DataType $dataType
      * @return bool
      * @throws InvalidDataTypeException
+     * @throws InvalidDataException
      */
     public function validate(DataType $dataType): bool
     {
@@ -137,7 +161,7 @@ class JsonSchema implements DataSchema
             return true;
         }
 
-        // Here $dataType->getData() is an array
+        // From here $dataType->getData() is an array
         if ($this->type === 'object') {
             return $this->validateObject($dataType);
         }
@@ -150,12 +174,13 @@ class JsonSchema implements DataSchema
     }
 
     /**
-     * @param DataType $dataType
+     * @param JsonData $dataType
      * @return bool
+     * @throws InvalidDataException
      * @throws InvalidDataTypeException
      * Each element must validate the schema
      */
-    private function validateList(DataType $dataType): bool
+    private function validateList(JsonData $dataType): bool
     {
         $data = $dataType->getData();
 
@@ -174,8 +199,7 @@ class JsonSchema implements DataSchema
                 return false;
             }
 
-            $jsonData = new JsonData();
-            $jsonData->setDataFromArray($element);
+            $jsonData = new JsonData($element);
 
             if (!$this->validateObject($jsonData)) {
                 return false;
@@ -188,6 +212,7 @@ class JsonSchema implements DataSchema
      * @param JsonData $dataType
      * @return bool
      * @throws InvalidDataTypeException
+     * @throws InvalidDataException
      */
     private function validateObject(JsonData $dataType): bool
     {
@@ -233,7 +258,7 @@ class JsonSchema implements DataSchema
                     }
 
                     try {
-                        $childJsonData = (new JsonData())->setData($value);
+                        $childJsonData = new JsonData($value);
                     } catch (InvalidDataException $e) {
                         $this->lastError = $e->getMessage();
                         return false;
@@ -257,11 +282,13 @@ class JsonSchema implements DataSchema
 
     /**
      * @param array $schema
-     * @return DataSchema
+     * @return JsonSchema
      * @throws InvalidSchemaException
      */
-    public function setSchema(array $schema): DataSchema
+    public function setSchema(array $schema): JsonSchema
     {
+        $this->reset();
+
         foreach ($schema as $property => $rule) {
             if (!isset($rule['type'])) {
                 throw new InvalidSchemaException('Each property of the schema must have a type', InvalidSchemaException::MISSING_TYPE);
@@ -304,7 +331,7 @@ class JsonSchema implements DataSchema
             $min = $rule['min'] ?? null;
             $max = $rule['max'] ?? null;
             $dateFormat = $rule['date-format'] ?? null;
-            $enum = (isset($rule['enum']) && is_array($rule['enum'])) ? $rule['enum'] : null;
+            $enum = isset($rule['enum']) && is_array($rule['enum']) ? $rule['enum'] : null;
             $canBeEmpty = $rule['empty'] ?? true;
 
             if ($type === JsonRule::LIST_TYPE || $type === JsonRule::OBJECT_TYPE) {
@@ -317,8 +344,8 @@ class JsonSchema implements DataSchema
                     throw new InvalidSchemaException('`schema` must be a valid schema', InvalidSchemaException::INVALID_OBJECT_SCHEMA);
                 }
 
-                $childSchema = new self();
-                $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull)->setSchema($s);
+                $childSchema = new self($s);
+                $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull);
                 $this->children[$property] = $childSchema;
             } else {
                 $this->rules[$property] = (new JsonRule())

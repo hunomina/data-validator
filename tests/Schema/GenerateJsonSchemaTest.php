@@ -21,7 +21,7 @@ class GenerateJsonSchemaTest extends TestCase
         ];
 
         /** @var JsonSchema $schema */
-        $schema = (new JsonSchema())->setSchema($s);
+        $schema = new JsonSchema($s);
         $this->assertCount(3, $schema->getRules());
         $this->assertCount(0, $schema->getChildren());
     }
@@ -42,7 +42,7 @@ class GenerateJsonSchemaTest extends TestCase
         ];
 
         /** @var JsonSchema $schema */
-        $schema = (new JsonSchema())->setSchema($s);
+        $schema = new JsonSchema($s);
         $this->assertCount(2, $schema->getRules());
         $this->assertCount(1, $schema->getChildren());
         $this->assertCount(3, $schema->getChildren()['users']->getRules());
@@ -65,7 +65,7 @@ class GenerateJsonSchemaTest extends TestCase
         ];
 
         /** @var JsonSchema $schema */
-        $schema = (new JsonSchema())->setSchema($s);
+        $schema = new JsonSchema($s);
         $this->assertCount(2, $schema->getRules());
         $this->assertCount(1, $schema->getChildren());
         $this->assertCount(3, $schema->getChildren()['user']->getRules());
@@ -90,7 +90,7 @@ class GenerateJsonSchemaTest extends TestCase
         ];
 
         /** @var JsonSchema $schema */
-        $schema = (new JsonSchema())->setSchema($s);
+        $schema = new JsonSchema($s);
 
         // first level
         $this->assertCount(2, $schema->getRules());
@@ -117,7 +117,7 @@ class GenerateJsonSchemaTest extends TestCase
             'success' => [],
         ];
 
-        (new JsonSchema())->setSchema($s);
+        new JsonSchema($s);
     }
 
     /**
@@ -132,7 +132,7 @@ class GenerateJsonSchemaTest extends TestCase
             'user' => ['type' => JsonRule::OBJECT_TYPE, 'null' => false, 'optional' => false]
         ];
 
-        (new JsonSchema())->setSchema($s);
+        new JsonSchema($s);
     }
 
     /**
@@ -147,6 +147,6 @@ class GenerateJsonSchemaTest extends TestCase
             'user' => ['type' => JsonRule::OBJECT_TYPE, 'null' => false, 'optional' => false, 'schema' => 'schema must be an array']
         ];
 
-        (new JsonSchema())->setSchema($s);
+        new JsonSchema($s);
     }
 }

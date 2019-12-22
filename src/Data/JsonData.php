@@ -14,6 +14,16 @@ class JsonData implements DataType, ArrayAccess
     private ?array $data = null;
 
     /**
+     * JsonData constructor.
+     * @param null $data
+     * @throws InvalidDataException
+     */
+    public function __construct($data = null)
+    {
+        $this->setData($data);
+    }
+
+    /**
      * @return array
      * @codeCoverageIgnore
      */
