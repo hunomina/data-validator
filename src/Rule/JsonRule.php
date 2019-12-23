@@ -350,7 +350,6 @@ class JsonRule implements Rule
         return $type === self::NUMERIC_TYPE
             || $type === self::INTEGER_TYPE
             || $type === self::FLOAT_TYPE
-            || $type === self::LIST_TYPE
             || in_array($type, self::TYPED_ARRAY_TYPES, true);
     }
 
@@ -380,7 +379,6 @@ class JsonRule implements Rule
     public static function isTypeWithEmptyCheck(string $type): bool
     {
         return $type === self::STRING_TYPE
-            || $type === self::CHAR_TYPE
             || in_array($type, self::TYPED_ARRAY_TYPES, true);
     }
 
