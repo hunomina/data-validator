@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/hunomina/json-data-validator.svg?branch=master)](https://travis-ci.com/hunomina/json-data-validator)
 [![codecov](https://codecov.io/gh/hunomina/json-data-validator/branch/master/graph/badge.svg)](https://codecov.io/gh/hunomina/json-data-validator)
 
-__Description :__ Library for json schemas validation
+__Description :__ Library for json data validation based on data schemas
 
 This library is mainly composed of 3 interfaces and 3 classes implementing them.
 
@@ -13,7 +13,7 @@ This project is licensed under the terms of the MIT license.
 
 ### [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php)
 
-Allows to encapsulate the data into an object and format it for [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) validation
+Allows to encapsulate the data into an object and format it for [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) validation.
 
 ### [JsonData](https://github.com/hunomina/json-data-validator/blob/master/src/Data/JsonData.php)
 
@@ -33,33 +33,26 @@ Allows to validate data unit by checking if the data is null, optional and his l
 
 [JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php) can validate :
 
-- Array types: list, array
-- Integer types: int, integer, long
-- Float types: float, double
-- Numeric types: numeric, number
-- Boolean types: boolean, bool
-- Character types: char, character
-- Typed Array types: numeric list, string list, boolean list, integer list, float list, character list
-- Object types: entity, object
-- Strings
-
-**Only strings and typed arrays can be length checked.**
-
-**Only strings can be date format checked.**
-
-**Only integers, floats, numbers and typed arrays can be min/max checked.**
-
-**Only strings, characters, string typed arrays and character typed array can be pattern checked.**
-
-**Only strings, integers, floats, numbers, typed list can be date format checked.**
-
-An object is a "child" schema and an array typed value is an object list.
+ Type/Check | Length | Pattern | Min/Max | Enum | Date format | Empty
+:---------: | :----: | :-----: | :-----: | :--: | :---------: | :---:
+  String    | :white_check_mark: | :white_check_mark: |         | :white_check_mark: | :white_check_mark: |:white_check_mark:
+ Character  |  | :white_check_mark: |         | :white_check_mark: |             |
+  Number    |        |         | :white_check_mark: (value) | **_TODO_** |  |
+  Integer   |        |         | :white_check_mark: (value) | :white_check_mark: |             |
+   Float    |        |         | :white_check_mark: (value) | :white_check_mark: |             |
+  Boolean   |        |         |         |      |             |
+ String List | :white_check_mark: | :white_check_mark: | :white_check_mark: (length) | :white_check_mark: | **_TODO_** |:white_check_mark:
+ Character List | :white_check_mark: | :white_check_mark: | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
+ Numeric List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
+ Integer List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
+ Float List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
+ Boolean List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
 
 ---
 
 ### [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php)
 
-[DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) is the library main class. It allows to validate [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) based on "child" schema or [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php)
+[DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) is the library main class. It allows to validate [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) based on "child" schemas and [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php).
 
 `DataSchema::validate()` method allows this validation. If the [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) does not validate the [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php), `DataSchema::validate()` will return false and `DataSchema::getLastError()` will return the validation error.
 
@@ -80,7 +73,7 @@ This is a schema definition :
 ```php
 use hunomina\Validator\Json\Schema\JsonSchema;
 
-$schema = (new JsonSchema())->setSchema([
+$schema = new JsonSchema([
     'success' => ['type' => 'bool'],
     'error' => ['type' => 'string', 'null' => true],
     'user' => ['type' => 'object', 'null' => true, 'optional' => true, 'schema' => [
@@ -108,6 +101,7 @@ This schema is composed of 3 elements :
     - can be null
     - is optional
     
+
 When a data unit is being validated using this schema by calling the `JsonSchema::validate()` method, the schema will check recursively if the data respects the rules and the "child" schemas.
 
 If the data has :
@@ -117,12 +111,13 @@ If the data has :
     - a string element `name`
     - an integer element `age`
     
+
 This data is valid :
 
 ```php
 use hunomina\Validator\Json\Data\JsonData;
 
-$data = (new JsonData())->setDataFromArray([
+$data = new JsonData([
     'success' => true,
     'error' => null,
     'user' => [
@@ -137,7 +132,7 @@ This one is not :
 ```php
 use hunomina\Validator\Json\Data\JsonData;
 
-$data = (new JsonData())->setDataFromArray([
+$data = new JsonData([
     'success' => true,
     'error' => null,
     'user' => 'test'
@@ -151,7 +146,7 @@ This schema uses the pattern validation on the `name` element and the length val
 ```php
 use hunomina\Validator\Json\Schema\JsonSchema;
 
-$schema = (new JsonSchema())->setSchema([
+$schema = new JsonSchema([
     'name' => ['type' => 'string', 'pattern' => '/^[a-z]+$/'],
     'geolocation' => ['type' => 'integer-list', 'length' => 2]
 ]);
