@@ -364,8 +364,11 @@ class JsonRule implements Rule
      */
     public function validate($data): bool
     {
-        if ($this->nullable && $data === null) {
-            return true;
+        if ($data === null) {
+            if ($this->nullable) {
+                return true;
+            }
+            throw new InvalidDataException('Can not be null', InvalidDataException::NULL_VALUE_NOT_ALLOWED);
         }
 
         if ($this->type === self::STRING_TYPE) {
