@@ -27,7 +27,7 @@ class ListTypeTest extends TestCase
             ]
         ]);
 
-        $this->assertTrue($this->getSchema()->validate($data));
+        $this->assertTrue(self::getSchema()->validate($data));
     }
 
     /**
@@ -38,20 +38,24 @@ class ListTypeTest extends TestCase
      */
     public function testExceptionThrownOnObjectPassedAsAList(): void
     {
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionCode(InvalidDataException::INVALID_LIST_ELEMENT);
+
         $data = new JsonData([
             'users' => [
-                'id' => 0, 'name' => 'test0'
+                'id' => 0,
+                'name' => 'test0'
             ]
         ]);
 
-        $this->assertFalse($this->getSchema()->validate($data));
+        self::getSchema()->validate($data);
     }
 
     /**
      * @return JsonSchema
      * @throws InvalidSchemaException
      */
-    private function getSchema(): JsonSchema
+    private static function getSchema(): JsonSchema
     {
         return new JsonSchema([
             'users' => ['type' => JsonRule::LIST_TYPE, 'schema' => [

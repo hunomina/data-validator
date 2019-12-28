@@ -9,164 +9,267 @@ use hunomina\Validator\Json\Exception\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 class TypedListTest extends TestCase
 {
     /**
-     * @throws InvalidSchemaException
+     * @dataProvider getTestableData
+     * @param JsonData $data
+     * @param JsonSchema $schema
+     * @param bool $success
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testIntList(): void
+    public function testTypedListCheck(JsonData $data, JsonSchema $schema, bool $success): void
     {
-        $data = new JsonData([
-            'users' => [1, 2, 3, 4]
-        ]);
+        if (!$success) {
+            try {
+                $schema->validate($data);
+            } catch (Throwable $t) {
+                // exception thrown by the schema
+                $this->assertInstanceOf(InvalidDataException::class, $t);
+                $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
-        $data2 = new JsonData([
-            'users' => [1, 2.89, 3.14158, 4.0]
-        ]);
+                // exception thrown by the typed list rule
+                $t = $t->getPrevious();
+                $this->assertInstanceOf(InvalidDataException::class, $t);
+                $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
-        $schema = new JsonSchema([
-            'users' => ['type' => JsonRule::INTEGER_LIST_TYPE]
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+                // exception thrown by the scalar type rule
+                $t = $t->getPrevious();
+                $this->assertInstanceOf(InvalidDataException::class, $t);
+                $this->assertEquals(InvalidDataException::INVALID_DATA_TYPE, $t->getCode());
+            }
+        } else {
+            $this->assertTrue($schema->validate($data));
+        }
     }
 
     /**
-     * @throws InvalidSchemaException
+     * @return array
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
+     * @throws InvalidSchemaException
      */
-    public function testStringList(): void
+    public function getTestableData(): array
     {
-        $data = new JsonData([
-            'users' => ['hello', 'i', 'am', 'testing']
-        ]);
-
-        $data2 = new JsonData([
-            'users' => ['hello', 'i', 'am', 'testing', 'for', 'the', 2, 'time']
-        ]);
-
-        $schema = new JsonSchema([
-            'users' => ['type' => JsonRule::STRING_LIST_TYPE]
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+        return [
+            $this->IntList(),
+            $this->IntListFail(),
+            $this->StringList(),
+            $this->StringListFail(),
+            $this->CharList(),
+            $this->CharListFail(),
+            $this->BooleanList(),
+            $this->BooleanListFail(),
+            $this->FloatList(),
+            $this->FloatListFail(),
+            $this->NumericList(),
+            $this->NumericListFail()
+        ];
     }
 
     /**
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
+     * @throws InvalidSchemaException
      */
-    public function testCharList(): void
+    public function IntList(): array
     {
-        $data = new JsonData([
-            'users' => ['a', 'b', 'c', 'd']
-        ]);
-
-        $data2 = new JsonData([
-            'users' => ['a', 'bc', 'd', 'e']
-        ]);
-
-        $schema = new JsonSchema([
-            'users' => ['type' => JsonRule::CHAR_LIST_TYPE]
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+        return [
+            new JsonData([
+                'integers' => [1, 2, 3, 4]
+            ]),
+            new JsonSchema([
+                'integers' => ['type' => JsonRule::INTEGER_LIST_TYPE]
+            ]),
+            true
+        ];
     }
 
     /**
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
+     * @throws InvalidSchemaException
      */
-    public function testBooleanList(): void
+    public function IntListFail(): array
     {
-        $data = new JsonData([
-            'users' => [true, false, false, true]
-        ]);
-
-        $data2 = new JsonData([
-            'users' => [true, false, 0, true]
-        ]);
-
-        $schema = new JsonSchema([
-            'users' => ['type' => JsonRule::BOOLEAN_LIST_TYPE]
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+        return [
+            new JsonData([
+                'integers' => [1, 2.89, 3.14158, 4.0]
+            ]),
+            new JsonSchema([
+                'integers' => ['type' => JsonRule::INTEGER_LIST_TYPE]
+            ]),
+            false
+        ];
     }
 
     /**
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
+     * @throws InvalidSchemaException
      */
-    public function testFloatList(): void
+    public function StringList(): array
     {
-        $data = new JsonData([
-            'users' => [1.1, 2.2, 3.3, 4.4]
-        ]);
-
-        $data2 = new JsonData([
-            'users' => [1, 2.2, 3.3, 4.4]
-        ]);
-
-        $schema = new JsonSchema([
-            'users' => ['type' => JsonRule::FLOAT_LIST_TYPE]
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+        return [
+            new JsonData([
+                'strings' => ['I', 'am', 'testing']
+            ]),
+            new JsonSchema([
+                'strings' => ['type' => JsonRule::STRING_LIST_TYPE]
+            ]),
+            true
+        ];
     }
 
     /**
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
+     * @throws InvalidSchemaException
      */
-    public function testNumericList(): void
+    public function StringListFail(): array
     {
-        $data = new JsonData([
-            'users' => [1, 2.89, 3.14158, 4.0]
-        ]);
-
-        $data2 = new JsonData([
-            'users' => ['a', 2.89, 3.14158, 4.0]
-        ]);
-
-        $schema = new JsonSchema([
-            'users' => ['type' => JsonRule::NUMERIC_LIST_TYPE]
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+        return [
+            new JsonData([
+                'strings' => ['I', 'am', 'testing', 'for', 'the', 2, 'nd', 'time']
+            ]),
+            new JsonSchema([
+                'strings' => ['type' => JsonRule::STRING_LIST_TYPE]
+            ]),
+            false
+        ];
     }
 
     /**
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
-     * @throws InvalidDataTypeException
-     * Assertion should fail because the `random-list` type simply does not exist
+     * @throws InvalidSchemaException
      */
-    public function testWrongTypeList(): void
+    public function CharList(): array
     {
-        $data = new JsonData([
-            'users' => [1, 2.89, 3.14158, 4.0]
-        ]);
+        return [
+            new JsonData([
+                'characters' => ['a', 'b', 'c', 'd']
+            ]),
+            new JsonSchema([
+                'characters' => ['type' => JsonRule::CHAR_LIST_TYPE]
+            ]),
+            true
+        ];
+    }
 
-        $schema = new JsonSchema([
-            'users' => ['type' => 'random-list']
-        ]);
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    public function CharListFail(): array
+    {
+        return [
+            new JsonData([
+                'characters' => ['a', 'bc', 'd', 'e']
+            ]),
+            new JsonSchema([
+                'characters' => ['type' => JsonRule::CHAR_LIST_TYPE]
+            ]),
+            false
+        ];
+    }
 
-        $this->assertFalse($schema->validate($data));
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    public function BooleanList(): array
+    {
+        return [
+            new JsonData([
+                'booleans' => [true, false, false, true]
+            ]),
+            new JsonSchema([
+                'booleans' => ['type' => JsonRule::BOOLEAN_LIST_TYPE]
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    public function BooleanListFail(): array
+    {
+        return [
+            new JsonData([
+                'booleans' => [true, false, 0, true]
+            ]),
+            new JsonSchema([
+                'booleans' => ['type' => JsonRule::BOOLEAN_LIST_TYPE]
+            ]),
+            false
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    public function FloatList(): array
+    {
+        return [
+            new JsonData([
+                'users' => [1.1, 2.2, 3.3, 4.4]
+            ]),
+            new JsonSchema([
+                'users' => ['type' => JsonRule::FLOAT_LIST_TYPE]
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    public function FloatListFail(): array
+    {
+        return [
+            new JsonData([
+                'users' => [1, 2.2, 3.3, 4.4]
+            ]),
+            new JsonSchema([
+                'users' => ['type' => JsonRule::FLOAT_LIST_TYPE]
+            ]),
+            false
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    public function NumericList(): array
+    {
+        return [
+            new JsonData([
+                'users' => [1, 2.89, 3.14158, 4.0]
+            ]),
+            new JsonSchema([
+                'users' => ['type' => JsonRule::NUMERIC_LIST_TYPE]
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    public function NumericListFail(): array
+    {
+        return [
+            new JsonData([
+                'users' => ['a', 2.89, 3.14158, 4.0]
+            ]),
+            new JsonSchema([
+                'users' => ['type' => JsonRule::NUMERIC_LIST_TYPE]
+            ]),
+            false
+        ];
     }
 }
