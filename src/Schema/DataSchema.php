@@ -14,11 +14,8 @@ interface DataSchema
     public function validate(DataType $data): bool;
 
     /**
-     * @return null|string
-     * When validate fail, an error must be set, not returned or thrown
-     * User can access it using this method
+     * @param array $schema
+     * @return $this
      */
-    public function getLastError(): ?string;
-
     public function setSchema(array $schema): self;
 }

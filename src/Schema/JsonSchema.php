@@ -131,17 +131,6 @@ class JsonSchema implements DataSchema
     }
 
     /**
-     * @return string
-     * When validate fail, an error must be set, not returned or thrown
-     * User can access it using this method
-     * @codeCoverageIgnore
-     */
-    public function getLastError(): ?string
-    {
-        return $this->lastError;
-    }
-
-    /**
      * @param DataType $dataType
      * @return bool
      * @throws InvalidDataTypeException
@@ -155,8 +144,7 @@ class JsonSchema implements DataSchema
 
         if ($dataType->getData() === null) {
             if (!$this->nullable) {
-                $this->lastError = 'This data can not be `null`';
-                return false;
+                throw new InvalidDataException('Can not be null', InvalidDataException::NULL_VALUE_NOT_ALLOWED);
             }
             return true;
         }
@@ -186,23 +174,23 @@ class JsonSchema implements DataSchema
 
         if ($data === null) {
             if (!$this->nullable) {
-                $this->lastError = 'This list can not be `null`';
-                return false;
+                throw new InvalidDataException('Can not be null', InvalidDataException::NULL_VALUE_NOT_ALLOWED);
             }
             return true;
         }
 
-        foreach ($data as $element) {
+        foreach ($data as $key => $element) {
 
             if (!is_array($element)) {
-                $this->lastError = 'A list can only be composed of objects <=> arrays';
-                return false;
+                throw new InvalidDataException('Element at index ' . $key . ' must be an object (array)', InvalidDataException::INVALID_LIST_ELEMENT);
             }
 
             $jsonData = new JsonData($element);
 
-            if (!$this->validateObject($jsonData)) {
-                return false;
+            try {
+                $this->validateObject($jsonData);
+            } catch (InvalidDataException $e) {
+                throw new InvalidDataException('Element at index ' . $key . ' is invalid : ' . $e->getMessage(), InvalidDataException::INVALID_LIST_ELEMENT, $e);
             }
         }
         return true;
@@ -217,63 +205,57 @@ class JsonSchema implements DataSchema
     private function validateObject(JsonData $dataType): bool
     {
         $data = $dataType->getData();
-        foreach ($this->rules as $property => $rule) {
+        foreach ($this->rules as $field => $rule) {
             $found = false;
             foreach ($data as $key => $value) {
-                if ($property === $key) {
+                if ($field === $key) {
                     $found = true;
-                    if (!$rule->validate($value)) {
-                        $this->lastError = '`' . $property . '` does not validate the schema. ' . $rule->getError();
-                        return false;
+                    try {
+                        $rule->validate($value);
+                    } catch (InvalidDataException $e) {
+                        throw new InvalidDataException('`' . $field . '` does not validate the schema. ' . $e->getMessage(), $e->getCode(), $e);
                     }
                 }
             }
 
             if (!$found && !$rule->isOptional()) {
-                $this->lastError = '`' . $property . '` property is mandatory';
-                return false;
+                throw new InvalidDataException('`' . $field . '` field is mandatory', InvalidDataException::MANDATORY_FIELD);
             }
         }
 
-        foreach ($this->children as $property => $schema) {
+        foreach ($this->children as $field => $schema) {
             $found = false;
             foreach ($data as $key => $value) {
-                if ($property === $key) {
+                if ($field === $key) {
                     $found = true;
 
-                    // $value must be null or an array
+                    // $value must be null or an array because it's a child object
+                    // if $value is null we check if it is allowed
                     if (!is_array($value)) {
                         if ($value === null) {
                             if (!$schema->isNullable()) {
-                                $this->lastError = '`' . $property . '` property can not be `null`';
-                                return false;
+                                throw new InvalidDataException('`' . $field . '` field can not be `null`', InvalidDataException::INVALID_CHILD_OBJECT);
                             }
                         } else if ($schema->isNullable()) {
-                            $this->lastError = '`' . $property . '` property must be an array or `null`';
-                            return false;
+                            throw new InvalidDataException('`' . $field . '` field must be an array or `null`', InvalidDataException::INVALID_CHILD_OBJECT);
                         } else {
-                            $this->lastError = '`' . $property . '` property must be an array';
-                            return false;
+                            throw new InvalidDataException('`' . $field . '` field must be an array', InvalidDataException::INVALID_CHILD_OBJECT);
                         }
                     }
 
-                    try {
-                        $childJsonData = new JsonData($value);
-                    } catch (InvalidDataException $e) {
-                        $this->lastError = $e->getMessage();
-                        return false;
-                    }
+                    // $value is null or an array
+                    $childJsonData = new JsonData($value);
 
-                    if (!$schema->validate($childJsonData)) {
-                        $this->lastError = 'The data passed does not validate the `' . $property . '` schema. ' . $schema->getLastError();
-                        return false;
+                    try {
+                        $schema->validate($childJsonData);
+                    } catch (InvalidDataException $e) {
+                        throw new InvalidDataException('`' . $field . '` does not validate the schema. ' . $e->getMessage(), $e->getCode(), $e);
                     }
                 }
             }
 
             if (!$found && !$schema->isOptional()) {
-                $this->lastError = '`' . $property . '` property is mandatory';
-                return false;
+                throw new InvalidDataException('`' . $field . '` field is mandatory', InvalidDataException::MANDATORY_FIELD);
             }
         }
 
@@ -289,9 +271,9 @@ class JsonSchema implements DataSchema
     {
         $this->reset();
 
-        foreach ($schema as $property => $rule) {
+        foreach ($schema as $field => $rule) {
             if (!isset($rule['type'])) {
-                throw new InvalidSchemaException('Each property of the schema must have a type', InvalidSchemaException::MISSING_TYPE);
+                throw new InvalidSchemaException('Each field of the schema must have a type', InvalidSchemaException::MISSING_TYPE);
             }
 
             $type = $rule['type'];
@@ -336,7 +318,7 @@ class JsonSchema implements DataSchema
 
             if ($type === JsonRule::LIST_TYPE || $type === JsonRule::OBJECT_TYPE) {
                 if (!isset($rule['schema'])) {
-                    throw new InvalidSchemaException('`list` or `object` type must have a `schema` property to describe to list or object schema', InvalidSchemaException::MISSING_SCHEMA);
+                    throw new InvalidSchemaException('`list` or `object` type must have a `schema` property', InvalidSchemaException::MISSING_SCHEMA);
                 }
 
                 $s = $rule['schema'];
@@ -346,9 +328,9 @@ class JsonSchema implements DataSchema
 
                 $childSchema = new self($s);
                 $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull);
-                $this->children[$property] = $childSchema;
+                $this->children[$field] = $childSchema;
             } else {
-                $this->rules[$property] = (new JsonRule())
+                $this->rules[$field] = (new JsonRule())
                     ->setType($type)
                     ->setNullable($canBeNull)
                     ->setOptional($isOptional)
