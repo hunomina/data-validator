@@ -92,7 +92,7 @@ class JsonRule implements Rule
      * @var bool $empty
      * Is the data allowed to be empty
      */
-    protected bool $empty = true;
+    protected bool $empty = false;
 
     /**
      * @return string
