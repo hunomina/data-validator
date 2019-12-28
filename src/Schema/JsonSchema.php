@@ -11,11 +11,12 @@ use hunomina\Validator\Json\Rule\JsonRule;
 
 class JsonSchema implements DataSchema
 {
-    /** @var string $lastError */
-    private ?string $lastError = null;
+    public const OBJECT_TYPE = 'object';
+
+    public const LIST_TYPE = 'list';
 
     /** @var string $type */
-    private string $type = 'object';
+    private string $type = self::OBJECT_TYPE;
 
     /** @var JsonRule[] $rule */
     private array $rules = [];
@@ -44,8 +45,7 @@ class JsonSchema implements DataSchema
      */
     private function reset(): void
     {
-        $this->lastError = null;
-        $this->type = 'object';
+        $this->type = self::OBJECT_TYPE;
         $this->rules = [];
         $this->children = [];
         $this->optional = false;
@@ -162,11 +162,11 @@ class JsonSchema implements DataSchema
         }
 
         // From here $dataType->getData() is an array
-        if ($this->type === 'object') {
+        if ($this->type === self::OBJECT_TYPE) {
             return $this->validateObject($dataType);
         }
 
-        if ($this->type === 'list') {
+        if ($this->type === self::LIST_TYPE) {
             return $this->validateList($dataType);
         }
 
