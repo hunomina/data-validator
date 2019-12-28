@@ -11,22 +11,69 @@ class DataFormattingTest extends TestCase
     /**
      * @throws InvalidDataException
      */
-    public function testThrowOnInvalidSetParameter(): void
+    public function testThrowOnIntegerParameterPassedToTheConstructor(): void
     {
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
 
-        new JsonData(1234567890);
+        new JsonData(1);
     }
 
     /**
      * @throws InvalidDataException
      */
-    public function testThrowOnInvalidJsonStringParameter(): void
+    public function testThrowOnFloatParameterPassedToTheConstructor(): void
+    {
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
+
+        new JsonData(1.0);
+    }
+
+    /**
+     * @throws InvalidDataException
+     */
+    public function testThrowOnBooleanParameterPassedToTheConstructor(): void
+    {
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
+
+        new JsonData(true);
+    }
+
+    /**
+     * @throws InvalidDataException
+     */
+    public function testThrowOnNonStringParameterPassedToFormat(): void
+    {
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
+
+        $schema = new JsonData();
+        $schema->format(null);
+    }
+
+    /**
+     * @throws InvalidDataException
+     */
+    public function testThrowOnInvalidJsonParameterPassedToFormat(): void
     {
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionCode(InvalidDataException::INVALID_JSON_DATA);
 
-        new JsonData('invalid json string');
+        $schema = new JsonData();
+        $schema->format('\\');
+    }
+
+    /**
+     * @throws InvalidDataException
+     */
+    public function testThrowOnNonJsonArrayParameterPassedToFormat(): void
+    {
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionCode(InvalidDataException::INVALID_JSON_DATA);
+
+        $schema = new JsonData();
+        $schema->format('a');
     }
 }
