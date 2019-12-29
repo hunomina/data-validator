@@ -10,7 +10,7 @@ use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class ListTypeTest extends TestCase
+class CharacterTypeTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -20,11 +20,11 @@ class ListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testListType(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testCharacterType(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
-            $this->expectExceptionCode(InvalidDataException::INVALID_LIST_ELEMENT);
+            $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
 
             $schema->validate($data);
         } else {
@@ -40,8 +40,8 @@ class ListTypeTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::ValidList(),
-            self::InvalidList()
+            self::ValidCharacterData(),
+            self::InvalidCharacterData()
         ];
     }
 
@@ -50,20 +50,14 @@ class ListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function ValidList(): array
+    private static function ValidCharacterData(): array
     {
         return [
             new JsonData([
-                'users' => [
-                    ['id' => 0, 'name' => 'test0'],
-                    ['id' => 1, 'name' => 'test1']
-                ]
+                'character' => 'a'
             ]),
             new JsonSchema([
-                'users' => ['type' => JsonRule::LIST_TYPE, 'schema' => [
-                    'id' => ['type' => JsonRule::INTEGER_TYPE],
-                    'name' => ['type' => JsonRule::STRING_TYPE]
-                ]]
+                'character' => ['type' => JsonRule::CHAR_TYPE]
             ]),
             true
         ];
@@ -71,23 +65,17 @@ class ListTypeTest extends TestCase
 
     /**
      * @return array
-     * @throws InvalidDataException
      * @throws InvalidSchemaException
+     * @throws InvalidDataException
      */
-    private static function InvalidList(): array
+    private static function InvalidCharacterData(): array
     {
         return [
             new JsonData([
-                'users' => [
-                    'id' => 0,
-                    'name' => 'test0'
-                ]
+                'character' => 'not-a-character'
             ]),
             new JsonSchema([
-                'users' => ['type' => JsonRule::LIST_TYPE, 'schema' => [
-                    'id' => ['type' => JsonRule::INTEGER_TYPE],
-                    'name' => ['type' => JsonRule::STRING_TYPE]
-                ]]
+                'character' => ['type' => JsonRule::CHAR_TYPE]
             ]),
             false
         ];

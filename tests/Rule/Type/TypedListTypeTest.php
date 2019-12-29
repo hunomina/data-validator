@@ -21,7 +21,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testTypedListCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testTypedListType(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             try {
@@ -54,18 +54,18 @@ class TypedListTypeTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->IntList(),
-            $this->IntListFail(),
-            $this->StringList(),
-            $this->StringListFail(),
-            $this->CharList(),
-            $this->CharListFail(),
-            $this->BooleanList(),
-            $this->BooleanListFail(),
-            $this->FloatList(),
-            $this->FloatListFail(),
-            $this->NumericList(),
-            $this->NumericListFail()
+            self::ValidIntegerList(),
+            self::InvalidIntegerList(),
+            self::ValidStringList(),
+            self::InvalidStringList(),
+            self::ValidCharacterList(),
+            self::InvalidCharacterList(),
+            self::ValidBooleanList(),
+            self::InvalidBooleanList(),
+            self::ValidFloatList(),
+            self::InvalidFloatList(),
+            self::ValidNumericList(),
+            self::InvalidNumericList()
         ];
     }
 
@@ -73,7 +73,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function IntList(): array
+    private static function ValidIntegerList(): array
     {
         return [
             new JsonData([
@@ -90,7 +90,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function IntListFail(): array
+    private static function InvalidIntegerList(): array
     {
         return [
             new JsonData([
@@ -107,7 +107,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function StringList(): array
+    private static function ValidStringList(): array
     {
         return [
             new JsonData([
@@ -124,7 +124,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function StringListFail(): array
+    private static function InvalidStringList(): array
     {
         return [
             new JsonData([
@@ -141,7 +141,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function CharList(): array
+    private static function ValidCharacterList(): array
     {
         return [
             new JsonData([
@@ -158,7 +158,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function CharListFail(): array
+    private static function InvalidCharacterList(): array
     {
         return [
             new JsonData([
@@ -175,7 +175,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function BooleanList(): array
+    private static function ValidBooleanList(): array
     {
         return [
             new JsonData([
@@ -192,7 +192,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function BooleanListFail(): array
+    private static function InvalidBooleanList(): array
     {
         return [
             new JsonData([
@@ -209,7 +209,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function FloatList(): array
+    private static function ValidFloatList(): array
     {
         return [
             new JsonData([
@@ -226,7 +226,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function FloatListFail(): array
+    private static function InvalidFloatList(): array
     {
         return [
             new JsonData([
@@ -243,7 +243,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function NumericList(): array
+    private static function ValidNumericList(): array
     {
         return [
             new JsonData([
@@ -260,7 +260,7 @@ class TypedListTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function NumericListFail(): array
+    private static function InvalidNumericList(): array
     {
         return [
             new JsonData([
