@@ -53,18 +53,6 @@ class JsonData implements DataType, ArrayAccess
     }
 
     /**
-     * @param array $data
-     * @return JsonData
-     * @codeCoverageIgnore
-     * @deprecated use $this->setData() instead
-     */
-    public function setDataFromArray(array $data): JsonData
-    {
-        $this->data = $data;
-        return $this;
-    }
-
-    /**
      * @param $data
      * @return array
      * @throws InvalidDataException
