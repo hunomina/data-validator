@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule;
+namespace hunomina\Validator\Json\Test\Rule\Type;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidDataException;
@@ -10,7 +10,7 @@ use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class EmptyCheckTest extends TestCase
+class NumericTypeTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -20,11 +20,11 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testEmptyCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testNumericType(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
-            $this->expectExceptionCode(InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
+            $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
 
             $schema->validate($data);
         } else {
@@ -40,10 +40,10 @@ class EmptyCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::EmptyRuleOnString(),
-            self::EmptyRuleOnStringFail(),
-            self::EmptyRuleOnStringTypedList(),
-            self::EmptyRuleOnStringTypedListFail(),
+            self::ValidIntegerData(),
+            self::ValidFloatData(),
+            self::InvalidNumericData(),
+            self::InvalidNumericStringData()
         ];
     }
 
@@ -52,14 +52,14 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnString(): array
+    private static function ValidIntegerData(): array
     {
         return [
             new JsonData([
-                'name' => ''
+                'integer' => 1
             ]),
             new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => true]
+                'integer' => ['type' => JsonRule::NUMERIC_TYPE]
             ]),
             true
         ];
@@ -70,14 +70,33 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnStringFail(): array
+    private static function ValidFloatData(): array
     {
         return [
             new JsonData([
-                'name' => ''
+                'number' => 1.0
             ]),
             new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => false] // default behavior
+                'number' => ['type' => JsonRule::NUMERIC_TYPE]
+            ]),
+            true
+        ];
+    }
+
+
+    /**
+     * @return array
+     * @throws InvalidSchemaException
+     * @throws InvalidDataException
+     */
+    private static function InvalidNumericData(): array
+    {
+        return [
+            new JsonData([
+                'number' => false
+            ]),
+            new JsonSchema([
+                'number' => ['type' => JsonRule::NUMERIC_TYPE]
             ]),
             false
         ];
@@ -88,32 +107,14 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnStringTypedList(): array
+    private static function InvalidNumericStringData(): array
     {
         return [
             new JsonData([
-                'list' => []
+                'number' => '1'
             ]),
             new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'empty' => true]
-            ]),
-            true
-        ];
-    }
-
-    /**
-     * @return array
-     * @throws InvalidDataException
-     * @throws InvalidSchemaException
-     */
-    private static function EmptyRuleOnStringTypedListFail(): array
-    {
-        return [
-            new JsonData([
-                'list' => []
-            ]),
-            new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'empty' => false] // default behavior
+                'number' => ['type' => JsonRule::NUMERIC_TYPE]
             ]),
             false
         ];

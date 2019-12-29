@@ -114,19 +114,6 @@ interface Rule
 
     /**
      * @return string|null
-     * `null` if no error
-     * Error message if the data does not match the rule
-     */
-    public function getError(): ?string;
-
-    /**
-     * @param string|null $error
-     * @return JsonRule
-     */
-    public function setError(?string $error): self;
-
-    /**
-     * @return string|null
      * `null` if does not have to be checked
      * Date format to test the data with
      */

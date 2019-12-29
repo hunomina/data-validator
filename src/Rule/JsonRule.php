@@ -3,6 +3,7 @@
 namespace hunomina\Validator\Json\Rule;
 
 use DateTime;
+use hunomina\Validator\Json\Exception\InvalidDataException;
 
 class JsonRule implements Rule
 {
@@ -82,12 +83,6 @@ class JsonRule implements Rule
     protected ?array $enum = null;
 
     /**
-     * @var string|null $error
-     * Error message when the data does not match the rule
-     */
-    protected ?string $error = null;
-
-    /**
      * @var null|string $dateFormat
      * Date format of the data
      */
@@ -97,7 +92,7 @@ class JsonRule implements Rule
      * @var bool $empty
      * Is the data allowed to be empty
      */
-    protected bool $empty = true;
+    protected bool $empty = false;
 
     /**
      * @return string
@@ -263,26 +258,6 @@ class JsonRule implements Rule
 
     /**
      * @return string|null
-     * @codeCoverageIgnore
-     */
-    public function getError(): ?string
-    {
-        return $this->error;
-    }
-
-    /**
-     * @param string|null $error
-     * @return JsonRule
-     * @codeCoverageIgnore
-     */
-    public function setError(?string $error): Rule
-    {
-        $this->error = $error;
-        return $this;
-    }
-
-    /**
-     * @return string|null
      * `null` if does not have to be checked
      * Date format to test the data with
      * @codeCoverageIgnore
@@ -363,7 +338,11 @@ class JsonRule implements Rule
             || $type === self::INTEGER_TYPE
             || $type === self::FLOAT_TYPE
             || $type === self::CHAR_TYPE
-            || in_array($type, self::TYPED_ARRAY_TYPES, true);
+            || $type === self::NUMERIC_LIST_TYPE
+            || $type === self::STRING_LIST_TYPE
+            || $type === self::INTEGER_LIST_TYPE
+            || $type === self::FLOAT_LIST_TYPE
+            || $type === self::CHAR_LIST_TYPE;
     }
 
     /**
@@ -385,11 +364,15 @@ class JsonRule implements Rule
     /**
      * @param $data
      * @return bool
+     * @throws InvalidDataException
      */
     public function validate($data): bool
     {
-        if ($this->nullable && $data === null) {
-            return true;
+        if ($data === null) {
+            if ($this->nullable) {
+                return true;
+            }
+            throw new InvalidDataException('Can not be null', InvalidDataException::NULL_VALUE_NOT_ALLOWED);
         }
 
         if ($this->type === self::STRING_TYPE) {
@@ -416,58 +399,44 @@ class JsonRule implements Rule
             return $this->isValidCharacter($data);
         }
 
-        if ($this->type === self::OBJECT_TYPE) {
-            return $this->isValidObject($data);
-        }
-
-        if ($this->type === self::LIST_TYPE) {
-            return $this->isValidList($data);
-        }
-
         if (in_array($this->type, self::TYPED_ARRAY_TYPES, true)) {
             return $this->isValidTypedList($data);
         }
 
-        $this->error = 'Invalid type to check';
-        return false;
+        throw new InvalidDataException('Unknown rule type', InvalidDataException::UNKNOWN_DATA_TYPE);
     }
 
     /**
      * @param $data
      * @return bool
+     * @throws InvalidDataException
      */
     protected function isValidString($data): bool
     {
         if (!is_string($data)) {
-            $this->error = 'Must be a string';
-            return false;
+            throw new InvalidDataException('Must be a string', InvalidDataException::INVALID_DATA_TYPE);
         }
 
         if ($this->empty === false && $data === '') {
-            $this->error = 'Invalid string : Can not be empty';
-            return false;
+            throw new InvalidDataException('Can not be empty', InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
         }
 
         if ($this->length !== null && strlen($data) !== $this->length) {
-            $this->error = 'Invalid string length: Must be ' . $this->length . '. Is ' . strlen($data);
-            return false;
+            throw new InvalidDataException('Invalid length: Must be ' . $this->length . '. Is ' . strlen($data), InvalidDataException::INVALID_LENGTH);
         }
 
         if ($this->pattern !== null && !preg_match($this->pattern, $data)) {
-            $this->error = 'Must match the pattern ' . $this->pattern;
-            return false;
+            throw new InvalidDataException('Must match the pattern : `' . $this->pattern . '`', InvalidDataException::PATTERN_NOT_MATCHED);
         }
 
         if ($this->enum !== null && !in_array($data, $this->enum, true)) {
-            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
-            return false;
+            throw new InvalidDataException('Must be one of the following values : ' . implode(', ', $this->enum), InvalidDataException::UNAUTHORIZED_VALUE);
         }
 
         if ($this->dateFormat !== null) {
             $d = DateTime::createFromFormat($this->dateFormat, $data);
             if (!($d instanceof DateTime) || $d->format($this->dateFormat) !== $data) {
-                $this->error = "Must match the '" . $this->dateFormat . "' date format. See available format here : https://www.php.net/manual/fr/datetime.createfromformat.php";
-                return false;
+                throw new InvalidDataException("Must match the '" . $this->dateFormat . "' date format. See available format here : https://www.php.net/manual/fr/datetime.createfromformat.php", InvalidDataException::INVALID_DATE_FORMAT);
             }
         }
 
@@ -477,27 +446,24 @@ class JsonRule implements Rule
     /**
      * @param $data
      * @return bool
+     * @throws InvalidDataException
      */
     protected function isValidInteger($data): bool
     {
         if (!is_int($data)) {
-            $this->error = 'Must be an integer';
-            return false;
+            throw new InvalidDataException('Must be an integer', InvalidDataException::INVALID_DATA_TYPE);
         }
 
         if ($this->min !== null && $data < $this->min) {
-            $this->error = 'Must be higher than ' . $this->min;
-            return false;
+            throw new InvalidDataException('Must be higher than ' . $this->min, InvalidDataException::INVALID_MIN_VALUE);
         }
 
         if ($this->max !== null && $data > $this->max) {
-            $this->error = 'Must be lower than ' . $this->max;
-            return false;
+            throw new InvalidDataException('Must be lower than ' . $this->max, InvalidDataException::INVALID_MAX_VALUE);
         }
 
         if ($this->enum !== null && !in_array($data, $this->enum, true)) {
-            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
-            return false;
+            throw new InvalidDataException('Must be one of the following values : ' . implode(', ', $this->enum), InvalidDataException::UNAUTHORIZED_VALUE);
         }
 
         return true;
@@ -506,27 +472,24 @@ class JsonRule implements Rule
     /**
      * @param $data
      * @return bool
+     * @throws InvalidDataException
      */
     protected function isValidFloat($data): bool
     {
         if (!is_float($data)) {
-            $this->error = 'Must be a floating number';
-            return false;
+            throw new InvalidDataException('Must be a floating number', InvalidDataException::INVALID_DATA_TYPE);
         }
 
         if ($this->min !== null && $data < $this->min) {
-            $this->error = 'Must be higher than ' . $this->min;
-            return false;
+            throw new InvalidDataException('Must be higher than ' . $this->min, InvalidDataException::INVALID_MIN_VALUE);
         }
 
         if ($this->max !== null && $data > $this->max) {
-            $this->error = 'Must be lower than ' . $this->max;
-            return false;
+            throw new InvalidDataException('Must be lower than ' . $this->max, InvalidDataException::INVALID_MAX_VALUE);
         }
 
         if ($this->enum !== null && !in_array($data, $this->enum, true)) {
-            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
-            return false;
+            throw new InvalidDataException('Must be one of the following values : ' . implode(', ', $this->enum), InvalidDataException::UNAUTHORIZED_VALUE);
         }
 
         return true;
@@ -535,27 +498,24 @@ class JsonRule implements Rule
     /**
      * @param $data
      * @return bool
+     * @throws InvalidDataException
      */
     protected function isValidNumber($data): bool
     {
         if (!is_numeric($data) || is_string($data)) {
-            $this->error = 'Must be a non string number';
-            return false;
+            throw new InvalidDataException('Must be a non string number', InvalidDataException::INVALID_DATA_TYPE);
         }
 
         if ($this->min !== null && $data < $this->min) {
-            $this->error = 'Must be higher than ' . $this->min;
-            return false;
+            throw new InvalidDataException('Must be higher than ' . $this->min, InvalidDataException::INVALID_MIN_VALUE);
         }
 
         if ($this->max !== null && $data > $this->max) {
-            $this->error = 'Must be lower than ' . $this->max;
-            return false;
+            throw new InvalidDataException('Must be lower than ' . $this->max, InvalidDataException::INVALID_MAX_VALUE);
         }
 
         if ($this->enum !== null && !in_array($data, $this->enum, true)) {
-            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
-            return false;
+            throw new InvalidDataException('Must be one of the following values : ' . implode(', ', $this->enum), InvalidDataException::UNAUTHORIZED_VALUE);
         }
 
         return true;
@@ -564,64 +524,52 @@ class JsonRule implements Rule
     /**
      * @param $data
      * @return bool
+     * @throws InvalidDataException
      */
     protected function isValidTypedList($data): bool
     {
         if (!is_array($data)) {
-            $this->error = 'Must be an array';
-            return false;
+            throw new InvalidDataException('Must be an array', InvalidDataException::INVALID_DATA_TYPE);
         }
 
         $length = count($data);
 
         if ($this->empty === false && $length === 0) {
-            $this->error = 'Invalid list : Can not be empty';
-            return false;
+            throw new InvalidDataException('Can not be empty', InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
         }
 
         if ($this->length !== null && $length !== $this->length) {
-            $this->error = 'Invalid list length: Must be ' . $this->length . '. Is ' . $length;
-            return false;
+            throw new InvalidDataException('Invalid length: Must be ' . $this->length . '. Is ' . $length, InvalidDataException::INVALID_LENGTH);
         }
 
         if ($this->min !== null && $length < $this->min) {
-            $this->error = 'Must contain at least ' . $this->min . ' elements';
-            return false;
+            throw new InvalidDataException('Must contain at least ' . $this->min . ' elements', InvalidDataException::INVALID_MIN_VALUE);
         }
 
         if ($this->max !== null && $length > $this->max) {
-            $this->error = 'Must contain at most ' . $this->max . ' elements';
-            return false;
+            throw new InvalidDataException('Must contain at most ' . $this->max . ' elements', InvalidDataException::INVALID_MAX_VALUE);
         }
 
-        if (!$this->checkTypedListValues($data, $this->enum)) {
-            // $this->error is modified by $this->checkTypedListValues() in order to get the error message for the invalid element
-            $this->error = 'Invalid elements for a ' . $this->type . '. ' . $this->error;
-            return false;
-        }
-
-        return true;
+        return $this->checkTypedListValues($data, $this->enum);
     }
 
     /**
      * @param $data
      * @return bool
+     * @throws InvalidDataException
      */
     protected function isValidCharacter($data): bool
     {
         if (!is_string($data) || strlen($data) !== 1) {
-            $this->error = 'Must be a character';
-            return false;
+            throw new InvalidDataException('Must be a character', InvalidDataException::INVALID_DATA_TYPE);
         }
 
         if ($this->pattern !== null && !preg_match($this->pattern, $data)) {
-            $this->error = 'Must match the pattern ' . $this->pattern;
-            return false;
+            throw new InvalidDataException('Must match the pattern ' . $this->pattern, InvalidDataException::PATTERN_NOT_MATCHED);
         }
 
         if ($this->enum !== null && !in_array($data, $this->enum, true)) {
-            $this->error = 'Must be one of the following values : ' . implode(', ', $this->enum);
-            return false;
+            throw new InvalidDataException('Must be one of the following values : ' . implode(', ', $this->enum), InvalidDataException::UNAUTHORIZED_VALUE);
         }
 
         return true;
@@ -630,37 +578,12 @@ class JsonRule implements Rule
     /**
      * @param $data
      * @return bool
+     * @throws InvalidDataException
      */
     protected function isValidBoolean($data): bool
     {
         if (!is_bool($data)) {
-            $this->error = 'Must be a boolean';
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @param $data
-     * @return bool
-     */
-    protected function isValidList($data): bool
-    {
-        if (!is_array($data)) {
-            $this->error = 'Must be an array';
-        }
-        return true;
-    }
-
-    /**
-     * @param $data
-     * @return bool
-     */
-    protected function isValidObject($data): bool
-    {
-        if (!is_array($data) || empty($data)) {
-            $this->error = 'Must be a non empty array';
-            return false;
+            throw new InvalidDataException('Must be a boolean', InvalidDataException::INVALID_DATA_TYPE);
         }
         return true;
     }
@@ -669,41 +592,41 @@ class JsonRule implements Rule
      * @param $data
      * @param array|null $enum
      * @return bool
+     * @throws InvalidDataException
      */
     protected function checkTypedListValues($data, ?array $enum): bool
     {
         $rule = null;
         switch ($this->type) {
             case self::INTEGER_LIST_TYPE:
-                $rule = (new self())->setType(self::INTEGER_TYPE);
+                $rule = (new self())->setType(self::INTEGER_TYPE)->setEnum($enum);
                 break;
             case self::FLOAT_LIST_TYPE:
-                $rule = (new self())->setType(self::FLOAT_TYPE);
+                $rule = (new self())->setType(self::FLOAT_TYPE)->setEnum($enum);
                 break;
             case self::BOOLEAN_LIST_TYPE:
                 $rule = (new self())->setType(self::BOOLEAN_TYPE);
                 break;
             case self::CHAR_LIST_TYPE:
-                $rule = (new self())->setType(self::CHAR_TYPE)->setPattern($this->pattern);
+                $rule = (new self())->setType(self::CHAR_TYPE)->setPattern($this->pattern)->setEnum($enum);
                 break;
             case self::STRING_LIST_TYPE:
-                $rule = (new self())->setType(self::STRING_TYPE)->setPattern($this->pattern);
+                $rule = (new self())->setType(self::STRING_TYPE)->setPattern($this->pattern)->setEnum($enum);
                 break;
             case self::NUMERIC_LIST_TYPE:
-                $rule = (new self())->setType(self::NUMERIC_TYPE);
+                $rule = (new self())->setType(self::NUMERIC_TYPE)->setEnum($enum);
                 break;
         }
 
         if (!($rule instanceof self)) {
-            return false;
+            throw new InvalidDataException('Invalid typed list type', InvalidDataException::UNKNOWN_DATA_TYPE);
         }
 
-        $rule->setEnum($enum); // set $enum to check if each element of the typed list is in $enum
-
         foreach ($data as $key => $value) {
-            if (!$rule->validate($value)) {
-                $this->error = 'Element at index ' . $key . ' is invalid : ' . $rule->getError();
-                return false;
+            try {
+                $rule->validate($value);
+            } catch (InvalidDataException $e) {
+                throw new InvalidDataException('Element at index ' . $key . ' is invalid : ' . $e->getMessage(), InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $e);
             }
         }
 

@@ -46,7 +46,7 @@ Allows to validate data unit by checking if the data is null, optional and his l
  Numeric List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
  Integer List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
  Float List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
- Boolean List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
+ Boolean List | :white_check_mark: | | :white_check_mark: (length) |  | |:white_check_mark:
 
 ---
 

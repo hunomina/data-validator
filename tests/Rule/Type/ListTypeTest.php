@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule;
+namespace hunomina\Validator\Json\Test\Rule\Type;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidDataException;
@@ -10,7 +10,7 @@ use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class EmptyCheckTest extends TestCase
+class ListTypeTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -20,11 +20,11 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testEmptyCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testListType(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
-            $this->expectExceptionCode(InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
+            $this->expectExceptionCode(InvalidDataException::INVALID_LIST_ELEMENT);
 
             $schema->validate($data);
         } else {
@@ -40,10 +40,9 @@ class EmptyCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::EmptyRuleOnString(),
-            self::EmptyRuleOnStringFail(),
-            self::EmptyRuleOnStringTypedList(),
-            self::EmptyRuleOnStringTypedListFail(),
+            self::ValidList(),
+            self::InvalidList(),
+            self::NotAnObjectList()
         ];
     }
 
@@ -52,14 +51,20 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnString(): array
+    private static function ValidList(): array
     {
         return [
             new JsonData([
-                'name' => ''
+                'users' => [
+                    ['id' => 0, 'name' => 'test0'],
+                    ['id' => 1, 'name' => 'test1']
+                ]
             ]),
             new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => true]
+                'users' => ['type' => JsonRule::LIST_TYPE, 'schema' => [
+                    'id' => ['type' => JsonRule::INTEGER_TYPE],
+                    'name' => ['type' => JsonRule::STRING_TYPE]
+                ]]
             ]),
             true
         ];
@@ -70,14 +75,20 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnStringFail(): array
+    private static function InvalidList(): array
     {
         return [
             new JsonData([
-                'name' => ''
+                'users' => [ // elements do not match the schema
+                    ['id' => 0],
+                    ['id' => 1],
+                ]
             ]),
             new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => false] // default behavior
+                'users' => ['type' => JsonRule::LIST_TYPE, 'schema' => [
+                    'id' => ['type' => JsonRule::INTEGER_TYPE],
+                    'name' => ['type' => JsonRule::STRING_TYPE]
+                ]]
             ]),
             false
         ];
@@ -88,32 +99,20 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnStringTypedList(): array
+    private static function NotAnObjectList(): array
     {
         return [
             new JsonData([
-                'list' => []
+                'users' => [
+                    'id' => 0,
+                    'name' => 'test0'
+                ]
             ]),
             new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'empty' => true]
-            ]),
-            true
-        ];
-    }
-
-    /**
-     * @return array
-     * @throws InvalidDataException
-     * @throws InvalidSchemaException
-     */
-    private static function EmptyRuleOnStringTypedListFail(): array
-    {
-        return [
-            new JsonData([
-                'list' => []
-            ]),
-            new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'empty' => false] // default behavior
+                'users' => ['type' => JsonRule::LIST_TYPE, 'schema' => [
+                    'id' => ['type' => JsonRule::INTEGER_TYPE],
+                    'name' => ['type' => JsonRule::STRING_TYPE]
+                ]]
             ]),
             false
         ];

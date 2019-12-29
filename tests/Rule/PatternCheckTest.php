@@ -9,71 +9,166 @@ use hunomina\Validator\Json\Exception\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 class PatternCheckTest extends TestCase
 {
     /**
-     * @throws InvalidSchemaException
+     * @dataProvider getTestableData
+     * @param JsonData $data
+     * @param JsonSchema $schema
+     * @param bool $success
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testPatternOnString(): void
+    public function testPatternCheck(JsonData $data, JsonSchema $schema, bool $success): void
     {
-        $data = new JsonData([
-            'name' => 'test'
-        ]);
+        if (!$success) {
+            $this->expectException(InvalidDataException::class);
+            $this->expectExceptionCode(InvalidDataException::PATTERN_NOT_MATCHED);
 
-        $data2 = new JsonData([
-            'name' => 'test2'
-        ]);
-
-        $schema = new JsonSchema([
-            'name' => ['type' => JsonRule::STRING_TYPE, 'pattern' => '/^[a-z]+$/']
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+            $schema->validate($data);
+        } else {
+            $this->assertTrue($schema->validate($data));
+        }
     }
 
     /**
-     * @throws InvalidSchemaException
+     * @return array
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
+     * @throws InvalidSchemaException
      */
-    public function testPatternOnChar(): void
+    public function getTestableData(): array
     {
-        $data = new JsonData([
-            'blood_type' => 'o'
-        ]);
-
-        $data2 = new JsonData([
-            'blood_type' => 'c'
-        ]);
-
-        $schema = new JsonSchema([
-            'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'pattern' => '/^[abo]$/']
-        ]);
-
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+        return [
+            self::PatternStringCheck(),
+            self::PatternStringCheckFail(),
+            self::PatternCharCheck(),
+            self::PatternCharCheckFail(),
+            self::PatternStringListCheck(),
+            self::PatternCharListCheck()
+        ];
     }
 
     /**
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
+     * @throws InvalidSchemaException
      */
-    public function testPatternOnStringList(): void
+    private static function PatternStringCheck(): array
+    {
+        return [
+            new JsonData([
+                'name' => 'test'
+            ]),
+            new JsonSchema([
+                'name' => ['type' => JsonRule::STRING_TYPE, 'pattern' => '/^[a-z]+$/']
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function PatternStringCheckFail(): array
+    {
+        return [
+            new JsonData([
+                'name' => 'test2'
+            ]),
+            new JsonSchema([
+                'name' => ['type' => JsonRule::STRING_TYPE, 'pattern' => '/^[a-z]+$/']
+            ]),
+            false
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function PatternCharCheck(): array
+    {
+        return [
+            new JsonData([
+                'blood_type' => 'O'
+            ]),
+            new JsonSchema([
+                'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'pattern' => '/^[ABO]$/']
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function PatternCharCheckFail(): array
+    {
+        return [
+            new JsonData([
+                'blood_type' => 'C'
+            ]),
+            new JsonSchema([
+                'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'pattern' => '/^[ABO]$/']
+            ]),
+            false
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function PatternStringListCheck(): array
+    {
+        return [
+            new JsonData([
+                'list' => [
+                    'hello',
+                    'love',
+                    'test'
+                ]
+            ]),
+            new JsonSchema([
+                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'pattern' => '/^[a-zA-Z]+$/']
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function PatternCharListCheck(): array
+    {
+        return [
+            new JsonData([
+                'list' => [
+                    'A',
+                    'B',
+                    'O'
+                ]
+            ]),
+            new JsonSchema([
+                'list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[ABO]+$/']
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    public function testPatternStringListCheckFail(): void
     {
         $data = new JsonData([
-            'list' => [
-                'hello',
-                'love',
-                'test'
-            ]
-        ]);
-
-        $data2 = new JsonData([
             'list' => [
                 'won\'t',
                 'work',
@@ -85,38 +180,53 @@ class PatternCheckTest extends TestCase
             'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'pattern' => '/^[a-zA-Z]+$/']
         ]);
 
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+        try {
+            $schema->validate($data);
+        } catch (Throwable $t) {
+            $this->assertInstanceOf(InvalidDataException::class, $t);
+            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+
+            $t = $t->getPrevious();
+            $this->assertInstanceOf(InvalidDataException::class, $t);
+            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+
+            $t = $t->getPrevious();
+            $this->assertInstanceOf(InvalidDataException::class, $t);
+            $this->assertEquals(InvalidDataException::PATTERN_NOT_MATCHED, $t->getCode());
+        }
     }
 
     /**
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
+     * @throws InvalidSchemaException
      */
-    public function testPatternOnCharacterList(): void
+    public function testPatternCharListCheckFail(): void
     {
         $data = new JsonData([
-            'blood_types' => [
-                'a',
-                'b',
-                'o'
-            ]
-        ]);
-
-        $data2 = new JsonData([
-            'blood_types' => [
-                'a',
-                'b',
-                'c'
+            'list' => [
+                'A',
+                'B',
+                'C'
             ]
         ]);
 
         $schema = new JsonSchema([
-            'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[abo]$/']
+            'list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[ABO]+$/']
         ]);
 
-        $this->assertTrue($schema->validate($data));
-        $this->assertFalse($schema->validate($data2));
+        try {
+            $schema->validate($data);
+        } catch (Throwable $t) {
+            $this->assertInstanceOf(InvalidDataException::class, $t);
+            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+
+            $t = $t->getPrevious();
+            $this->assertInstanceOf(InvalidDataException::class, $t);
+            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+
+            $t = $t->getPrevious();
+            $this->assertInstanceOf(InvalidDataException::class, $t);
+            $this->assertEquals(InvalidDataException::PATTERN_NOT_MATCHED, $t->getCode());
+        }
     }
 }
