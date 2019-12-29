@@ -171,14 +171,6 @@ class JsonSchema implements DataSchema
     private function validateList(JsonData $dataType): bool
     {
         $data = $dataType->getData();
-
-        if ($data === null) {
-            if (!$this->nullable) {
-                throw new InvalidDataException('Can not be null', InvalidDataException::NULL_VALUE_NOT_ALLOWED);
-            }
-            return true;
-        }
-
         foreach ($data as $key => $element) {
 
             if (!is_array($element)) {
