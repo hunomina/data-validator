@@ -399,7 +399,7 @@ class JsonRule implements Rule
             return $this->isValidTypedList($data);
         }
 
-        throw new InvalidDataException('Unknown data type', InvalidDataException::UNKNOWN_DATA_TYPE);
+        throw new InvalidDataException('Unknown rule type', InvalidDataException::UNKNOWN_DATA_TYPE);
     }
 
     /**

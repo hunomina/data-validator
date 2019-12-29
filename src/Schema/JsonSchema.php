@@ -158,7 +158,7 @@ class JsonSchema implements DataSchema
             return $this->validateList($dataType);
         }
 
-        return false;
+        throw new InvalidDataException('Unknown schema type', InvalidDataException::UNKNOWN_DATA_TYPE);
     }
 
     /**
