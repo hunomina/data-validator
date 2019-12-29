@@ -41,7 +41,8 @@ class ListTypeTest extends TestCase
     {
         return [
             self::ValidList(),
-            self::InvalidList()
+            self::InvalidList(),
+            self::NotAnObjectList()
         ];
     }
 
@@ -75,6 +76,30 @@ class ListTypeTest extends TestCase
      * @throws InvalidSchemaException
      */
     private static function InvalidList(): array
+    {
+        return [
+            new JsonData([
+                'users' => [ // elements do not match the schema
+                    ['id' => 0],
+                    ['id' => 1],
+                ]
+            ]),
+            new JsonSchema([
+                'users' => ['type' => JsonRule::LIST_TYPE, 'schema' => [
+                    'id' => ['type' => JsonRule::INTEGER_TYPE],
+                    'name' => ['type' => JsonRule::STRING_TYPE]
+                ]]
+            ]),
+            false
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function NotAnObjectList(): array
     {
         return [
             new JsonData([
