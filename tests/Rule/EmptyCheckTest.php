@@ -10,8 +10,6 @@ use hunomina\Validator\Json\Rule\JsonRule;
 use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-// todo : add schema build test in an other test in Test\Schema
-
 class EmptyCheckTest extends TestCase
 {
     /**
