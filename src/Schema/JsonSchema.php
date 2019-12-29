@@ -94,7 +94,7 @@ class JsonSchema implements DataSchema
      * @return bool
      * @codeCoverageIgnore
      */
-    public function isNullable(): bool
+    public function canBeNull(): bool
     {
         return $this->nullable;
     }
@@ -233,10 +233,10 @@ class JsonSchema implements DataSchema
                     // if $value is null we check if it is allowed
                     if (!is_array($value)) {
                         if ($value === null) {
-                            if (!$schema->isNullable()) {
+                            if (!$schema->canBeNull()) {
                                 throw new InvalidDataException('`' . $field . '` field can not be `null`', InvalidDataException::INVALID_CHILD_OBJECT);
                             }
-                        } else if ($schema->isNullable()) {
+                        } else if ($schema->canBeNull()) {
                             throw new InvalidDataException('`' . $field . '` field must be an array or `null`', InvalidDataException::INVALID_CHILD_OBJECT);
                         } else {
                             throw new InvalidDataException('`' . $field . '` field must be an array', InvalidDataException::INVALID_CHILD_OBJECT);
