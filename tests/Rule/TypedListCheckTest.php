@@ -11,7 +11,7 @@ use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
-class TypedListTest extends TestCase
+class TypedListCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -36,7 +36,7 @@ class TypedListTest extends TestCase
                 $this->assertInstanceOf(InvalidDataException::class, $t);
                 $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
-                // exception thrown by the scalar type rule
+                // exception thrown by the invalid list element (scalar type)
                 $t = $t->getPrevious();
                 $this->assertInstanceOf(InvalidDataException::class, $t);
                 $this->assertEquals(InvalidDataException::INVALID_DATA_TYPE, $t->getCode());
