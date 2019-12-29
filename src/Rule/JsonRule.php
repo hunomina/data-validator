@@ -395,14 +395,6 @@ class JsonRule implements Rule
             return $this->isValidCharacter($data);
         }
 
-        if ($this->type === self::OBJECT_TYPE) {
-            return $this->isValidObject($data);
-        }
-
-        if ($this->type === self::LIST_TYPE) {
-            return $this->isValidList($data);
-        }
-
         if (in_array($this->type, self::TYPED_ARRAY_TYPES, true)) {
             return $this->isValidTypedList($data);
         }
@@ -588,32 +580,6 @@ class JsonRule implements Rule
     {
         if (!is_bool($data)) {
             throw new InvalidDataException('Must be a boolean', InvalidDataException::INVALID_DATA_TYPE);
-        }
-        return true;
-    }
-
-    /**
-     * @param $data
-     * @return bool
-     * @throws InvalidDataException
-     */
-    protected function isValidList($data): bool
-    {
-        if (!is_array($data)) {
-            throw new InvalidDataException('Must be an array', InvalidDataException::INVALID_DATA_TYPE);
-        }
-        return true;
-    }
-
-    /**
-     * @param $data
-     * @return bool
-     * @throws InvalidDataException
-     */
-    protected function isValidObject($data): bool
-    {
-        if (!is_array($data) || empty($data)) {
-            throw new InvalidDataException('Must be a non empty array', InvalidDataException::INVALID_DATA_TYPE);
         }
         return true;
     }
