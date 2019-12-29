@@ -338,7 +338,11 @@ class JsonRule implements Rule
             || $type === self::INTEGER_TYPE
             || $type === self::FLOAT_TYPE
             || $type === self::CHAR_TYPE
-            || in_array($type, self::TYPED_ARRAY_TYPES, true);
+            || $type === self::NUMERIC_LIST_TYPE
+            || $type === self::STRING_LIST_TYPE
+            || $type === self::INTEGER_LIST_TYPE
+            || $type === self::FLOAT_LIST_TYPE
+            || $type === self::CHAR_LIST_TYPE;
     }
 
     /**
@@ -595,30 +599,28 @@ class JsonRule implements Rule
         $rule = null;
         switch ($this->type) {
             case self::INTEGER_LIST_TYPE:
-                $rule = (new self())->setType(self::INTEGER_TYPE);
+                $rule = (new self())->setType(self::INTEGER_TYPE)->setEnum($enum);
                 break;
             case self::FLOAT_LIST_TYPE:
-                $rule = (new self())->setType(self::FLOAT_TYPE);
+                $rule = (new self())->setType(self::FLOAT_TYPE)->setEnum($enum);
                 break;
             case self::BOOLEAN_LIST_TYPE:
                 $rule = (new self())->setType(self::BOOLEAN_TYPE);
                 break;
             case self::CHAR_LIST_TYPE:
-                $rule = (new self())->setType(self::CHAR_TYPE)->setPattern($this->pattern);
+                $rule = (new self())->setType(self::CHAR_TYPE)->setPattern($this->pattern)->setEnum($enum);
                 break;
             case self::STRING_LIST_TYPE:
-                $rule = (new self())->setType(self::STRING_TYPE)->setPattern($this->pattern);
+                $rule = (new self())->setType(self::STRING_TYPE)->setPattern($this->pattern)->setEnum($enum);
                 break;
             case self::NUMERIC_LIST_TYPE:
-                $rule = (new self())->setType(self::NUMERIC_TYPE);
+                $rule = (new self())->setType(self::NUMERIC_TYPE)->setEnum($enum);
                 break;
         }
 
         if (!($rule instanceof self)) {
             throw new InvalidDataException('Invalid typed list type', InvalidDataException::UNKNOWN_DATA_TYPE);
         }
-
-        $rule->setEnum($enum); // set $enum to check if each element of the typed list is in $enum
 
         foreach ($data as $key => $value) {
             try {
