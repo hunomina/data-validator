@@ -12,6 +12,9 @@ class InvalidSchemaException extends Exception
     // thrown when a field type is missing
     public const MISSING_TYPE = 1;
 
+    // thrown when a schema with an invalid/unknown type is being validated
+    public const INVALID_SCHEMA_TYPE = 2;
+
     // thrown when an object schema is invalid
     public const INVALID_OBJECT_SCHEMA = 10;
 

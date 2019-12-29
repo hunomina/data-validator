@@ -122,10 +122,14 @@ class JsonSchema implements DataSchema
     /**
      * @param string $type
      * @return JsonSchema
-     * @codeCoverageIgnore
+     * @throws InvalidSchemaException
      */
     public function setType(string $type): JsonSchema
     {
+        if ($type !== self::OBJECT_TYPE && $type !== self::LIST_TYPE) {
+            throw new InvalidSchemaException('Invalid schema type', InvalidSchemaException::INVALID_SCHEMA_TYPE);
+        }
+
         $this->type = $type;
         return $this;
     }
@@ -133,8 +137,8 @@ class JsonSchema implements DataSchema
     /**
      * @param DataType $dataType
      * @return bool
-     * @throws InvalidDataTypeException
      * @throws InvalidDataException
+     * @throws InvalidDataTypeException
      */
     public function validate(DataType $dataType): bool
     {
@@ -154,11 +158,8 @@ class JsonSchema implements DataSchema
             return $this->validateObject($dataType);
         }
 
-        if ($this->type === self::LIST_TYPE) {
-            return $this->validateList($dataType);
-        }
-
-        throw new InvalidDataException('Unknown schema type', InvalidDataException::UNKNOWN_DATA_TYPE);
+        // if it's not an object type schema, it's a list type
+        return $this->validateList($dataType);
     }
 
     /**
