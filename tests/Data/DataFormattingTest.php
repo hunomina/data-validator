@@ -76,4 +76,36 @@ class DataFormattingTest extends TestCase
         $schema = new JsonData();
         $schema->format('a');
     }
+
+    /**
+     * @throws InvalidDataException
+     */
+    public function testFormatWithValidJsonButNotAnArray(): void
+    {
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionCode(InvalidDataException::INVALID_JSON_DATA);
+
+        $schema = new JsonData();
+        $schema->format('null');
+    }
+
+    /**
+     * @throws InvalidDataException
+     * Ensure that passing a valid json to format() works
+     */
+    public function testFormatWithValidJson(): void
+    {
+        $schema = new JsonData();
+        $this->assertIsArray($schema->format('[null]'));
+    }
+
+    /**
+     * @throws InvalidDataException
+     * Ensure that passing a valid json to setData() (or constructor) works
+     */
+    public function testSetDataWithValidJson(): void
+    {
+        $schema = new JsonData();
+        $this->assertInstanceOf(JsonData::class, $schema->setData('[null]'));
+    }
 }
