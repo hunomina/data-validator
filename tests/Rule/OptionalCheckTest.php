@@ -40,8 +40,8 @@ class OptionalCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->OptionalCheck(),
-            $this->OptionalCheckFail()
+            self::OptionalCheck(),
+            self::OptionalCheckFail()
         ];
     }
 
@@ -50,7 +50,7 @@ class OptionalCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function OptionalCheck(): array
+    private static function OptionalCheck(): array
     {
         return [
             new JsonData([]),
@@ -66,7 +66,7 @@ class OptionalCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function OptionalCheckFail(): array
+    private static function OptionalCheckFail(): array
     {
         return [
             new JsonData([]),

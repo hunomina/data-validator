@@ -40,14 +40,14 @@ class DateFormatCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->YmdFormat(),
-            $this->YmdFormatFail(),
-            $this->TimestampFormat(),
-            $this->TimestampFormatFail(),
-            $this->AdvancedFormatCheck(),
-            $this->AdvancedFormatCheckFail(),
-            $this->ExistingDateCheck(),
-            $this->NonExistingDateCheck()
+            self::YmdFormat(),
+            self::YmdFormatFail(),
+            self::TimestampFormat(),
+            self::TimestampFormatFail(),
+            self::AdvancedFormatCheck(),
+            self::AdvancedFormatCheckFail(),
+            self::ExistingDateCheck(),
+            self::NonExistingDateCheck()
         ];
     }
 
@@ -56,7 +56,7 @@ class DateFormatCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function YmdFormat(): array
+    private static function YmdFormat(): array
     {
         return [
             new JsonData([
@@ -74,7 +74,7 @@ class DateFormatCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function YmdFormatFail(): array
+    private static function YmdFormatFail(): array
     {
         return [
             new JsonData([
@@ -92,7 +92,7 @@ class DateFormatCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function TimestampFormat(): array
+    private static function TimestampFormat(): array
     {
         return [
             new JsonData([
@@ -110,7 +110,7 @@ class DateFormatCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function TimestampFormatFail(): array
+    private static function TimestampFormatFail(): array
     {
         return [
             new JsonData([
@@ -129,7 +129,7 @@ class DateFormatCheckTest extends TestCase
      * @throws InvalidSchemaException
      * @see https://www.w3.org/TR/NOTE-datetime
      */
-    public function AdvancedFormatCheck(): array
+    private static function AdvancedFormatCheck(): array
     {
         return [
             new JsonData([
@@ -147,7 +147,7 @@ class DateFormatCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function AdvancedFormatCheckFail(): array
+    private static function AdvancedFormatCheckFail(): array
     {
         return [
             new JsonData([
@@ -165,7 +165,7 @@ class DateFormatCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function ExistingDateCheck(): array
+    private static function ExistingDateCheck(): array
     {
         return [
             new JsonData([
@@ -183,7 +183,7 @@ class DateFormatCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function NonExistingDateCheck(): array
+    private static function NonExistingDateCheck(): array
     {
         return [
             new JsonData([

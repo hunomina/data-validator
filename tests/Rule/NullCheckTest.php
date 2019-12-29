@@ -40,8 +40,8 @@ class NullCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->NullCheck(),
-            $this->NullCheckFail()
+            self::NullCheck(),
+            self::NullCheckFail()
         ];
     }
 
@@ -50,7 +50,7 @@ class NullCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function NullCheck(): array
+    private static function NullCheck(): array
     {
         return [
             new JsonData([
@@ -68,7 +68,7 @@ class NullCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function NullCheckFail(): array
+    private static function NullCheckFail(): array
     {
         return [
             new JsonData([

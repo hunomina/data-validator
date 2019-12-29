@@ -42,10 +42,10 @@ class EmptyCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->EmptyRuleOnString(),
-            $this->EmptyRuleOnStringFail(),
-            $this->EmptyRuleOnStringTypedList(),
-            $this->EmptyRuleOnStringTypedListFail(),
+            self::EmptyRuleOnString(),
+            self::EmptyRuleOnStringFail(),
+            self::EmptyRuleOnStringTypedList(),
+            self::EmptyRuleOnStringTypedListFail(),
         ];
     }
 
@@ -54,7 +54,7 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EmptyRuleOnString(): array
+    private static function EmptyRuleOnString(): array
     {
         return [
             new JsonData([
@@ -72,7 +72,7 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EmptyRuleOnStringFail(): array
+    private static function EmptyRuleOnStringFail(): array
     {
         return [
             new JsonData([
@@ -90,7 +90,7 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EmptyRuleOnStringTypedList(): array
+    private static function EmptyRuleOnStringTypedList(): array
     {
         return [
             new JsonData([
@@ -108,7 +108,7 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EmptyRuleOnStringTypedListFail(): array
+    private static function EmptyRuleOnStringTypedListFail(): array
     {
         return [
             new JsonData([

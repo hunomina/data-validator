@@ -40,14 +40,14 @@ class MinCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->MinIntegerCheck(),
-            $this->MinIntegerCheckFail(),
-            $this->MinFloatCheck(),
-            $this->MinFloatCheckFail(),
-            $this->MinNumberCheck(),
-            $this->MinNumberCheckFail(),
-            $this->MinSizeTypedListCheck(),
-            $this->MinSizeTypedListCheckFail()
+            self::MinIntegerCheck(),
+            self::MinIntegerCheckFail(),
+            self::MinFloatCheck(),
+            self::MinFloatCheckFail(),
+            self::MinNumberCheck(),
+            self::MinNumberCheckFail(),
+            self::MinSizeTypedListCheck(),
+            self::MinSizeTypedListCheckFail()
         ];
     }
 
@@ -55,7 +55,7 @@ class MinCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MinIntegerCheck(): array
+    private static function MinIntegerCheck(): array
     {
         return [
             new JsonData([
@@ -72,7 +72,7 @@ class MinCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MinIntegerCheckFail(): array
+    private static function MinIntegerCheckFail(): array
     {
         return [
             new JsonData([
@@ -89,7 +89,7 @@ class MinCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MinFloatCheck(): array
+    private static function MinFloatCheck(): array
     {
         return [
             new JsonData([
@@ -106,7 +106,7 @@ class MinCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MinFloatCheckFail(): array
+    private static function MinFloatCheckFail(): array
     {
         return [
             new JsonData([
@@ -123,7 +123,7 @@ class MinCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MinNumberCheck(): array
+    private static function MinNumberCheck(): array
     {
         return [
             new JsonData([
@@ -140,7 +140,7 @@ class MinCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MinNumberCheckFail(): array
+    private static function MinNumberCheckFail(): array
     {
         return [
             new JsonData([
@@ -157,7 +157,7 @@ class MinCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MinSizeTypedListCheck(): array
+    private static function MinSizeTypedListCheck(): array
     {
         return [
             new JsonData([
@@ -174,7 +174,7 @@ class MinCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MinSizeTypedListCheckFail(): array
+    private static function MinSizeTypedListCheckFail(): array
     {
         return [
             new JsonData([

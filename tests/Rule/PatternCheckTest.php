@@ -41,12 +41,12 @@ class PatternCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->PatternStringCheck(),
-            $this->PatternStringCheckFail(),
-            $this->PatternCharCheck(),
-            $this->PatternCharCheckFail(),
-            $this->PatternStringListCheck(),
-            $this->PatternCharListCheck()
+            self::PatternStringCheck(),
+            self::PatternStringCheckFail(),
+            self::PatternCharCheck(),
+            self::PatternCharCheckFail(),
+            self::PatternStringListCheck(),
+            self::PatternCharListCheck()
         ];
     }
 
@@ -54,7 +54,7 @@ class PatternCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function PatternStringCheck(): array
+    private static function PatternStringCheck(): array
     {
         return [
             new JsonData([
@@ -71,7 +71,7 @@ class PatternCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function PatternStringCheckFail(): array
+    private static function PatternStringCheckFail(): array
     {
         return [
             new JsonData([
@@ -88,7 +88,7 @@ class PatternCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function PatternCharCheck(): array
+    private static function PatternCharCheck(): array
     {
         return [
             new JsonData([
@@ -105,7 +105,7 @@ class PatternCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function PatternCharCheckFail(): array
+    private static function PatternCharCheckFail(): array
     {
         return [
             new JsonData([
@@ -123,7 +123,7 @@ class PatternCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function PatternStringListCheck(): array
+    private static function PatternStringListCheck(): array
     {
         return [
             new JsonData([
@@ -141,10 +141,32 @@ class PatternCheckTest extends TestCase
     }
 
     /**
+     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function PatternStringListCheckFail(): void
+    private static function PatternCharListCheck(): array
+    {
+        return [
+            new JsonData([
+                'list' => [
+                    'A',
+                    'B',
+                    'O'
+                ]
+            ]),
+            new JsonSchema([
+                'list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[ABO]+$/']
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    public function testPatternStringListCheckFail(): void
     {
         $data = new JsonData([
             'list' => [
@@ -172,28 +194,6 @@ class PatternCheckTest extends TestCase
             $this->assertInstanceOf(InvalidDataException::class, $t);
             $this->assertEquals(InvalidDataException::PATTERN_NOT_MATCHED, $t->getCode());
         }
-    }
-
-    /**
-     * @return array
-     * @throws InvalidDataException
-     * @throws InvalidSchemaException
-     */
-    public function PatternCharListCheck(): array
-    {
-        return [
-            new JsonData([
-                'list' => [
-                    'A',
-                    'B',
-                    'O'
-                ]
-            ]),
-            new JsonSchema([
-                'list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[ABO]+$/']
-            ]),
-            true
-        ];
     }
 
     /**

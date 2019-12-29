@@ -40,10 +40,10 @@ class LengthCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->StringLengthCheck(),
-            $this->StringLengthCheckFail(),
-            $this->TypedListLengthCheck(),
-            $this->TypedListLengthCheckFail()
+            self::StringLengthCheck(),
+            self::StringLengthCheckFail(),
+            self::TypedListLengthCheck(),
+            self::TypedListLengthCheckFail()
         ];
     }
 
@@ -51,7 +51,7 @@ class LengthCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function StringLengthCheck(): array
+    private static function StringLengthCheck(): array
     {
         return [
             new JsonData([
@@ -68,7 +68,7 @@ class LengthCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function StringLengthCheckFail(): array
+    private static function StringLengthCheckFail(): array
     {
         return [
             new JsonData([
@@ -85,7 +85,7 @@ class LengthCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function TypedListLengthCheck(): array
+    private static function TypedListLengthCheck(): array
     {
         return [
             new JsonData([
@@ -102,7 +102,7 @@ class LengthCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function TypedListLengthCheckFail(): array
+    private static function TypedListLengthCheckFail(): array
     {
         return [
             new JsonData([

@@ -41,15 +41,15 @@ class EnumCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->EnumForString(),
-            $this->EnumForStringFail(),
-            $this->EnumForInteger(),
-            $this->EnumForIntegerFail(),
-            $this->EnumForFloat(),
-            $this->EnumForFloatFail(),
-            $this->EnumForCharacter(),
-            $this->EnumForCharacterFail(),
-            $this->EnumForTypedList()
+            self::EnumForString(),
+            self::EnumForStringFail(),
+            self::EnumForInteger(),
+            self::EnumForIntegerFail(),
+            self::EnumForFloat(),
+            self::EnumForFloatFail(),
+            self::EnumForCharacter(),
+            self::EnumForCharacterFail(),
+            self::EnumForTypedList()
         ];
     }
 
@@ -57,7 +57,7 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EnumForString(): array
+    private static function EnumForString(): array
     {
         return [
             new JsonData([
@@ -74,7 +74,7 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EnumForStringFail(): array
+    private static function EnumForStringFail(): array
     {
         return [
             new JsonData([
@@ -91,7 +91,7 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EnumForInteger(): array
+    private static function EnumForInteger(): array
     {
         return [
             new JsonData([
@@ -108,7 +108,7 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EnumForIntegerFail(): array
+    private static function EnumForIntegerFail(): array
     {
         return [
             new JsonData([
@@ -125,7 +125,7 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EnumForFloat(): array
+    private static function EnumForFloat(): array
     {
         return [
             new JsonData([
@@ -142,7 +142,7 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EnumForFloatFail(): array
+    private static function EnumForFloatFail(): array
     {
         return [
             new JsonData([
@@ -159,7 +159,7 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EnumForCharacter(): array
+    private static function EnumForCharacter(): array
     {
         return [
             new JsonData([
@@ -176,7 +176,7 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EnumForCharacterFail(): array
+    private static function EnumForCharacterFail(): array
     {
         return [
             new JsonData([
@@ -193,7 +193,7 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function EnumForTypedList(): array
+    private static function EnumForTypedList(): array
     {
         return [
             new JsonData([

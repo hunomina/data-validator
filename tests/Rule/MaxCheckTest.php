@@ -40,14 +40,14 @@ class MaxCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            $this->MaxIntegerCheck(),
-            $this->MaxIntegerCheckFail(),
-            $this->MaxFloatCheck(),
-            $this->MaxFloatCheckFail(),
-            $this->MaxNumberCheck(),
-            $this->MaxNumberCheckFail(),
-            $this->MaxSizeTypedListCheck(),
-            $this->MaxSizeTypedListCheckFail()
+            self::MaxIntegerCheck(),
+            self::MaxIntegerCheckFail(),
+            self::MaxFloatCheck(),
+            self::MaxFloatCheckFail(),
+            self::MaxNumberCheck(),
+            self::MaxNumberCheckFail(),
+            self::MaxSizeTypedListCheck(),
+            self::MaxSizeTypedListCheckFail()
         ];
     }
 
@@ -55,7 +55,7 @@ class MaxCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MaxIntegerCheck(): array
+    private static function MaxIntegerCheck(): array
     {
         return [
             new JsonData([
@@ -72,7 +72,7 @@ class MaxCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MaxIntegerCheckFail(): array
+    private static function MaxIntegerCheckFail(): array
     {
         return [
             new JsonData([
@@ -89,7 +89,7 @@ class MaxCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MaxFloatCheck(): array
+    private static function MaxFloatCheck(): array
     {
         return [
             new JsonData([
@@ -106,7 +106,7 @@ class MaxCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MaxFloatCheckFail(): array
+    private static function MaxFloatCheckFail(): array
     {
         return [
             new JsonData([
@@ -123,7 +123,7 @@ class MaxCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MaxNumberCheck(): array
+    private static function MaxNumberCheck(): array
     {
         return [
             new JsonData([
@@ -140,7 +140,7 @@ class MaxCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MaxNumberCheckFail(): array
+    private static function MaxNumberCheckFail(): array
     {
         return [
             new JsonData([
@@ -157,7 +157,7 @@ class MaxCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MaxSizeTypedListCheck(): array
+    private static function MaxSizeTypedListCheck(): array
     {
         return [
             new JsonData([
@@ -174,7 +174,7 @@ class MaxCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    public function MaxSizeTypedListCheckFail(): array
+    private static function MaxSizeTypedListCheckFail(): array
     {
         return [
             new JsonData([
