@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule;
+namespace hunomina\Validator\Json\Test\Rule\Type;
 
 use hunomina\Validator\Json\Data\JsonData;
 use hunomina\Validator\Json\Exception\InvalidDataException;
@@ -11,7 +11,7 @@ use hunomina\Validator\Json\Schema\JsonSchema;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
-class TypedListCheckTest extends TestCase
+class TypedListTypeTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
