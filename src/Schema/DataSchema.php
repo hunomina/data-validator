@@ -3,6 +3,7 @@
 namespace hunomina\Validator\Json\Schema;
 
 use hunomina\Validator\Json\Data\DataType;
+use hunomina\Validator\Json\Rule\Rule;
 
 interface DataSchema
 {
@@ -18,4 +19,16 @@ interface DataSchema
      * @return $this
      */
     public function setSchema(array $schema): self;
+
+    /**
+     * @return Rule[]|array
+     * Get the schema rules
+     */
+    public function getRules(): array;
+
+    /**
+     * @return DataSchema[]|array
+     * Get the children sub schemas
+     */
+    public function getChildren(): array;
 }
