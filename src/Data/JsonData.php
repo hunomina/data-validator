@@ -11,7 +11,7 @@ class JsonData implements DataType, ArrayAccess
     /**
      * @var array $data
      */
-    private ?array $data = null;
+    private ?array $data;
 
     /**
      * JsonData constructor.
