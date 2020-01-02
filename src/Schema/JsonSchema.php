@@ -4,10 +4,12 @@ namespace hunomina\Validator\Json\Schema;
 
 use hunomina\Validator\Json\Data\DataType;
 use hunomina\Validator\Json\Data\JsonData;
-use hunomina\Validator\Json\Exception\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
+use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Exception\InvalidJsonRuleException;
 use hunomina\Validator\Json\Exception\InvalidSchemaException;
-use hunomina\Validator\Json\Rule\JsonRule;
+use hunomina\Validator\Json\Rule\Json\JsonRule;
+use hunomina\Validator\Json\Rule\Json\JsonRuleFactory;
 
 class JsonSchema implements DataSchema
 {
@@ -264,76 +266,40 @@ class JsonSchema implements DataSchema
     {
         $this->reset();
 
-        foreach ($schema as $field => $rule) {
-            if (!isset($rule['type'])) {
+        foreach ($schema as $rule => $options) {
+            if (!isset($options['type'])) {
                 throw new InvalidSchemaException('Each field of the schema must have a type', InvalidSchemaException::MISSING_TYPE);
             }
 
-            $type = $rule['type'];
-            $isOptional = isset($rule['optional']) ? (bool)$rule['optional'] : false;
-            $canBeNull = isset($rule['null']) ? (bool)$rule['null'] : false;
-
-            if (isset($rule['length']) && !JsonRule::isTypeWithLengthCheck($type)) {
-                throw new InvalidSchemaException('`' . $type . '` type can not be length checked', InvalidSchemaException::INVALID_LENGTH_RULE);
-            }
-
-            if (isset($rule['pattern']) && !JsonRule::isTypeWithPatternCheck($type)) {
-                throw new InvalidSchemaException('`' . $type . '` type can not be patterned checked', InvalidSchemaException::INVALID_PATTERN_RULE);
-            }
-
-            if (isset($rule['min']) && !JsonRule::isTypeWithMinMaxCheck($type)) {
-                throw new InvalidSchemaException('`' . $type . '` type can not be min checked', InvalidSchemaException::INVALID_MIN_RULE);
-            }
-
-            if (isset($rule['max']) && !JsonRule::isTypeWithMinMaxCheck($type)) {
-                throw new InvalidSchemaException('`' . $type . '` type can not be max checked', InvalidSchemaException::INVALID_MAX_RULE);
-            }
-
-            if (isset($rule['enum']) && !JsonRule::isTypeWithEnumCheck($type)) {
-                throw new InvalidSchemaException('`' . $type . '` type can not be enum checked', InvalidSchemaException::INVALID_ENUM_RULE);
-            }
-
-            if (isset($rule['date-format']) && !JsonRule::isTypeWithDateFormatCheck($type)) {
-                throw new InvalidSchemaException('`' . $type . '` type can not be date format checked', InvalidSchemaException::INVALID_DATE_FORMAT_RULE);
-            }
-
-            if (isset($rule['empty']) && !JsonRule::isTypeWithEmptyCheck($type)) {
-                throw new InvalidSchemaException('`' . $type . '` type can not be empty checked', InvalidSchemaException::INVALID_EMPTY_RULE);
-            }
-
-            $length = $rule['length'] ?? null;
-            $pattern = $rule['pattern'] ?? null;
-            $min = $rule['min'] ?? null;
-            $max = $rule['max'] ?? null;
-            $dateFormat = $rule['date-format'] ?? null;
-            $enum = isset($rule['enum']) && is_array($rule['enum']) ? $rule['enum'] : null;
-            $canBeEmpty = $rule['empty'] ?? true;
+            $type = $options['type'];
 
             if ($type === JsonRule::LIST_TYPE || $type === JsonRule::OBJECT_TYPE) {
-                if (!isset($rule['schema'])) {
+                if (!isset($options['schema'])) {
                     throw new InvalidSchemaException('`list` or `object` type must have a `schema` property', InvalidSchemaException::MISSING_SCHEMA);
                 }
 
-                $s = $rule['schema'];
+                $s = $options['schema'];
                 if (!is_array($s)) {
-                    throw new InvalidSchemaException('`schema` must be a valid schema', InvalidSchemaException::INVALID_OBJECT_SCHEMA);
+                    throw new InvalidSchemaException('`schema` option must be an array', InvalidSchemaException::INVALID_CHILD_SCHEMA);
                 }
 
-                $childSchema = new self($s);
+                $isOptional = isset($options['optional']) ? (bool)$options['optional'] : false;
+                $canBeNull = isset($options['null']) ? (bool)$options['null'] : false;
+
+                try {
+                    $childSchema = new self($s);
+                } catch (InvalidSchemaException $e) {
+                    throw new InvalidSchemaException('Invalid `' . $rule . '` child schema : ', InvalidSchemaException::INVALID_CHILD_SCHEMA);
+                }
+
                 $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull);
-                $this->children[$field] = $childSchema;
+                $this->children[$rule] = $childSchema;
             } else {
-                $this->rules[$field] = (new JsonRule())
-                    ->setType($type)
-                    ->setNullable($canBeNull)
-                    ->setOptional($isOptional)
-                    ->setLength($length)
-                    ->setPattern($pattern)
-                    ->setMin($min)
-                    ->setMax($max)
-                    ->setEnum($enum)
-                    ->setDateFormat($dateFormat)
-                    ->setEmpty($canBeEmpty);
+                try {
+                    $this->rules[$rule] = JsonRuleFactory::create($type, $options);
+                } catch (InvalidJsonRuleException $e) {
+                    throw new InvalidSchemaException('Invalid `' . $rule . '` rule : ' . $e->getMessage(), InvalidSchemaException::INVALID_SCHEMA_RULE, $e);
+                }
             }
         }
 
