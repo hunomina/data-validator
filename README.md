@@ -33,20 +33,15 @@ Allows to validate data unit by checking if the data is null, optional and his l
 
 [JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php) can validate :
 
- Type/Check | Length | Pattern | Min/Max | Enum | Date format | Empty
-:---------: | :----: | :-----: | :-----: | :--: | :---------: | :---:
-  String    | :white_check_mark: | :white_check_mark: |         | :white_check_mark: | :white_check_mark: |:white_check_mark:
- Character  |  | :white_check_mark: |         | :white_check_mark: |             |
-  Number    |        |         | :white_check_mark: (value) | **_TODO_** |  |
-  Integer   |        |         | :white_check_mark: (value) | :white_check_mark: |             |
-   Float    |        |         | :white_check_mark: (value) | :white_check_mark: |             |
-  Boolean   |        |         |         |      |             |
- String List | :white_check_mark: | :white_check_mark: | :white_check_mark: (length) | :white_check_mark: | **_TODO_** |:white_check_mark:
- Character List | :white_check_mark: | :white_check_mark: | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
- Numeric List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
- Integer List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
- Float List | :white_check_mark: | | :white_check_mark: (length) | :white_check_mark: | |:white_check_mark:
- Boolean List | :white_check_mark: | | :white_check_mark: (length) |  | |:white_check_mark:
+ Type/Check | Null | Length | Pattern | Min/Max | Enum | Date format | Empty
+:---------: | :----: | :-----: | :-----: | :--: | :---------: | :---: | :---: 
+  String    | :white_check_mark: | :white_check_mark: | :white_check_mark: |         | :white_check_mark: | :white_check_mark: |:white_check_mark:
+ Character  | :white_check_mark: |  | :white_check_mark: |         | :white_check_mark: |             |
+  Number    | :white_check_mark: |        |         | :white_check_mark: | :white_check_mark: |  |
+  Integer   | :white_check_mark: |        |         | :white_check_mark: | :white_check_mark: |             |
+   Float    | :white_check_mark: |        |         | :white_check_mark: | :white_check_mark: |             |
+  Boolean   |     |        |         |         |      |             |
+ Typed List | :white_check_mark: | :white_check_mark: |  | :white_check_mark: |  |  |:white_check_mark:
 
 ---
 
