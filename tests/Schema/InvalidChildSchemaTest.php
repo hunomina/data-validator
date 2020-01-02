@@ -15,7 +15,7 @@ class InvalidChildSchemaTest extends TestCase
     public function testThrowOnInvalidChildSchema(): void
     {
         $this->expectException(InvalidSchemaException::class);
-        $this->expectExceptionCode(InvalidSchemaException::INVALID_OBJECT_SCHEMA);
+        $this->expectExceptionCode(InvalidSchemaException::INVALID_CHILD_SCHEMA);
 
         new JsonSchema([
             'object' => ['type' => JsonRule::OBJECT_TYPE, 'schema' => 'invalid-schema']
