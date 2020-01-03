@@ -242,11 +242,11 @@ abstract class JsonRuleFactory
         }
 
         if (isset($options['list-empty'])) {
-            if (!is_bool($options['empty'])) {
+            if (!is_bool($options['list-empty'])) {
                 throw new InvalidRuleException('`list-empty` option must be a boolean', InvalidRuleException::INVALID_LIST_EMPTY_RULE);
             }
 
-            $rule->setEmpty($options['empty']);
+            $rule->setEmpty($options['list-empty']);
         }
     }
 }
