@@ -36,6 +36,6 @@ trait DateFormatCheckTrait
         }
 
         $d = DateTime::createFromFormat($this->dateFormat, $data);
-        return ($d instanceof DateTime) || $d->format($this->dateFormat) !== $data;
+        return ($d instanceof DateTime) && $d->format($this->dateFormat) === $data;
     }
 }

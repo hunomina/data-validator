@@ -74,7 +74,7 @@ class TypedListRule extends JsonRule
     public function validateEmptyness(array $data): bool
     {
         if ($this->empty === false) {
-            return count($data) === 0;
+            return count($data) !== 0;
         }
 
         return true;
