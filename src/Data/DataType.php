@@ -18,7 +18,7 @@ interface DataType
     /**
      * @param $data
      * @return mixed
-     * Process to transform data into an actual data type
+     * Process to transform raw data into operable data
      */
     public function format($data);
 }
