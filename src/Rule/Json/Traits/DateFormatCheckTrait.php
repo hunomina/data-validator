@@ -18,12 +18,10 @@ trait DateFormatCheckTrait
 
     /**
      * @param string|null $dateFormat
-     * @return DateFormatCheckTrait
      */
-    public function setDateFormat(?string $dateFormat): DateFormatCheckTrait
+    public function setDateFormat(?string $dateFormat): void
     {
         $this->dateFormat = $dateFormat;
-        return $this;
     }
 
     /**

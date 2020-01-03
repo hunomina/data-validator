@@ -16,12 +16,10 @@ trait LengthCheckTrait
 
     /**
      * @param int|null $length
-     * @return LengthCheckTrait
      */
-    public function setLength(?int $length): LengthCheckTrait
+    public function setLength(?int $length): void
     {
         $this->length = $length;
-        return $this;
     }
 
     /**

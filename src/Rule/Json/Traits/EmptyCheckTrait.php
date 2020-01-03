@@ -16,12 +16,10 @@ trait EmptyCheckTrait
 
     /**
      * @param bool $empty
-     * @return EmptyCheckTrait
      */
-    public function setEmpty(bool $empty): EmptyCheckTrait
+    public function setEmpty(bool $empty): void
     {
         $this->empty = $empty;
-        return $this;
     }
 
     /**

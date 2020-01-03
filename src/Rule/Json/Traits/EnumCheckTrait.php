@@ -16,12 +16,10 @@ trait EnumCheckTrait
 
     /**
      * @param array|null $enum
-     * @return EnumCheckTrait
      */
-    public function setEnum(?array $enum): EnumCheckTrait
+    public function setEnum(?array $enum): void
     {
         $this->enum = $enum;
-        return $this;
     }
 
     /**

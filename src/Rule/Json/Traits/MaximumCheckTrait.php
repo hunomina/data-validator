@@ -16,12 +16,10 @@ trait MaximumCheckTrait
 
     /**
      * @param float|null $maximum
-     * @return MaximumCheckTrait
      */
-    public function setMaximum(?float $maximum): MaximumCheckTrait
+    public function setMaximum(?float $maximum): void
     {
         $this->maximum = $maximum;
-        return $this;
     }
 
     /**

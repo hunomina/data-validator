@@ -16,12 +16,10 @@ trait PatternCheckTrait
 
     /**
      * @param string|null $pattern
-     * @return PatternCheckTrait
      */
-    public function setPattern(?string $pattern): PatternCheckTrait
+    public function setPattern(?string $pattern): void
     {
         $this->pattern = $pattern;
-        return $this;
     }
 
     /**

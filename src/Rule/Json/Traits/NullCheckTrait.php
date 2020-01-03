@@ -16,12 +16,10 @@ trait NullCheckTrait
 
     /**
      * @param bool $nullable
-     * @return NullCheckTrait
      */
-    public function setNullable(bool $nullable): NullCheckTrait
+    public function setNullable(bool $nullable): void
     {
         $this->nullable = $nullable;
-        return $this;
     }
 
     /**

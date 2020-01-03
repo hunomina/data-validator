@@ -16,12 +16,10 @@ trait MinimumCheckTrait
 
     /**
      * @param float|null $minimum
-     * @return MinimumCheckTrait
      */
-    public function setMinimum(?float $minimum): MinimumCheckTrait
+    public function setMinimum(?float $minimum): void
     {
         $this->minimum = $minimum;
-        return $this;
     }
 
     /**
