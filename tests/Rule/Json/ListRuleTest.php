@@ -1,16 +1,16 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule\Type;
+namespace hunomina\Validator\Json\Test\Rule\Json;
 
-use hunomina\Validator\Json\Data\JsonData;
-use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Data\Json\JsonData;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
-use hunomina\Validator\Json\Exception\InvalidSchemaException;
-use hunomina\Validator\Json\Rule\JsonRule;
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\Json\JsonRule;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class ListTypeTest extends TestCase
+class ListRuleTest extends TestCase
 {
     /**
      * @dataProvider getTestableData

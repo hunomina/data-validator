@@ -2,7 +2,7 @@
 
 namespace hunomina\Validator\Json\Rule\Json;
 
-use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 
 class BooleanRule extends JsonRule
 {

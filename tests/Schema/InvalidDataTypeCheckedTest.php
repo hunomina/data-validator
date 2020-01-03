@@ -3,10 +3,10 @@
 namespace hunomina\Validator\Json\Test\Schema;
 
 use hunomina\Validator\Json\Data\DataType;
-use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
-use hunomina\Validator\Json\Exception\InvalidSchemaException;
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
 class InvalidDataTypeCheckedTest extends TestCase

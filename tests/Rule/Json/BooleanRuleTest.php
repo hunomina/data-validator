@@ -1,16 +1,16 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule\Type;
+namespace hunomina\Validator\Json\Test\Rule\Json;
 
-use hunomina\Validator\Json\Data\JsonData;
-use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Data\Json\JsonData;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
-use hunomina\Validator\Json\Exception\InvalidSchemaException;
-use hunomina\Validator\Json\Rule\JsonRule;
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\Json\JsonRule;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class FloatTypeTest extends TestCase
+class BooleanRuleTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -20,7 +20,7 @@ class FloatTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testFloatType(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testBooleanRule(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
@@ -40,8 +40,8 @@ class FloatTypeTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::ValidFloatData(),
-            self::InvalidFloatData()
+            self::ValidBooleanData(),
+            self::InvalidBooleanData()
         ];
     }
 
@@ -50,14 +50,14 @@ class FloatTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function ValidFloatData(): array
+    private static function ValidBooleanData(): array
     {
         return [
             new JsonData([
-                'float' => 1.0
+                'boolean' => true
             ]),
             new JsonSchema([
-                'float' => ['type' => JsonRule::FLOAT_TYPE]
+                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE]
             ]),
             true
         ];
@@ -68,14 +68,14 @@ class FloatTypeTest extends TestCase
      * @throws InvalidSchemaException
      * @throws InvalidDataException
      */
-    private static function InvalidFloatData(): array
+    private static function InvalidBooleanData(): array
     {
         return [
             new JsonData([
-                'float' => 1
+                'boolean' => 'not-a-boolean'
             ]),
             new JsonSchema([
-                'float' => ['type' => JsonRule::FLOAT_TYPE]
+                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE]
             ]),
             false
         ];

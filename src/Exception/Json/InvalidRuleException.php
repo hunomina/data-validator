@@ -1,10 +1,10 @@
 <?php
 
-namespace hunomina\Validator\Json\Exception;
+namespace hunomina\Validator\Json\Exception\Json;
 
 use Exception;
 
-class InvalidJsonRuleException extends Exception
+class InvalidRuleException extends Exception
 {
     // thrown when a rule is created with an invalid type
     public const INVALID_RULE_TYPE = 1;

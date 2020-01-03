@@ -2,7 +2,7 @@
 
 namespace hunomina\Validator\Json\Rule;
 
-use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 
 abstract class Rule
 {

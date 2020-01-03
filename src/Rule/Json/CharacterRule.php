@@ -2,7 +2,7 @@
 
 namespace hunomina\Validator\Json\Rule\Json;
 
-use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Rule\Json\Traits\EnumCheckTrait;
 use hunomina\Validator\Json\Rule\Json\Traits\NullCheckTrait;
 use hunomina\Validator\Json\Rule\Json\Traits\PatternCheckTrait;

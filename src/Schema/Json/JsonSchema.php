@@ -1,15 +1,16 @@
 <?php
 
-namespace hunomina\Validator\Json\Schema;
+namespace hunomina\Validator\Json\Schema\Json;
 
 use hunomina\Validator\Json\Data\DataType;
-use hunomina\Validator\Json\Data\JsonData;
+use hunomina\Validator\Json\Data\Json\JsonData;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
-use hunomina\Validator\Json\Exception\InvalidDataException;
-use hunomina\Validator\Json\Exception\InvalidJsonRuleException;
-use hunomina\Validator\Json\Exception\InvalidSchemaException;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
+use hunomina\Validator\Json\Exception\Json\InvalidRuleException;
+use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\Json\JsonRule;
-use hunomina\Validator\Json\Rule\Json\JsonRuleFactory;
+use hunomina\Validator\Json\Rule\Json\Factory\JsonRuleFactory;
+use hunomina\Validator\Json\Schema\DataSchema;
 
 class JsonSchema implements DataSchema
 {
@@ -145,7 +146,7 @@ class JsonSchema implements DataSchema
     public function validate(DataType $dataType): bool
     {
         if (!($dataType instanceof JsonData)) {
-            throw new InvalidDataTypeException('JsonSchema only check JsonData', InvalidDataTypeException::INVALID_DATA_TYPE_USED);
+            throw new InvalidDataTypeException('JsonSchema only validate JsonData', InvalidDataTypeException::INVALID_DATA_TYPE_USED);
         }
 
         if ($dataType->getData() === null) {
@@ -297,7 +298,7 @@ class JsonSchema implements DataSchema
             } else {
                 try {
                     $this->rules[$rule] = JsonRuleFactory::create($type, $options);
-                } catch (InvalidJsonRuleException $e) {
+                } catch (InvalidRuleException $e) {
                     throw new InvalidSchemaException('Invalid `' . $rule . '` rule : ' . $e->getMessage(), InvalidSchemaException::INVALID_SCHEMA_RULE, $e);
                 }
             }

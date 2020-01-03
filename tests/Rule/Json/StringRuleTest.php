@@ -1,16 +1,16 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule\Type;
+namespace hunomina\Validator\Json\Test\Rule\Json;
 
-use hunomina\Validator\Json\Data\JsonData;
-use hunomina\Validator\Json\Exception\InvalidDataException;
+use hunomina\Validator\Json\Data\Json\JsonData;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
-use hunomina\Validator\Json\Exception\InvalidSchemaException;
-use hunomina\Validator\Json\Rule\JsonRule;
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
+use hunomina\Validator\Json\Rule\Json\JsonRule;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class IntegerTypeTest extends TestCase
+class StringRuleTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -20,7 +20,7 @@ class IntegerTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testIntegerType(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testStringType(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
@@ -40,8 +40,8 @@ class IntegerTypeTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::ValidIntegerData(),
-            self::InvalidIntegerData()
+            self::ValidStringData(),
+            self::InvalidStringData()
         ];
     }
 
@@ -50,14 +50,14 @@ class IntegerTypeTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function ValidIntegerData(): array
+    private static function ValidStringData(): array
     {
         return [
             new JsonData([
-                'integer' => 1
+                'string' => 'hello'
             ]),
             new JsonSchema([
-                'integer' => ['type' => JsonRule::INTEGER_TYPE]
+                'string' => ['type' => JsonRule::STRING_TYPE]
             ]),
             true
         ];
@@ -68,14 +68,14 @@ class IntegerTypeTest extends TestCase
      * @throws InvalidSchemaException
      * @throws InvalidDataException
      */
-    private static function InvalidIntegerData(): array
+    private static function InvalidStringData(): array
     {
         return [
             new JsonData([
-                'integer' => false
+                'string' => false
             ]),
             new JsonSchema([
-                'integer' => ['type' => JsonRule::INTEGER_TYPE]
+                'string' => ['type' => JsonRule::STRING_TYPE]
             ]),
             false
         ];
