@@ -30,13 +30,16 @@ abstract class JsonRuleFactory
      */
     public static function create(string $type, array $options): JsonRule
     {
-        $rule = self::getRuleObjectFromType($type);
+        try {
+            $rule = self::getRuleObjectFromType($type);
+        } catch (InvalidRuleException $e) {
+            throw new InvalidRuleException('Invalid rule type : `' . $type . '`', InvalidRuleException::INVALID_RULE_TYPE);
+        }
 
         if (isset($options['optional'])) {
             if (!is_bool($options['optional'])) {
                 throw new InvalidRuleException('`optional` option must be a boolean', InvalidRuleException::INVALID_OPTIONAL_RULE);
             }
-
             $rule->setOptional($options['optional']);
         }
 
@@ -82,7 +85,7 @@ abstract class JsonRuleFactory
             return new TypedListRule(self::getRuleObjectFromType($matches[1]));
         }
 
-        throw new InvalidRuleException('Invalid rule type : `' . $type . '`', InvalidRuleException::INVALID_RULE_TYPE);
+        throw new InvalidRuleException('Invalid rule type', InvalidRuleException::INVALID_RULE_TYPE);
     }
 
     /**
