@@ -15,12 +15,12 @@ abstract class JsonRule extends Rule
     public const BOOLEAN_TYPE = 'boolean';
 
     /* List Types */
-    public const STRING_LIST_TYPE = self::STRING_TYPE.self::LIST_TYPE_SUFFIX;
-    public const CHAR_LIST_TYPE = self::CHAR_TYPE.self::LIST_TYPE_SUFFIX;
-    public const INTEGER_LIST_TYPE = self::INTEGER_TYPE.self::LIST_TYPE_SUFFIX;
-    public const FLOAT_LIST_TYPE = self::FLOAT_TYPE.self::LIST_TYPE_SUFFIX;
-    public const NUMERIC_LIST_TYPE = self::NUMERIC_TYPE.self::LIST_TYPE_SUFFIX;
-    public const BOOLEAN_LIST_TYPE = self::BOOLEAN_TYPE.self::LIST_TYPE_SUFFIX;
+    public const STRING_LIST_TYPE = self::STRING_TYPE . self::LIST_TYPE_SUFFIX;
+    public const CHAR_LIST_TYPE = self::CHAR_TYPE . self::LIST_TYPE_SUFFIX;
+    public const INTEGER_LIST_TYPE = self::INTEGER_TYPE . self::LIST_TYPE_SUFFIX;
+    public const FLOAT_LIST_TYPE = self::FLOAT_TYPE . self::LIST_TYPE_SUFFIX;
+    public const NUMERIC_LIST_TYPE = self::NUMERIC_TYPE . self::LIST_TYPE_SUFFIX;
+    public const BOOLEAN_LIST_TYPE = self::BOOLEAN_TYPE . self::LIST_TYPE_SUFFIX;
 
     public const LIST_TYPE = 'list';
     public const OBJECT_TYPE = 'object';
