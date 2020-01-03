@@ -21,17 +21,4 @@ trait NullCheckTrait
     {
         $this->nullable = $nullable;
     }
-
-    /**
-     * @param $data
-     * @return bool
-     */
-    public function validateNullness($data): bool
-    {
-        if ($data !== null) {
-            return true;
-        }
-
-        return $this->nullable;
-    }
 }

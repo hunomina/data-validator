@@ -33,8 +33,11 @@ class TypedListRule extends JsonRule
      */
     public function validate($data): bool
     {
-        if (!$this->validateNullness($data)) {
-            throw new InvalidDataException('Can not be null', InvalidDataException::NULL_VALUE_NOT_ALLOWED);
+        if ($data === null) {
+            if (!$this->nullable) {
+                throw new InvalidDataException('Can not be null', InvalidDataException::NULL_VALUE_NOT_ALLOWED);
+            }
+            return true;
         }
 
         if (!is_array($data)) {
