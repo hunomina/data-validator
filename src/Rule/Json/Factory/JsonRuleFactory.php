@@ -95,6 +95,10 @@ abstract class JsonRuleFactory
      */
     private static function setScalarTypeOptions(JsonRule $rule, array $options): void
     {
+        if (count(preg_grep('/^list-/', array_keys($options)))) {
+            throw new InvalidRuleException('Invalid `list-` option for `' . $rule->getType() . '` type', InvalidRuleException::INVALID_LIST_RULE_FOR_SCALAR_TYPE);
+        }
+
         $checkRules = class_uses($rule);
 
         if (isset($options['null'])) {
@@ -206,8 +210,9 @@ abstract class JsonRuleFactory
      * @param TypedListRule $rule
      * @param array $options
      * @throws InvalidRuleException
+     * Options are unset once applied to be able to create the child rule from these options
      */
-    private static function setTypedListOptions(TypedListRule $rule, array $options): void
+    private static function setTypedListOptions(TypedListRule $rule, array &$options): void
     {
         if (isset($options['list-null'])) {
             if (!is_bool($options['list-null'])) {
@@ -215,6 +220,7 @@ abstract class JsonRuleFactory
             }
 
             $rule->setNullable($options['list-null']);
+            unset($options['list-null']);
         }
 
         if (isset($options['list-length'])) {
@@ -223,6 +229,7 @@ abstract class JsonRuleFactory
             }
 
             $rule->setLength($options['list-length']);
+            unset($options['list-length']);
         }
 
         if (isset($options['list-min'])) {
@@ -231,6 +238,7 @@ abstract class JsonRuleFactory
             }
 
             $rule->setMinimum($options['list-min']);
+            unset($options['list-min']);
         }
 
         if (isset($options['list-max'])) {
@@ -239,6 +247,7 @@ abstract class JsonRuleFactory
             }
 
             $rule->setMaximum($options['list-max']);
+            unset($options['list-max']);
         }
 
         if (isset($options['list-empty'])) {
@@ -247,6 +256,7 @@ abstract class JsonRuleFactory
             }
 
             $rule->setEmpty($options['list-empty']);
+            unset($options['list-empty']);
         }
     }
 }
