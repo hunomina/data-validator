@@ -27,11 +27,9 @@ abstract class Rule
 
     /**
      * @param bool $optional
-     * @return Rule
      */
-    public function setOptional(bool $optional): Rule
+    public function setOptional(bool $optional): void
     {
         $this->optional = $optional;
-        return $this;
     }
 }
