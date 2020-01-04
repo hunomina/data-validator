@@ -1,9 +1,9 @@
 <?php
 
-namespace hunomina\Validator\Json\Schema;
+namespace hunomina\DataValidator\Schema;
 
-use hunomina\Validator\Json\Data\DataType;
-use hunomina\Validator\Json\Rule\Rule;
+use hunomina\DataValidator\Data\DataType;
+use hunomina\DataValidator\Rule\DataRule;
 
 interface DataSchema
 {
@@ -21,7 +21,7 @@ interface DataSchema
     public function setSchema(array $schema): self;
 
     /**
-     * @return Rule[]|array
+     * @return DataRule[]|array
      * Get the schema rules
      */
     public function getRules(): array;
