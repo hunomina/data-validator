@@ -17,6 +17,9 @@ class TypedListRule extends JsonRule
     use LengthCheckTrait {
         setLength as private traitSetLength;
     }
+    use MinimumCheckTrait {
+        setMinimum as private traitSetMinimum;
+    }
     use EnumCheckTrait;
     use EmptyCheckTrait;
 
@@ -120,6 +123,18 @@ class TypedListRule extends JsonRule
         }
 
         return count($data) <= $this->maximum;
+    }
+
+    /**
+     * @param float|null $minimum
+     * @throws InvalidRuleException
+     */
+    public function setMinimum(?float $minimum): void
+    {
+        if ($minimum !== null && $minimum < 0) {
+            throw new InvalidRuleException('`list-min` option must be greater or equal to 0', InvalidRuleException::INVALID_LIST_MIN_RULE);
+        }
+        $this->traitSetMinimum($minimum);
     }
 
     /**
