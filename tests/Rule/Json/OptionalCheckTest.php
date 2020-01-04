@@ -3,8 +3,8 @@
 namespace hunomina\Validator\Json\Test\Rule\Json;
 
 use hunomina\Validator\Json\Data\Json\JsonData;
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\Json\JsonRule;
 use hunomina\Validator\Json\Schema\Json\JsonSchema;
@@ -40,8 +40,10 @@ class OptionalCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::OptionalCheck(),
-            self::OptionalCheckFail()
+            self::OptionalFieldCheck(),
+            self::OptionalFieldCheckFail(),
+            self::OptionalObjectCheck(),
+            self::OptionalObjectCheckFail()
         ];
     }
 
@@ -50,12 +52,12 @@ class OptionalCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function OptionalCheck(): array
+    private static function OptionalFieldCheck(): array
     {
         return [
             new JsonData([]),
             new JsonSchema([
-                'value' => ['type' => JsonRule::STRING_TYPE, 'optional' => true]
+                'fieldobject' => ['type' => JsonRule::STRING_TYPE, 'optional' => true]
             ]),
             true
         ];
@@ -66,12 +68,44 @@ class OptionalCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function OptionalCheckFail(): array
+    private static function OptionalFieldCheckFail(): array
     {
         return [
             new JsonData([]),
             new JsonSchema([
-                'value' => ['type' => JsonRule::STRING_TYPE, 'optional' => false] // default behavior
+                'fieldobject' => ['type' => JsonRule::STRING_TYPE, 'optional' => false] // default behavior
+            ]),
+            false
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function OptionalObjectCheck(): array
+    {
+        return [
+            new JsonData([]),
+            new JsonSchema([
+                'object' => ['type' => JsonRule::OBJECT_TYPE, 'optional' => true, 'schema' => []]
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function OptionalObjectCheckFail(): array
+    {
+        return [
+            new JsonData([]),
+            new JsonSchema([
+                'object' => ['type' => JsonRule::OBJECT_TYPE, 'optional' => false, 'schema' => []] // default behavior
             ]),
             false
         ];
