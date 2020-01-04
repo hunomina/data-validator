@@ -2,6 +2,8 @@
 
 namespace hunomina\Validator\Json\Rule\Json\Traits;
 
+use hunomina\Validator\Json\Exception\Json\InvalidRuleException;
+
 trait LengthCheckTrait
 {
     protected ?int $length = null;
@@ -16,9 +18,14 @@ trait LengthCheckTrait
 
     /**
      * @param int|null $length
+     * @throws InvalidRuleException
      */
     public function setLength(?int $length): void
     {
+        if ($length !== null && $length < 1) {
+            throw new InvalidRuleException('`length` option must be greater or equal to 1', InvalidRuleException::INVALID_LENGTH_RULE);
+        }
+
         $this->length = $length;
     }
 
