@@ -96,7 +96,7 @@ abstract class JsonRuleFactory
     private static function setScalarTypeOptions(JsonRule $rule, array $options): void
     {
         if (count(preg_grep('/^list-/', array_keys($options)))) {
-            throw new InvalidRuleException('Invalid `list-` option for `' . $rule->getType() . '` type', InvalidRuleException::INVALID_LIST_RULE_FOR_SCALAR_TYPE);
+            throw new InvalidRuleException('`' . $rule->getType() . '` type does not support `list-` options', InvalidRuleException::INVALID_LIST_RULE_FOR_SCALAR_TYPE);
         }
 
         $checkRules = class_uses($rule);

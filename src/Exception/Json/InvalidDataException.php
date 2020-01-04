@@ -21,9 +21,9 @@ class InvalidDataException extends Exception
     public const NULL_VALUE_NOT_ALLOWED = 12;
     // thrown when a value has an invalid length
     public const INVALID_LENGTH = 13;
-    // thrown when a list has not enough element or when a string has not enough character
+    // thrown when a list has not enough element or when a data value is lower than the minimum authorized value
     public const INVALID_MIN_VALUE = 14;
-    // thrown when a list has too many elements or when a string has too many characters
+    // thrown when a list has too many elements or when a data value is greater than the maximum authorized value
     public const INVALID_MAX_VALUE = 15;
     // thrown when a value or the value of a list element is not part of the `enum` property
     public const UNAUTHORIZED_VALUE = 16;
