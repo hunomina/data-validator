@@ -3,9 +3,7 @@
 [![Build Status](https://travis-ci.com/hunomina/json-data-validator.svg?branch=master)](https://travis-ci.com/hunomina/json-data-validator)
 [![codecov](https://codecov.io/gh/hunomina/json-data-validator/branch/master/graph/badge.svg)](https://codecov.io/gh/hunomina/json-data-validator)
 
-__Description :__ Library for json data validation based on data schemas
-
-This library is mainly composed of 3 interfaces and 3 classes implementing them.
+__Description :__ Library for data validation based on data schemas
 
 This project is licensed under the terms of the MIT license.
 
@@ -25,11 +23,11 @@ Allows to encapsulate the data into an object and format it for [DataSchema](htt
 
 ### [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php)
 
-Allows to validate data unit by checking if the data is null, optional and his length, pattern and type.
+Allows to validate data unit based on rule specifications (is the data optional ?, is the data allowed to be...).
 
 ### [JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php)
 
-[JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php) implements [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php).
+[JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php) extends [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php).
 
 [JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php) can validate :
 
@@ -47,7 +45,7 @@ Allows to validate data unit by checking if the data is null, optional and his l
 
 ### [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php)
 
-[DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) is the library main class. It allows to validate [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) based on "child" schemas and [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php).
+[DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) is the library main class. It allows to validate [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) based on sub-schemas and [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php).
 
 `DataSchema::validate()` method allows this validation. If the [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) does not validate the [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php), `DataSchema::validate()` will return false and `DataSchema::getLastError()` will return the validation error.
 
@@ -66,7 +64,7 @@ Objects are composed of rules and "child" schemas if needed.
 This is a schema definition :
 
 ```php
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 
 $schema = new JsonSchema([
     'success' => ['type' => 'bool'],
@@ -110,7 +108,7 @@ If the data has :
 This data is valid :
 
 ```php
-use hunomina\Validator\Json\Data\JsonData;
+use hunomina\Validator\Json\Data\Json\JsonData;
 
 $data = new JsonData([
     'success' => true,
@@ -125,7 +123,7 @@ $data = new JsonData([
 This one is not :
 
 ```php
-use hunomina\Validator\Json\Data\JsonData;
+use hunomina\Validator\Json\Data\Json\JsonData;
 
 $data = new JsonData([
     'success' => true,
@@ -139,7 +137,7 @@ As said earlier, rules can be used to validate length or data pattern.
 This schema uses the pattern validation on the `name` element and the length validation on the `geolocation` element :
 
 ```php
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 
 $schema = new JsonSchema([
     'name' => ['type' => 'string', 'pattern' => '/^[a-z]+$/'],
