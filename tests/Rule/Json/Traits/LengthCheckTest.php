@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule;
+namespace hunomina\Validator\Json\Test\Rule\Json\Traits;
 
 use hunomina\Validator\Json\Data\Json\JsonData;
 use hunomina\Validator\Json\Exception\Json\InvalidDataException;
@@ -10,7 +10,7 @@ use hunomina\Validator\Json\Rule\Json\JsonRule;
 use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class EmptyCheckTest extends TestCase
+class LengthCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -20,11 +20,11 @@ class EmptyCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testEmptyCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testLengthCheck(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
-            $this->expectExceptionCode(InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
+            $this->expectExceptionCode(InvalidDataException::INVALID_LENGTH);
 
             $schema->validate($data);
         } else {
@@ -40,80 +40,76 @@ class EmptyCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::EmptyRuleOnString(),
-            self::EmptyRuleOnStringFail(),
-            self::EmptyRuleOnStringTypedList(),
-            self::EmptyRuleOnStringTypedListFail(),
+            self::StringLengthCheck(),
+            self::StringLengthCheckFail(),
+            self::TypedListLengthCheck(),
+            self::TypedListLengthCheckFail()
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnString(): array
+    private static function StringLengthCheck(): array
     {
         return [
             new JsonData([
-                'name' => ''
+                'username' => 'test'
             ]),
             new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => true]
+                'username' => ['type' => JsonRule::STRING_TYPE, 'length' => 4]
             ]),
             true
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnStringFail(): array
+    private static function StringLengthCheckFail(): array
     {
         return [
             new JsonData([
-                'name' => ''
+                'username' => 'test2'
             ]),
             new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => false] // default behavior
+                'username' => ['type' => JsonRule::STRING_TYPE, 'length' => 4]
             ]),
             false
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnStringTypedList(): array
+    private static function TypedListLengthCheck(): array
     {
         return [
             new JsonData([
-                'list' => []
+                'users' => [1, 2, 3, 4]
             ]),
             new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'empty' => true]
+                'users' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'list-length' => 4]
             ]),
             true
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function EmptyRuleOnStringTypedListFail(): array
+    private static function TypedListLengthCheckFail(): array
     {
         return [
             new JsonData([
-                'list' => []
+                'users' => [1, 2, 3, 4, 5]
             ]),
             new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'empty' => false] // default behavior
+                'users' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'list-length' => 4]
             ]),
             false
         ];

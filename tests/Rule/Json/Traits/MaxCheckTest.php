@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule;
+namespace hunomina\Validator\Json\Test\Rule\Json\Traits;
 
 use hunomina\Validator\Json\Data\Json\JsonData;
 use hunomina\Validator\Json\Exception\Json\InvalidDataException;
@@ -10,7 +10,7 @@ use hunomina\Validator\Json\Rule\Json\JsonRule;
 use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class DateFormatCheckTest extends TestCase
+class MaxCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -20,11 +20,11 @@ class DateFormatCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testDateFormatCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testMaxCheck(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
-            $this->expectExceptionCode(InvalidDataException::INVALID_DATE_FORMAT);
+            $this->expectExceptionCode(InvalidDataException::INVALID_MAX_VALUE);
 
             $schema->validate($data);
         } else {
@@ -40,157 +40,148 @@ class DateFormatCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::YmdFormat(),
-            self::YmdFormatFail(),
-            self::TimestampFormat(),
-            self::TimestampFormatFail(),
-            self::AdvancedFormatCheck(),
-            self::AdvancedFormatCheckFail(),
-            self::ExistingDateCheck(),
-            self::NonExistingDateCheck()
+            self::MaxIntegerCheck(),
+            self::MaxIntegerCheckFail(),
+            self::MaxFloatCheck(),
+            self::MaxFloatCheckFail(),
+            self::MaxNumberCheck(),
+            self::MaxNumberCheckFail(),
+            self::MaxSizeTypedListCheck(),
+            self::MaxSizeTypedListCheckFail()
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function YmdFormat(): array
+    private static function MaxIntegerCheck(): array
     {
         return [
             new JsonData([
-                'birthday' => '2000-01-01'
+                'integer' => 2
             ]),
             new JsonSchema([
-                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'Y-m-d']
+                'integer' => ['type' => JsonRule::INTEGER_TYPE, 'max' => 3]
             ]),
             true
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function YmdFormatFail(): array
+    private static function MaxIntegerCheckFail(): array
     {
         return [
             new JsonData([
-                'birthday' => 'January the first in 2000'
+                'integer' => 4
             ]),
             new JsonSchema([
-                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'Y-m-d']
+                'integer' => ['type' => JsonRule::INTEGER_TYPE, 'max' => 3]
             ]),
             false
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function TimestampFormat(): array
+    private static function MaxFloatCheck(): array
     {
         return [
             new JsonData([
-                'birthday' => '1234567890'
+                'float' => 2.0
             ]),
             new JsonSchema([
-                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'U']
+                'float' => ['type' => JsonRule::FLOAT_TYPE, 'max' => 3.0]
             ]),
             true
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function TimestampFormatFail(): array
+    private static function MaxFloatCheckFail(): array
     {
         return [
             new JsonData([
-                'birthday' => '2000-01-01'
+                'float' => 4.0
             ]),
             new JsonSchema([
-                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'U']
+                'float' => ['type' => JsonRule::FLOAT_TYPE, 'max' => 3.0]
             ]),
             false
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
-     * @see https://www.w3.org/TR/NOTE-datetime
      */
-    private static function AdvancedFormatCheck(): array
+    private static function MaxNumberCheck(): array
     {
         return [
             new JsonData([
-                'birthday' => 'Sat 01 January 2000'
+                'number' => 2.0
             ]),
             new JsonSchema([
-                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
+                'number' => ['type' => JsonRule::NUMERIC_TYPE, 'max' => 3]
             ]),
             true
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function AdvancedFormatCheckFail(): array
+    private static function MaxNumberCheckFail(): array
     {
         return [
             new JsonData([
-                'birthday' => '2000-01-01'
+                'number' => 4.0
             ]),
             new JsonSchema([
-                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
+                'number' => ['type' => JsonRule::NUMERIC_TYPE, 'max' => 3]
             ]),
             false
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function ExistingDateCheck(): array
+    private static function MaxSizeTypedListCheck(): array
     {
         return [
             new JsonData([
-                'birthday' => 'Sat 01 January 2000' // valid day
+                'list' => [1]
             ]),
             new JsonSchema([
-                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
+                'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'list-max' => 2]
             ]),
             true
         ];
     }
 
     /**
-     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function NonExistingDateCheck(): array
+    private static function MaxSizeTypedListCheckFail(): array
     {
         return [
             new JsonData([
-                'birthday' => 'Mon 01 January 2000' // invalid day
+                'list' => [1, 2, 3]
             ]),
             new JsonSchema([
-                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
+                'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'list-max' => 2]
             ]),
             false
         ];

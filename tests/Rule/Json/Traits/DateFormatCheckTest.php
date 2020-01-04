@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule;
+namespace hunomina\Validator\Json\Test\Rule\Json\Traits;
 
 use hunomina\Validator\Json\Data\Json\JsonData;
 use hunomina\Validator\Json\Exception\Json\InvalidDataException;
@@ -10,7 +10,7 @@ use hunomina\Validator\Json\Rule\Json\JsonRule;
 use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
-class MinCheckTest extends TestCase
+class DateFormatCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -20,11 +20,11 @@ class MinCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidDataTypeException
      */
-    public function testMinCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testDateFormatCheck(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
-            $this->expectExceptionCode(InvalidDataException::INVALID_MIN_VALUE);
+            $this->expectExceptionCode(InvalidDataException::INVALID_DATE_FORMAT);
 
             $schema->validate($data);
         } else {
@@ -40,148 +40,157 @@ class MinCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::MinIntegerCheck(),
-            self::MinIntegerCheckFail(),
-            self::MinFloatCheck(),
-            self::MinFloatCheckFail(),
-            self::MinNumberCheck(),
-            self::MinNumberCheckFail(),
-            self::MinSizeTypedListCheck(),
-            self::MinSizeTypedListCheckFail()
+            self::YmdFormat(),
+            self::YmdFormatFail(),
+            self::TimestampFormat(),
+            self::TimestampFormatFail(),
+            self::AdvancedFormatCheck(),
+            self::AdvancedFormatCheckFail(),
+            self::ExistingDateCheck(),
+            self::NonExistingDateCheck()
         ];
     }
 
     /**
+     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function MinIntegerCheck(): array
+    private static function YmdFormat(): array
     {
         return [
             new JsonData([
-                'integer' => 4
+                'birthday' => '2000-01-01'
             ]),
             new JsonSchema([
-                'integer' => ['type' => JsonRule::INTEGER_TYPE, 'min' => 3]
+                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'Y-m-d']
             ]),
             true
         ];
     }
 
     /**
+     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function MinIntegerCheckFail(): array
+    private static function YmdFormatFail(): array
     {
         return [
             new JsonData([
-                'integer' => 2
+                'birthday' => 'January the first in 2000'
             ]),
             new JsonSchema([
-                'integer' => ['type' => JsonRule::INTEGER_TYPE, 'min' => 3]
+                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'Y-m-d']
             ]),
             false
         ];
     }
 
     /**
+     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function MinFloatCheck(): array
+    private static function TimestampFormat(): array
     {
         return [
             new JsonData([
-                'float' => 4.0
+                'birthday' => '1234567890'
             ]),
             new JsonSchema([
-                'float' => ['type' => JsonRule::FLOAT_TYPE, 'min' => 3.0]
+                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'U']
             ]),
             true
         ];
     }
 
     /**
+     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function MinFloatCheckFail(): array
+    private static function TimestampFormatFail(): array
     {
         return [
             new JsonData([
-                'float' => 2.0
+                'birthday' => '2000-01-01'
             ]),
             new JsonSchema([
-                'float' => ['type' => JsonRule::FLOAT_TYPE, 'min' => 3.0]
+                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'U']
             ]),
             false
         ];
     }
 
     /**
+     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
+     * @see https://www.w3.org/TR/NOTE-datetime
      */
-    private static function MinNumberCheck(): array
+    private static function AdvancedFormatCheck(): array
     {
         return [
             new JsonData([
-                'number' => 4.0
+                'birthday' => 'Sat 01 January 2000'
             ]),
             new JsonSchema([
-                'number' => ['type' => JsonRule::NUMERIC_TYPE, 'min' => 3]
+                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
             ]),
             true
         ];
     }
 
     /**
+     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function MinNumberCheckFail(): array
+    private static function AdvancedFormatCheckFail(): array
     {
         return [
             new JsonData([
-                'number' => 2.0
+                'birthday' => '2000-01-01'
             ]),
             new JsonSchema([
-                'number' => ['type' => JsonRule::NUMERIC_TYPE, 'min' => 3]
+                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
             ]),
             false
         ];
     }
 
     /**
+     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function MinSizeTypedListCheck(): array
+    private static function ExistingDateCheck(): array
     {
         return [
             new JsonData([
-                'list' => [1, 2, 3]
+                'birthday' => 'Sat 01 January 2000' // valid day
             ]),
             new JsonSchema([
-                'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'min' => 2]
+                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
             ]),
             true
         ];
     }
 
     /**
+     * @return array
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
-    private static function MinSizeTypedListCheckFail(): array
+    private static function NonExistingDateCheck(): array
     {
         return [
             new JsonData([
-                'list' => [1]
+                'birthday' => 'Mon 01 January 2000' // invalid day
             ]),
             new JsonSchema([
-                'list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'min' => 2]
+                'birthday' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'D d F Y']
             ]),
             false
         ];

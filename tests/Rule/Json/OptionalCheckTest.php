@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule;
+namespace hunomina\Validator\Json\Test\Rule\Json;
 
 use hunomina\Validator\Json\Data\Json\JsonData;
 use hunomina\Validator\Json\Exception\Json\InvalidDataException;

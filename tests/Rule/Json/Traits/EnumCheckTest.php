@@ -1,15 +1,14 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule;
+namespace hunomina\Validator\Json\Test\Rule\Json\Traits;
 
 use hunomina\Validator\Json\Data\Json\JsonData;
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\Json\JsonRule;
 use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
-use Throwable;
 
 class EnumCheckTest extends TestCase
 {
@@ -47,9 +46,10 @@ class EnumCheckTest extends TestCase
             self::EnumForIntegerFail(),
             self::EnumForFloat(),
             self::EnumForFloatFail(),
+            self::EnumForNumber(),
+            self::EnumForNumberFail(),
             self::EnumForCharacter(),
-            self::EnumForCharacterFail(),
-            self::EnumForTypedList()
+            self::EnumForCharacterFail()
         ];
     }
 
@@ -159,6 +159,40 @@ class EnumCheckTest extends TestCase
      * @throws InvalidDataException
      * @throws InvalidSchemaException
      */
+    private static function EnumForNumber(): array
+    {
+        return [
+            new JsonData([
+                'feet' => 2.0
+            ]),
+            new JsonSchema([
+                'feet' => ['type' => JsonRule::NUMERIC_TYPE, 'enum' => [2.0, 3, 4.0]]
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function EnumForNumberFail(): array
+    {
+        return [
+            new JsonData([
+                'feet' => 5.0
+            ]),
+            new JsonSchema([
+                'feet' => ['type' => JsonRule::NUMERIC_TYPE, 'enum' => [2.0, 3, 4.0]]
+            ]),
+            false
+        ];
+    }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
     private static function EnumForCharacter(): array
     {
         return [
@@ -187,53 +221,5 @@ class EnumCheckTest extends TestCase
             ]),
             false
         ];
-    }
-
-    /**
-     * @throws InvalidDataException
-     * @throws InvalidSchemaException
-     */
-    private static function EnumForTypedList(): array
-    {
-        return [
-            new JsonData([
-                'blood_types' => ['A', 'B', 'O']
-            ]),
-            new JsonSchema([
-                'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'enum' => ['A', 'B', 'O']]
-            ]),
-            true
-        ];
-    }
-
-    /**
-     * @throws InvalidDataException
-     * @throws InvalidSchemaException
-     * Single test for a specific use case
-     */
-    public function testEnumForTypedListFail(): void
-    {
-        $data = new JsonData([
-            'blood_types' => ['A', 'B', 'C']
-        ]);
-
-        $schema = new JsonSchema([
-            'blood_types' => ['type' => JsonRule::CHAR_LIST_TYPE, 'enum' => ['A', 'B', 'O']]
-        ]);
-
-        try {
-            $schema->validate($data);
-        } catch (Throwable $t) {
-            $this->assertInstanceOf(InvalidDataException::class, $t);
-            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
-
-            $t = $t->getPrevious();
-            $this->assertInstanceOf(InvalidDataException::class, $t);
-            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
-
-            $t = $t->getPrevious();
-            $this->assertInstanceOf(InvalidDataException::class, $t);
-            $this->assertEquals(InvalidDataException::UNAUTHORIZED_VALUE, $t->getCode());
-        }
     }
 }

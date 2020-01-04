@@ -1,10 +1,10 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Rule;
+namespace hunomina\Validator\Json\Test\Rule\Json\Traits;
 
 use hunomina\Validator\Json\Data\Json\JsonData;
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\Json\JsonRule;
 use hunomina\Validator\Json\Schema\Json\JsonSchema;
@@ -41,7 +41,9 @@ class NullCheckTest extends TestCase
     {
         return [
             self::NullCheck(),
-            self::NullCheckFail()
+            self::NullCheckFail(),
+            self::NullListCheck(),
+            self::NullListCheckFail()
         ];
     }
 
@@ -76,6 +78,42 @@ class NullCheckTest extends TestCase
             ]),
             new JsonSchema([
                 'value' => ['type' => JsonRule::STRING_TYPE, 'null' => false] // default behavior
+            ]),
+            false
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function NullListCheck(): array
+    {
+        return [
+            new JsonData([
+                'value' => null
+            ]),
+            new JsonSchema([
+                'value' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-null' => true]
+            ]),
+            true
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws InvalidDataException
+     * @throws InvalidSchemaException
+     */
+    private static function NullListCheckFail(): array
+    {
+        return [
+            new JsonData([
+                'value' => null
+            ]),
+            new JsonSchema([
+                'value' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-null' => false] // default behavior
             ]),
             false
         ];
