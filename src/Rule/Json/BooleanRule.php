@@ -1,8 +1,8 @@
 <?php
 
-namespace hunomina\Validator\Json\Rule\Json;
+namespace hunomina\DataValidator\Rule\Json;
 
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Exception\Json\InvalidDataException;
 
 class BooleanRule extends JsonRule
 {

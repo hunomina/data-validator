@@ -1,8 +1,8 @@
 <?php
 
-namespace hunomina\Validator\Json\Rule\Json\Traits;
+namespace hunomina\DataValidator\Rule\Json\Traits;
 
-use hunomina\Validator\Json\Exception\Json\InvalidRuleException;
+use hunomina\DataValidator\Exception\Json\InvalidRuleException;
 
 trait LengthCheckTrait
 {

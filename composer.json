@@ -1,5 +1,5 @@
 {
-  "name": "hunomina/json-data-validator",
+  "name": "hunomina/data-validator",
   "license": "proprietary",
   "description": "Library for json schemas validation",
   "type": "library",
@@ -19,12 +19,12 @@
   },
   "autoload": {
     "psr-4": {
-      "hunomina\\Validator\\Json\\": "src/"
+      "hunomina\\DataValidator\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "hunomina\\Validator\\Json\\Test\\": "tests/"
+      "hunomina\\DataValidator\\Test\\": "tests/"
     }
   }
 }

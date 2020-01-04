@@ -1,9 +1,9 @@
 <?php
 
-namespace hunomina\Validator\Json\Schema;
+namespace hunomina\DataValidator\Schema;
 
-use hunomina\Validator\Json\Data\DataType;
-use hunomina\Validator\Json\Rule\DataRule;
+use hunomina\DataValidator\Data\DataType;
+use hunomina\DataValidator\Rule\DataRule;
 
 interface DataSchema
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Rule\Json\Traits;
+namespace hunomina\DataValidator\Rule\Json\Traits;
 
 trait EmptyCheckTrait
 {

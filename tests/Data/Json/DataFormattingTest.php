@@ -1,9 +1,9 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Data\Json;
+namespace hunomina\DataValidator\Test\Data\Json;
 
-use hunomina\Validator\Json\Data\Json\JsonData;
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Data\Json\JsonData;
+use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use PHPUnit\Framework\TestCase;
 
 class DataFormattingTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Exception;
+namespace hunomina\DataValidator\Exception;
 
 use Exception;
 

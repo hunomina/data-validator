@@ -1,8 +1,8 @@
 <?php
 
-namespace hunomina\Validator\Json\Rule;
+namespace hunomina\DataValidator\Rule;
 
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Exception\Json\InvalidDataException;
 
 interface DataRule
 {

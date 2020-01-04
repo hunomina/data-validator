@@ -1,24 +1,24 @@
 <?php
 
-namespace hunomina\Validator\Json\Rule\Json\Factory;
+namespace hunomina\DataValidator\Rule\Json\Factory;
 
-use hunomina\Validator\Json\Exception\Json\InvalidRuleException;
-use hunomina\Validator\Json\Rule\Json\BooleanRule;
-use hunomina\Validator\Json\Rule\Json\CharacterRule;
-use hunomina\Validator\Json\Rule\Json\FloatRule;
-use hunomina\Validator\Json\Rule\Json\IntegerRule;
-use hunomina\Validator\Json\Rule\Json\JsonRule;
-use hunomina\Validator\Json\Rule\Json\NumericRule;
-use hunomina\Validator\Json\Rule\Json\StringRule;
-use hunomina\Validator\Json\Rule\Json\Traits\DateFormatCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\EmptyCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\EnumCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\LengthCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\MaximumCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\MinimumCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\NullCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\PatternCheckTrait;
-use hunomina\Validator\Json\Rule\Json\TypedListRule;
+use hunomina\DataValidator\Exception\Json\InvalidRuleException;
+use hunomina\DataValidator\Rule\Json\BooleanRule;
+use hunomina\DataValidator\Rule\Json\CharacterRule;
+use hunomina\DataValidator\Rule\Json\FloatRule;
+use hunomina\DataValidator\Rule\Json\IntegerRule;
+use hunomina\DataValidator\Rule\Json\JsonRule;
+use hunomina\DataValidator\Rule\Json\NumericRule;
+use hunomina\DataValidator\Rule\Json\StringRule;
+use hunomina\DataValidator\Rule\Json\Traits\DateFormatCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\EmptyCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\EnumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\LengthCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\MaximumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\MinimumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\PatternCheckTrait;
+use hunomina\DataValidator\Rule\Json\TypedListRule;
 
 abstract class JsonRuleFactory
 {

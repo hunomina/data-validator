@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Data;
+namespace hunomina\DataValidator\Data;
 
 interface DataType
 {

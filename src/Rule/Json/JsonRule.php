@@ -1,8 +1,8 @@
 <?php
 
-namespace hunomina\Validator\Json\Rule\Json;
+namespace hunomina\DataValidator\Rule\Json;
 
-use hunomina\Validator\Json\Rule\DataRule;
+use hunomina\DataValidator\Rule\DataRule;
 
 abstract class JsonRule implements DataRule
 {

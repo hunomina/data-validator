@@ -1,14 +1,14 @@
 <?php
 
-namespace hunomina\Validator\Json\Rule\Json;
+namespace hunomina\DataValidator\Rule\Json;
 
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
-use hunomina\Validator\Json\Rule\Json\Traits\DateFormatCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\EmptyCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\EnumCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\LengthCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\NullCheckTrait;
-use hunomina\Validator\Json\Rule\Json\Traits\PatternCheckTrait;
+use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Rule\Json\Traits\DateFormatCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\EmptyCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\EnumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\LengthCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait;
+use hunomina\DataValidator\Rule\Json\Traits\PatternCheckTrait;
 
 class StringRule extends JsonRule
 {

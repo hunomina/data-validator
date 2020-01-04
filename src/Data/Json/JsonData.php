@@ -1,10 +1,10 @@
 <?php
 
-namespace hunomina\Validator\Json\Data\Json;
+namespace hunomina\DataValidator\Data\Json;
 
 use ArrayAccess;
-use hunomina\Validator\Json\Data\DataType;
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Data\DataType;
+use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use JsonException;
 
 class JsonData implements DataType, ArrayAccess

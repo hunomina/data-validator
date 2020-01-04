@@ -1,16 +1,16 @@
 <?php
 
-namespace hunomina\Validator\Json\Schema\Json;
+namespace hunomina\DataValidator\Schema\Json;
 
-use hunomina\Validator\Json\Data\DataType;
-use hunomina\Validator\Json\Data\Json\JsonData;
-use hunomina\Validator\Json\Exception\InvalidDataTypeException;
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
-use hunomina\Validator\Json\Exception\Json\InvalidRuleException;
-use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
-use hunomina\Validator\Json\Rule\Json\JsonRule;
-use hunomina\Validator\Json\Rule\Json\Factory\JsonRuleFactory;
-use hunomina\Validator\Json\Schema\DataSchema;
+use hunomina\DataValidator\Data\DataType;
+use hunomina\DataValidator\Data\Json\JsonData;
+use hunomina\DataValidator\Exception\InvalidDataTypeException;
+use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Exception\Json\InvalidRuleException;
+use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
+use hunomina\DataValidator\Rule\Json\JsonRule;
+use hunomina\DataValidator\Rule\Json\Factory\JsonRuleFactory;
+use hunomina\DataValidator\Schema\DataSchema;
 
 class JsonSchema implements DataSchema
 {
