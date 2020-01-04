@@ -11,7 +11,7 @@ This project is licensed under the terms of the MIT license.
 
 ### [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php)
 
-Allows to encapsulate the data into an object and format it for [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) validation.
+Allows to encapsulate the data into an object and format it in order to be validated using a [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php).
 
 ### [JsonData](https://github.com/hunomina/json-data-validator/blob/master/src/Data/JsonData.php)
 
@@ -21,13 +21,13 @@ Allows to encapsulate the data into an object and format it for [DataSchema](htt
 
 ---
 
-### [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php)
+### [DataRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php)
 
-Allows to validate data unit based on rule specifications (is the data optional ?, is the data allowed to be...).
+Allows to validate [DataType]() based on rule specifications (is the data optional ?, is the data allowed to be...).
 
 ### [JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php)
 
-[JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php) extends [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php).
+[JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php) implement [DataRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php).
 
 [JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php) can validate :
 
@@ -45,13 +45,13 @@ Allows to validate data unit based on rule specifications (is the data optional 
 
 ### [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php)
 
-[DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) is the library main class. It allows to validate [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) based on sub-schemas and [Rule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php).
+[DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) is the library main class. It allows to validate [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) based on sub-schemas and [DataRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/Rule.php).
 
-`DataSchema::validate()` method allows this validation. If the [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) does not validate the [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php), `DataSchema::validate()` will return false and `DataSchema::getLastError()` will return the validation error.
+`DataSchema::validate()` method allows this validation. If  `DataSchema::validate()` does not validate the [DataType](https://github.com/hunomina/json-data-validator/blob/master/src/Data/DataType.php) it throws an [InvalidDataException]().
 
 ### [JsonSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/JsonSchema.php)
 
-[JsonSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/JsonSchema.php) implements [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php), validates [JsonData](https://github.com/hunomina/json-data-validator/blob/master/src/Data/JsonData.php) and uses [JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php) for validation.
+[JsonSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/JsonSchema.php) implements [DataSchema](https://github.com/hunomina/json-data-validator/blob/master/src/Schema/DataSchema.php) and validates [JsonData](https://github.com/hunomina/json-data-validator/blob/master/src/Data/JsonData.php) using [JsonRule](https://github.com/hunomina/json-data-validator/blob/master/src/Rule/JsonRule.php).
 
 ## How it works
 
