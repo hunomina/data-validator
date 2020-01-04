@@ -272,4 +272,24 @@ class TypedListRuleTest extends TestCase
             false
         ];
     }
+
+    /**
+     * @throws InvalidDataException
+     * @throws InvalidDataTypeException
+     * @throws InvalidSchemaException
+     */
+    public function testInvalidDataList(): void
+    {
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
+
+        $data = new JsonData([
+            'users' => 'not-a-list'
+        ]);
+        $schema = new JsonSchema([
+            'users' => ['type' => JsonRule::NUMERIC_LIST_TYPE]
+        ]);
+
+        $schema->validate($data);
+    }
 }
