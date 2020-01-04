@@ -8,6 +8,7 @@ trait MinimumCheckTrait
 
     /**
      * @return float|null
+     * @codeCoverageIgnore
      */
     public function getMinimum(): ?float
     {

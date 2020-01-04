@@ -8,6 +8,7 @@ trait PatternCheckTrait
 
     /**
      * @return string|null
+     * @codeCoverageIgnore
      */
     public function getPattern(): ?string
     {

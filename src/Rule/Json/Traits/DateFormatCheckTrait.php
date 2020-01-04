@@ -10,6 +10,7 @@ trait DateFormatCheckTrait
 
     /**
      * @return string|null
+     * @codeCoverageIgnore
      */
     public function getDateFormat(): ?string
     {

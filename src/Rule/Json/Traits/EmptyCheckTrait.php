@@ -8,6 +8,7 @@ trait EmptyCheckTrait
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      */
     public function canBeEmpty(): bool
     {

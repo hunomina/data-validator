@@ -8,6 +8,7 @@ trait MaximumCheckTrait
 
     /**
      * @return float|null
+     * @codeCoverageIgnore
      */
     public function getMaximum(): ?float
     {

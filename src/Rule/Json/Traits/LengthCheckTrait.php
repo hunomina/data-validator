@@ -10,6 +10,7 @@ trait LengthCheckTrait
 
     /**
      * @return int|null
+     * @codeCoverageIgnore
      */
     public function getLength(): ?int
     {

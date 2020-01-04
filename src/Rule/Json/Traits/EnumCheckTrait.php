@@ -10,6 +10,7 @@ trait EnumCheckTrait
 
     /**
      * @return array|null
+     * @codeCoverageIgnore
      */
     public function getEnum(): ?array
     {

@@ -8,6 +8,7 @@ trait NullCheckTrait
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      */
     public function canBeNull(): bool
     {
