@@ -3,6 +3,7 @@
 namespace hunomina\Validator\Json\Rule\Json;
 
 use hunomina\Validator\Json\Exception\Json\InvalidDataException;
+use hunomina\Validator\Json\Exception\Json\InvalidRuleException;
 use hunomina\Validator\Json\Rule\Json\Traits\EmptyCheckTrait;
 use hunomina\Validator\Json\Rule\Json\Traits\EnumCheckTrait;
 use hunomina\Validator\Json\Rule\Json\Traits\LengthCheckTrait;
@@ -13,9 +14,9 @@ use hunomina\Validator\Json\Rule\Json\Traits\NullCheckTrait;
 class TypedListRule extends JsonRule
 {
     use NullCheckTrait;
-    use LengthCheckTrait;
-    use MinimumCheckTrait;
-    use MaximumCheckTrait;
+    use LengthCheckTrait {
+        setLength as private traitSetLength;
+    }
     use EnumCheckTrait;
     use EmptyCheckTrait;
 
@@ -81,6 +82,19 @@ class TypedListRule extends JsonRule
         }
 
         return true;
+    }
+
+    /**
+     * @param int|null $length
+     * @throws InvalidRuleException
+     */
+    public function setLength(?int $length): void
+    {
+        try {
+            $this->traitSetLength($length);
+        } catch (InvalidRuleException $e) {
+            throw new InvalidRuleException('`list-length` option must be greater or equal to 1', InvalidRuleException::INVALID_LIST_LENGTH_RULE, $e);
+        }
     }
 
     /**
