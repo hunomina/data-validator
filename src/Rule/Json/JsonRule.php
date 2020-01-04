@@ -2,9 +2,9 @@
 
 namespace hunomina\Validator\Json\Rule\Json;
 
-use hunomina\Validator\Json\Rule\Rule;
+use hunomina\Validator\Json\Rule\DataRule;
 
-abstract class JsonRule extends Rule
+abstract class JsonRule implements DataRule
 {
     /* Scalar types */
     public const STRING_TYPE = 'string';
@@ -27,9 +27,28 @@ abstract class JsonRule extends Rule
 
     protected const LIST_TYPE_SUFFIX = '-list';
 
+    protected bool $optional = false;
+
     /**
      * @return string
      * Return the rule type as a string
      */
     abstract public function getType(): string;
+
+    /**
+     * @return bool
+     * Is the data optional <=> is it mandatory in the parent schema
+     */
+    public function isOptional(): bool
+    {
+        return $this->optional;
+    }
+
+    /**
+     * @param bool $optional
+     */
+    public function setOptional(bool $optional): void
+    {
+        $this->optional = $optional;
+    }
 }
