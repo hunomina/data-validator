@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Schema\Rule;
+namespace hunomina\Validator\Json\Test\Schema\Json\Rule;
 
 use hunomina\Validator\Json\Data\Json\JsonData;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
@@ -10,8 +10,9 @@ use hunomina\Validator\Json\Exception\Json\InvalidRuleException;
 use hunomina\Validator\Json\Rule\Json\JsonRule;
 use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
-class MaxRuleTest extends TestCase
+class NullRuleTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -22,16 +23,20 @@ class MaxRuleTest extends TestCase
      * @throws InvalidSchemaException
      * @throws InvalidDataTypeException
      */
-    public function testMinRule(array $schema, bool $success, ?JsonData $data = null): void
+    public function testNullRule(array $schema, bool $success, ?JsonData $data = null): void
     {
         if (!$success) {
-            $this->expectException(InvalidSchemaException::class);
-            $this->expectExceptionCode(InvalidSchemaException::INVALID_MAX_RULE);
-        }
+            try {
+                new JsonSchema($schema);
+            } catch (Throwable $t) {
+                $this->assertInstanceOf(InvalidSchemaException::class, $t);
+                $this->assertEquals(InvalidSchemaException::INVALID_SCHEMA_RULE, $t->getCode());
 
-        $schema = new JsonSchema($schema);
-
-        if ($success) {
+                $this->assertInstanceOf(InvalidRuleException::class, $t->getPrevious());
+                $this->assertEquals(InvalidRuleException::INVALID_NULL_RULE, $t->getPrevious()->getCode());
+            }
+        } else {
+            $schema = new JsonSchema($schema);
             $this->assertTrue($schema->validate($data));
         }
     }
@@ -60,23 +65,31 @@ class MaxRuleTest extends TestCase
 
     /**
      * @return array
+     * @throws InvalidDataException
      */
     private static function StringRule(): array
     {
         return [
-            ['string' => ['type' => JsonRule::STRING_TYPE, 'max' => 'x']],
-            false
+            ['string' => ['type' => JsonRule::STRING_TYPE, 'null' => true]],
+            true,
+            new JsonData([
+                'string' => null
+            ])
         ];
     }
 
     /**
      * @return array
+     * @throws InvalidDataException
      */
     private static function CharacterRule(): array
     {
         return [
-            ['character' => ['type' => JsonRule::CHAR_TYPE, 'max' => 'x']],
-            false
+            ['character' => ['type' => JsonRule::CHAR_TYPE, 'null' => true]],
+            true,
+            new JsonData([
+                'character' => null
+            ])
         ];
     }
 
@@ -87,10 +100,10 @@ class MaxRuleTest extends TestCase
     private static function NumericRule(): array
     {
         return [
-            ['number' => ['type' => JsonRule::NUMERIC_TYPE, 'max' => 3.0]],
+            ['number' => ['type' => JsonRule::NUMERIC_TYPE, 'null' => true]],
             true,
             new JsonData([
-                'number' => 2
+                'number' => null
             ])
         ];
     }
@@ -102,10 +115,10 @@ class MaxRuleTest extends TestCase
     private static function IntegerRule(): array
     {
         return [
-            ['integer' => ['type' => JsonRule::INTEGER_TYPE, 'max' => 3]],
+            ['integer' => ['type' => JsonRule::INTEGER_TYPE, 'null' => true]],
             true,
             new JsonData([
-                'integer' => 2
+                'integer' => null
             ])
         ];
     }
@@ -117,10 +130,10 @@ class MaxRuleTest extends TestCase
     private static function FloatRule(): array
     {
         return [
-            ['float' => ['type' => JsonRule::FLOAT_TYPE, 'max' => 3.0]],
+            ['float' => ['type' => JsonRule::FLOAT_TYPE, 'null' => true]],
             true,
             new JsonData([
-                'float' => 2.0
+                'float' => null
             ])
         ];
     }
@@ -131,7 +144,7 @@ class MaxRuleTest extends TestCase
     private static function BooleanRule(): array
     {
         return [
-            ['boolean' => ['type' => JsonRule::BOOLEAN_TYPE, 'max' => 1]],
+            ['boolean' => ['type' => JsonRule::BOOLEAN_TYPE, 'null' => true]],
             false
         ];
     }
@@ -143,10 +156,10 @@ class MaxRuleTest extends TestCase
     private static function StringListRule(): array
     {
         return [
-            ['string-list' => ['type' => JsonRule::STRING_LIST_TYPE, 'max' => 6]], // check the list length
+            ['string-list' => ['type' => JsonRule::STRING_LIST_TYPE, 'null' => true]],
             true,
             new JsonData([
-                'string-list' => ['this', 'one', 'should', 'work']
+                'string-list' => [null, 'ok']
             ])
         ];
     }
@@ -158,10 +171,10 @@ class MaxRuleTest extends TestCase
     private static function CharacterListRule(): array
     {
         return [
-            ['character-list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'max' => 6]], // check the list length
+            ['character-list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'null' => true]],
             true,
             new JsonData([
-                'character-list' => ['a', 'b', 'C', 'd']
+                'character-list' => [null, 'o', 'k']
             ])
         ];
     }
@@ -173,10 +186,10 @@ class MaxRuleTest extends TestCase
     private static function NumericListRule(): array
     {
         return [
-            ['numeric-list' => ['type' => JsonRule::NUMERIC_LIST_TYPE, 'max' => 6]], // check the list length
+            ['numeric-list' => ['type' => JsonRule::NUMERIC_LIST_TYPE, 'null' => true]],
             true,
             new JsonData([
-                'numeric-list' => [1, 2, 3.0, 4]
+                'numeric-list' => [null, 1, 2.0]
             ])
         ];
     }
@@ -188,10 +201,10 @@ class MaxRuleTest extends TestCase
     private static function IntegerListRule(): array
     {
         return [
-            ['integer-list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'max' => 6]], // check the list length
+            ['integer-list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'null' => true]],
             true,
             new JsonData([
-                'integer-list' => [1, 2, 3, 4]
+                'integer-list' => [null, 1]
             ])
         ];
     }
@@ -203,26 +216,22 @@ class MaxRuleTest extends TestCase
     private static function FloatListRule(): array
     {
         return [
-            ['float-list' => ['type' => JsonRule::FLOAT_LIST_TYPE, 'max' => 6]], // check the list length
+            ['float-list' => ['type' => JsonRule::FLOAT_LIST_TYPE, 'null' => true]],
             true,
             new JsonData([
-                'float-list' => [1.0, 2.0, 3.0, 4.0]
+                'float-list' => [null, 1.0]
             ])
         ];
     }
 
     /**
      * @return array
-     * @throws InvalidDataException
      */
     private static function BooleanListRule(): array
     {
         return [
-            ['boolean-list' => ['type' => JsonRule::BOOLEAN_LIST_TYPE, 'max' => 6]], // check the list length
-            true,
-            new JsonData([
-                'boolean-list' => [true, true, false, true]
-            ])
+            ['boolean-list' => ['type' => JsonRule::BOOLEAN_LIST_TYPE, 'null' => true]],
+            false
         ];
     }
 }

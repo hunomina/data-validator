@@ -1,10 +1,17 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Schema;
+namespace hunomina\Validator\Json\Test\Schema\Json;
 
 use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
-use hunomina\Validator\Json\Rule\JsonRule;
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Rule\Json\BooleanRule;
+use hunomina\Validator\Json\Rule\Json\CharacterRule;
+use hunomina\Validator\Json\Rule\Json\FloatRule;
+use hunomina\Validator\Json\Rule\Json\IntegerRule;
+use hunomina\Validator\Json\Rule\Json\JsonRule;
+use hunomina\Validator\Json\Rule\Json\NumericRule;
+use hunomina\Validator\Json\Rule\Json\StringRule;
+use hunomina\Validator\Json\Rule\Json\TypedListRule;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
 class OneLevelJsonSchemaTest extends TestCase
@@ -27,22 +34,22 @@ class OneLevelJsonSchemaTest extends TestCase
         $this->assertCount(0, $schema->getChildren());
 
         $this->assertArrayHasKey('boolean', $schema->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_TYPE, $schema->getRules()['boolean']->getType());
+        $this->assertInstanceOf(BooleanRule::class, $schema->getRules()['boolean']);
 
         $this->assertArrayHasKey('string', $schema->getRules());
-        $this->assertEquals(JsonRule::STRING_TYPE, $schema->getRules()['string']->getType());
+        $this->assertInstanceOf(StringRule::class, $schema->getRules()['string']);
 
         $this->assertArrayHasKey('integer', $schema->getRules());
-        $this->assertEquals(JsonRule::INTEGER_TYPE, $schema->getRules()['integer']->getType());
+        $this->assertInstanceOf(IntegerRule::class, $schema->getRules()['integer']);
 
         $this->assertArrayHasKey('float', $schema->getRules());
-        $this->assertEquals(JsonRule::FLOAT_TYPE, $schema->getRules()['float']->getType());
+        $this->assertInstanceOf(FloatRule::class, $schema->getRules()['float']);
 
         $this->assertArrayHasKey('number', $schema->getRules());
-        $this->assertEquals(JsonRule::NUMERIC_TYPE, $schema->getRules()['number']->getType());
+        $this->assertInstanceOf(NumericRule::class, $schema->getRules()['number']);
 
         $this->assertArrayHasKey('character', $schema->getRules());
-        $this->assertEquals(JsonRule::CHAR_TYPE, $schema->getRules()['character']->getType());
+        $this->assertInstanceOf(CharacterRule::class, $schema->getRules()['character']);
     }
 
     /**
@@ -63,22 +70,40 @@ class OneLevelJsonSchemaTest extends TestCase
         $this->assertCount(0, $schema->getChildren());
 
         $this->assertArrayHasKey('boolean-list', $schema->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_LIST_TYPE, $schema->getRules()['boolean-list']->getType());
+        /** @var TypedListRule $booleanList */
+        $booleanList = $schema->getRules()['boolean-list'];
+        $this->assertInstanceOf(TypedListRule::class, $booleanList);
+        $this->assertInstanceOf(BooleanRule::class, $booleanList->getChildRule());
 
         $this->assertArrayHasKey('string-list', $schema->getRules());
-        $this->assertEquals(JsonRule::STRING_LIST_TYPE, $schema->getRules()['string-list']->getType());
+        /** @var TypedListRule $stringList */
+        $stringList = $schema->getRules()['string-list'];
+        $this->assertInstanceOf(TypedListRule::class, $stringList);
+        $this->assertInstanceOf(StringRule::class, $stringList->getChildRule());
 
         $this->assertArrayHasKey('integer-list', $schema->getRules());
-        $this->assertEquals(JsonRule::INTEGER_LIST_TYPE, $schema->getRules()['integer-list']->getType());
+        /** @var TypedListRule $integerList */
+        $integerList = $schema->getRules()['integer-list'];
+        $this->assertInstanceOf(TypedListRule::class, $integerList);
+        $this->assertInstanceOf(IntegerRule::class, $integerList->getChildRule());
 
         $this->assertArrayHasKey('float-list', $schema->getRules());
-        $this->assertEquals(JsonRule::FLOAT_LIST_TYPE, $schema->getRules()['float-list']->getType());
+        /** @var TypedListRule $floatList */
+        $floatList = $schema->getRules()['float-list'];
+        $this->assertInstanceOf(TypedListRule::class, $floatList);
+        $this->assertInstanceOf(FloatRule::class, $floatList->getChildRule());
 
         $this->assertArrayHasKey('number-list', $schema->getRules());
-        $this->assertEquals(JsonRule::NUMERIC_LIST_TYPE, $schema->getRules()['number-list']->getType());
+        /** @var TypedListRule $numberList */
+        $numberList = $schema->getRules()['number-list'];
+        $this->assertInstanceOf(TypedListRule::class, $numberList);
+        $this->assertInstanceOf(NumericRule::class, $numberList->getChildRule());
 
         $this->assertArrayHasKey('character-list', $schema->getRules());
-        $this->assertEquals(JsonRule::CHAR_LIST_TYPE, $schema->getRules()['character-list']->getType());
+        /** @var TypedListRule $characterList */
+        $characterList = $schema->getRules()['character-list'];
+        $this->assertInstanceOf(TypedListRule::class, $characterList);
+        $this->assertInstanceOf(CharacterRule::class, $characterList->getChildRule());
     }
 
     /**
@@ -87,25 +112,25 @@ class OneLevelJsonSchemaTest extends TestCase
     public function testOptionalRuleOnSetSchema(): void
     {
         $schema = new JsonSchema([
-            'optional' => ['type' => JsonRule::BOOLEAN_TYPE]
+            'optional' => ['type' => JsonRule::STRING_TYPE]
         ]);
 
         $schema2 = new JsonSchema([
-            'optional' => ['type' => JsonRule::BOOLEAN_TYPE, 'optional' => true],
+            'optional' => ['type' => JsonRule::STRING_TYPE, 'optional' => true],
         ]);
 
         $this->assertCount(1, $schema->getRules());
         $this->assertCount(0, $schema->getChildren());
 
         $this->assertArrayHasKey('optional', $schema->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_TYPE, $schema->getRules()['optional']->getType());
+        $this->assertInstanceOf(StringRule::class, $schema->getRules()['optional']);
         $this->assertFalse($schema->getRules()['optional']->isOptional());
 
         $this->assertCount(1, $schema2->getRules());
         $this->assertCount(0, $schema2->getChildren());
 
         $this->assertArrayHasKey('optional', $schema2->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_TYPE, $schema2->getRules()['optional']->getType());
+        $this->assertInstanceOf(StringRule::class, $schema2->getRules()['optional']);
         $this->assertTrue($schema2->getRules()['optional']->isOptional());
     }
 
@@ -115,25 +140,25 @@ class OneLevelJsonSchemaTest extends TestCase
     public function testNullRuleOnSetSchema(): void
     {
         $schema = new JsonSchema([
-            'null' => ['type' => JsonRule::BOOLEAN_TYPE]
+            'null' => ['type' => JsonRule::STRING_TYPE]
         ]);
 
         $schema2 = new JsonSchema([
-            'null' => ['type' => JsonRule::BOOLEAN_TYPE, 'null' => true],
+            'null' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
         ]);
 
         $this->assertCount(1, $schema->getRules());
         $this->assertCount(0, $schema->getChildren());
 
         $this->assertArrayHasKey('null', $schema->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_TYPE, $schema->getRules()['null']->getType());
+        $this->assertInstanceOf(StringRule::class, $schema->getRules()['null']);
         $this->assertFalse($schema->getRules()['null']->canBeNull());
 
         $this->assertCount(1, $schema2->getRules());
         $this->assertCount(0, $schema2->getChildren());
 
         $this->assertArrayHasKey('null', $schema2->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_TYPE, $schema2->getRules()['null']->getType());
+        $this->assertInstanceOf(StringRule::class, $schema2->getRules()['null']);
         $this->assertTrue($schema2->getRules()['null']->canBeNull());
     }
 

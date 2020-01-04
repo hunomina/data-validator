@@ -1,10 +1,13 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Schema;
+namespace hunomina\Validator\Json\Test\Schema\Json;
 
 use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
-use hunomina\Validator\Json\Rule\JsonRule;
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Rule\Json\BooleanRule;
+use hunomina\Validator\Json\Rule\Json\IntegerRule;
+use hunomina\Validator\Json\Rule\Json\JsonRule;
+use hunomina\Validator\Json\Rule\Json\StringRule;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
 class ThreeLevelJsonValidatorTest extends TestCase
@@ -30,10 +33,10 @@ class ThreeLevelJsonValidatorTest extends TestCase
         $this->assertCount(1, $schema->getChildren());
 
         $this->assertArrayHasKey('boolean', $schema->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_TYPE, $schema->getRules()['boolean']->getType());
+        $this->assertInstanceOf(BooleanRule::class, $schema->getRules()['boolean']);
 
         $this->assertArrayHasKey('string', $schema->getRules());
-        $this->assertEquals(JsonRule::STRING_TYPE, $schema->getRules()['string']->getType());
+        $this->assertInstanceOf(StringRule::class, $schema->getRules()['string']);
         $this->assertTrue($schema->getRules()['string']->canBeNull());
 
         $this->assertArrayHasKey('list', $schema->getChildren());
@@ -45,7 +48,7 @@ class ThreeLevelJsonValidatorTest extends TestCase
         $this->assertCount(1, $listChild->getChildren());
 
         $this->assertArrayHasKey('string', $listChild->getRules());
-        $this->assertEquals(JsonRule::STRING_TYPE, $listChild->getRules()['string']->getType());
+        $this->assertInstanceOf(StringRule::class, $listChild->getRules()['string']);
 
         $this->assertArrayHasKey('object', $listChild->getChildren());
         $objectChild = $listChild->getChildren()['object'];
@@ -56,10 +59,10 @@ class ThreeLevelJsonValidatorTest extends TestCase
         $this->assertCount(0, $objectChild->getChildren());
 
         $this->assertArrayHasKey('string', $objectChild->getRules());
-        $this->assertEquals(JsonRule::STRING_TYPE, $objectChild->getRules()['string']->getType());
+        $this->assertInstanceOf(StringRule::class, $objectChild->getRules()['string']);
 
         $this->assertArrayHasKey('integer', $objectChild->getRules());
-        $this->assertEquals(JsonRule::INTEGER_TYPE, $objectChild->getRules()['integer']->getType());
+        $this->assertInstanceOf(IntegerRule::class, $objectChild->getRules()['integer']);
         $this->assertTrue($objectChild->getRules()['integer']->isOptional());
 
     }

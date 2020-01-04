@@ -1,10 +1,13 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Schema;
+namespace hunomina\Validator\Json\Test\Schema\Json;
 
 use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
-use hunomina\Validator\Json\Rule\JsonRule;
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Rule\Json\BooleanRule;
+use hunomina\Validator\Json\Rule\Json\IntegerRule;
+use hunomina\Validator\Json\Rule\Json\JsonRule;
+use hunomina\Validator\Json\Rule\Json\StringRule;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
 class TwoLevelJsonSchemaWithObjectTest extends TestCase
@@ -26,7 +29,7 @@ class TwoLevelJsonSchemaWithObjectTest extends TestCase
         $this->assertCount(1, $schema->getChildren());
 
         $this->assertArrayHasKey('boolean', $schema->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_TYPE, $schema->getRules()['boolean']->getType());
+        $this->assertInstanceOf(BooleanRule::class, $schema->getRules()['boolean']);
 
         $this->assertArrayHasKey('object', $schema->getChildren());
         $objectChild = $schema->getChildren()['object'];
@@ -36,11 +39,11 @@ class TwoLevelJsonSchemaWithObjectTest extends TestCase
         $this->assertCount(0, $objectChild->getChildren());
 
         $this->assertArrayHasKey('integer', $objectChild->getRules());
-        $this->assertEquals(JsonRule::INTEGER_TYPE, $objectChild->getRules()['integer']->getType());
+        $this->assertInstanceOf(IntegerRule::class, $objectChild->getRules()['integer']);
         $this->assertTrue($objectChild->getRules()['integer']->canBeNull());
 
         $this->assertArrayHasKey('string', $objectChild->getRules());
-        $this->assertEquals(JsonRule::STRING_TYPE, $objectChild->getRules()['string']->getType());
+        $this->assertInstanceOf(StringRule::class, $objectChild->getRules()['string']);
         $this->assertTrue($objectChild->getRules()['string']->isOptional());
     }
 

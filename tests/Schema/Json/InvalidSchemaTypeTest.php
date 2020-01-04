@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Schema;
+namespace hunomina\Validator\Json\Test\Schema\Json;
 
 use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
 use hunomina\Validator\Json\Schema\Json\JsonSchema;

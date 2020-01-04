@@ -1,17 +1,18 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Schema\Rule;
+namespace hunomina\Validator\Json\Test\Schema\Json\Rule;
 
 use hunomina\Validator\Json\Data\Json\JsonData;
-use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\InvalidDataTypeException;
-use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
+use hunomina\Validator\Json\Exception\Json\InvalidDataException;
 use hunomina\Validator\Json\Exception\Json\InvalidRuleException;
+use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
 use hunomina\Validator\Json\Rule\Json\JsonRule;
 use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
-class DateFormatRuleTest extends TestCase
+class LengthRuleTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -22,16 +23,20 @@ class DateFormatRuleTest extends TestCase
      * @throws InvalidSchemaException
      * @throws InvalidDataTypeException
      */
-    public function testDateFormatRule(array $schema, bool $success, ?JsonData $data = null): void
+    public function testLengthRule(array $schema, bool $success, ?JsonData $data = null): void
     {
         if (!$success) {
-            $this->expectException(InvalidSchemaException::class);
-            $this->expectExceptionCode(InvalidSchemaException::INVALID_DATE_FORMAT_RULE);
-        }
+            try {
+                new JsonSchema($schema);
+            } catch (Throwable $t) {
+                $this->assertInstanceOf(InvalidSchemaException::class, $t);
+                $this->assertEquals(InvalidSchemaException::INVALID_SCHEMA_RULE, $t->getCode());
 
-        $schema = new JsonSchema($schema);
-
-        if ($success) {
+                $this->assertInstanceOf(InvalidRuleException::class, $t->getPrevious());
+                $this->assertEquals(InvalidRuleException::INVALID_LENGTH_RULE, $t->getPrevious()->getCode());
+            }
+        } else {
+            $schema = new JsonSchema($schema);
             $this->assertTrue($schema->validate($data));
         }
     }
@@ -65,10 +70,10 @@ class DateFormatRuleTest extends TestCase
     private static function StringRule(): array
     {
         return [
-            ['string' => ['type' => JsonRule::STRING_TYPE, 'date-format' => 'Y-m-d']],
+            ['string' => ['type' => JsonRule::STRING_TYPE, 'length' => 4]],
             true,
             new JsonData([
-                'string' => '2000-01-01'
+                'string' => 'work'
             ])
         ];
     }
@@ -79,7 +84,7 @@ class DateFormatRuleTest extends TestCase
     private static function CharacterRule(): array
     {
         return [
-            ['character' => ['type' => JsonRule::CHAR_TYPE, 'date-format' => 'Y-m-d']],
+            ['character' => ['type' => JsonRule::CHAR_TYPE, 'length' => 4]],
             false
         ];
     }
@@ -90,7 +95,7 @@ class DateFormatRuleTest extends TestCase
     private static function NumericRule(): array
     {
         return [
-            ['number' => ['type' => JsonRule::NUMERIC_TYPE, 'date-format' => 'Y-m-d']],
+            ['number' => ['type' => JsonRule::NUMERIC_TYPE, 'length' => 4]],
             false
         ];
     }
@@ -101,7 +106,7 @@ class DateFormatRuleTest extends TestCase
     private static function IntegerRule(): array
     {
         return [
-            ['integer' => ['type' => JsonRule::INTEGER_TYPE, 'date-format' => 'Y-m-d']],
+            ['integer' => ['type' => JsonRule::INTEGER_TYPE, 'length' => 4]],
             false
         ];
     }
@@ -112,7 +117,7 @@ class DateFormatRuleTest extends TestCase
     private static function FloatRule(): array
     {
         return [
-            ['float' => ['type' => JsonRule::FLOAT_TYPE, 'date-format' => 'Y-m-d']],
+            ['float' => ['type' => JsonRule::FLOAT_TYPE, 'length' => 4]],
             false
         ];
     }
@@ -123,19 +128,23 @@ class DateFormatRuleTest extends TestCase
     private static function BooleanRule(): array
     {
         return [
-            ['boolean' => ['type' => JsonRule::BOOLEAN_TYPE, 'date-format' => 'Y-m-d']],
+            ['boolean' => ['type' => JsonRule::BOOLEAN_TYPE, 'length' => 4]],
             false
         ];
     }
 
     /**
      * @return array
+     * @throws InvalidDataException
      */
     private static function StringListRule(): array
     {
         return [
-            ['string-list' => ['type' => JsonRule::STRING_LIST_TYPE, 'date-format' => 'Y-m-d']],
-            false
+            ['string-list' => ['type' => JsonRule::STRING_LIST_TYPE, 'length' => 4]],
+            true,
+            new JsonData([
+                'string-list' => ['this', 'work']
+            ])
         ];
     }
 
@@ -145,7 +154,7 @@ class DateFormatRuleTest extends TestCase
     private static function CharacterListRule(): array
     {
         return [
-            ['character-list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'date-format' => 'Y-m-d']],
+            ['character-list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'length' => 4]],
             false
         ];
     }
@@ -156,7 +165,7 @@ class DateFormatRuleTest extends TestCase
     private static function NumericListRule(): array
     {
         return [
-            ['numeric-list' => ['type' => JsonRule::NUMERIC_LIST_TYPE, 'date-format' => 'Y-m-d']],
+            ['numeric-list' => ['type' => JsonRule::NUMERIC_LIST_TYPE, 'length' => 4]],
             false
         ];
     }
@@ -167,7 +176,7 @@ class DateFormatRuleTest extends TestCase
     private static function IntegerListRule(): array
     {
         return [
-            ['integer-list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'date-format' => 'Y-m-d']],
+            ['integer-list' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'length' => 4]],
             false
         ];
     }
@@ -178,7 +187,7 @@ class DateFormatRuleTest extends TestCase
     private static function FloatListRule(): array
     {
         return [
-            ['float-list' => ['type' => JsonRule::FLOAT_LIST_TYPE, 'date-format' => 'Y-m-d']],
+            ['float-list' => ['type' => JsonRule::FLOAT_LIST_TYPE, 'length' => 4]],
             false
         ];
     }
@@ -189,8 +198,24 @@ class DateFormatRuleTest extends TestCase
     private static function BooleanListRule(): array
     {
         return [
-            ['boolean-list' => ['type' => JsonRule::BOOLEAN_LIST_TYPE, 'date-format' => 'Y-m-d']],
+            ['boolean-list' => ['type' => JsonRule::BOOLEAN_LIST_TYPE, 'length' => 4]],
             false
         ];
+    }
+
+    public function testInvalidLengthRuleValue(): void
+    {
+        try {
+            new JsonSchema([
+                'string' => ['type' => JsonRule::STRING_TYPE, 'length' => 0]
+            ]);
+        } catch (Throwable $t) {
+            $this->assertInstanceOf(InvalidSchemaException::class, $t);
+            $this->assertEquals(InvalidSchemaException::INVALID_SCHEMA_RULE, $t->getCode());
+
+            $t = $t->getPrevious();
+            $this->assertInstanceOf(InvalidRuleException::class, $t);
+            $this->assertEquals(InvalidRuleException::INVALID_LENGTH_RULE, $t->getCode());
+        }
     }
 }

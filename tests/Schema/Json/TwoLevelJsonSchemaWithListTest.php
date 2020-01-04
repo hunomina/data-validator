@@ -1,10 +1,12 @@
 <?php
 
-namespace hunomina\Validator\Json\Test\Schema;
+namespace hunomina\Validator\Json\Test\Schema\Json;
 
 use hunomina\Validator\Json\Exception\Json\InvalidSchemaException;
-use hunomina\Validator\Json\Rule\JsonRule;
-use hunomina\Validator\Json\Schema\JsonSchema;
+use hunomina\Validator\Json\Rule\Json\BooleanRule;
+use hunomina\Validator\Json\Rule\Json\JsonRule;
+use hunomina\Validator\Json\Rule\Json\StringRule;
+use hunomina\Validator\Json\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
 class TwoLevelJsonSchemaWithListTest extends TestCase
@@ -17,8 +19,8 @@ class TwoLevelJsonSchemaWithListTest extends TestCase
         $schema = new JsonSchema([
             'boolean' => ['type' => JsonRule::BOOLEAN_TYPE],
             'list' => ['type' => JsonRule::LIST_TYPE, 'schema' => [
-                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE, 'null' => true],
-                'string' => ['type' => JsonRule::STRING_TYPE, 'optional' => true]
+                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE, 'optional' => true],
+                'string' => ['type' => JsonRule::STRING_TYPE, 'null' => true]
             ]]
         ]);
 
@@ -26,7 +28,7 @@ class TwoLevelJsonSchemaWithListTest extends TestCase
         $this->assertCount(1, $schema->getChildren());
 
         $this->assertArrayHasKey('boolean', $schema->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_TYPE, $schema->getRules()['boolean']->getType());
+        $this->assertInstanceOf(BooleanRule::class, $schema->getRules()['boolean']);
 
         $this->assertArrayHasKey('list', $schema->getChildren());
         $listChild = $schema->getChildren()['list'];
@@ -36,12 +38,14 @@ class TwoLevelJsonSchemaWithListTest extends TestCase
         $this->assertCount(0, $listChild->getChildren());
 
         $this->assertArrayHasKey('boolean', $listChild->getRules());
-        $this->assertEquals(JsonRule::BOOLEAN_TYPE, $listChild->getRules()['boolean']->getType());
-        $this->assertTrue($listChild->getRules()['boolean']->canBeNull());
+        $this->assertInstanceOf(BooleanRule::class, $listChild->getRules()['boolean']);
+        $this->assertTrue($listChild->getRules()['boolean']->isOptional());
 
         $this->assertArrayHasKey('string', $listChild->getRules());
-        $this->assertEquals(JsonRule::STRING_TYPE, $listChild->getRules()['string']->getType());
-        $this->assertTrue($listChild->getRules()['string']->isOptional());
+        /** @var StringRule $stringRule */
+        $stringRule = $listChild->getRules()['string'];
+        $this->assertInstanceOf(StringRule::class, $stringRule);
+        $this->assertTrue($stringRule->canBeNull());
     }
 
     /**
