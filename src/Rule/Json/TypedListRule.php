@@ -20,6 +20,9 @@ class TypedListRule extends JsonRule
     use MinimumCheckTrait {
         setMinimum as private traitSetMinimum;
     }
+    use MaximumCheckTrait {
+        setMaximum as private traitSetMaximum;
+    }
     use EnumCheckTrait;
     use EmptyCheckTrait;
 
@@ -110,6 +113,18 @@ class TypedListRule extends JsonRule
         }
 
         return $this->length === count($data);
+    }
+
+    /**
+     * @param float|null $maximum
+     * @throws InvalidRuleException
+     */
+    public function setMaximum(?float $maximum): void
+    {
+        if ($maximum !== null && $maximum < 1) {
+            throw new InvalidRuleException('`list-max` option must be greater or equal to 1', InvalidRuleException::INVALID_LIST_MAX_RULE);
+        }
+        $this->traitSetMaximum($maximum);
     }
 
     /**
