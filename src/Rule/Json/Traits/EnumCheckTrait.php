@@ -2,6 +2,8 @@
 
 namespace hunomina\Validator\Json\Rule\Json\Traits;
 
+use hunomina\Validator\Json\Exception\Json\InvalidRuleException;
+
 trait EnumCheckTrait
 {
     protected ?array $enum = null;
@@ -16,9 +18,14 @@ trait EnumCheckTrait
 
     /**
      * @param array|null $enum
+     * @throws InvalidRuleException
      */
     public function setEnum(?array $enum): void
     {
+        if ($enum !== null && count($enum) === 0) {
+            throw new InvalidRuleException('`enum` option can not be an empty array', InvalidRuleException::INVALID_ENUM_RULE);
+        }
+
         $this->enum = $enum;
     }
 
