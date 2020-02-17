@@ -50,7 +50,6 @@ class JsonSchema implements DataSchema
      */
     private function reset(): void
     {
-        $this->type = self::OBJECT_TYPE;
         $this->rules = [];
         $this->children = [];
         $this->optional = false;
