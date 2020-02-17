@@ -19,7 +19,7 @@ class JsonSchema implements DataSchema
     public const LIST_TYPE = 'list';
 
     /** @var string $type */
-    private string $type = self::OBJECT_TYPE;
+    private string $type;
 
     /** @var JsonRule[] $rule */
     private array $rules = [];
@@ -36,11 +36,13 @@ class JsonSchema implements DataSchema
     /**
      * JsonSchema constructor.
      * @param array $schema
+     * @param string $type
      * @throws InvalidSchemaException
      */
-    public function __construct(array $schema = [])
+    public function __construct(array $schema = [], string $type = self::OBJECT_TYPE)
     {
         $this->setSchema($schema);
+        $this->setType($type);
     }
 
     /**
