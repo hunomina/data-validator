@@ -3,7 +3,6 @@
 namespace hunomina\DataValidator\Test\Rule\Json;
 
 use hunomina\DataValidator\Data\Json\JsonData;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
@@ -19,7 +18,6 @@ class TypedListRuleTest extends TestCase
      * @param JsonSchema $schema
      * @param bool $success
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function testTypedListType(JsonData $data, JsonSchema $schema, bool $success): void
     {
@@ -275,7 +273,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      * @throws InvalidSchemaException
      */
     public function testInvalidDataList(): void

@@ -4,7 +4,6 @@ namespace hunomina\DataValidator\Test\Rule\Json\Traits;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
 use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
@@ -18,7 +17,6 @@ class MaxCheckTest extends TestCase
      * @param JsonSchema $schema
      * @param bool $success
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function testMaxCheck(JsonData $data, JsonSchema $schema, bool $success): void
     {

@@ -3,7 +3,6 @@
 namespace hunomina\DataValidator\Test\Schema\Json\Rule;
 
 use hunomina\DataValidator\Data\Json\JsonData;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
 use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Exception\Json\InvalidRuleException;
@@ -21,7 +20,6 @@ class PatternRuleTest extends TestCase
      * @param JsonData|null $data
      * @throws InvalidDataException
      * @throws InvalidSchemaException
-     * @throws InvalidDataTypeException
      */
     public function testPatternRule(array $schema, bool $success, ?JsonData $data = null): void
     {

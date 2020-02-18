@@ -4,7 +4,6 @@ namespace hunomina\DataValidator\Test\Schema\Json;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
 use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +12,6 @@ class ValidateNullDataTest extends TestCase
 {
     /**
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      * @throws InvalidSchemaException
      */
     public function testValidateNullData(): void
@@ -26,7 +24,6 @@ class ValidateNullDataTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      * @throws InvalidSchemaException
      */
     public function testThrowOnInvalidNullData(): void
