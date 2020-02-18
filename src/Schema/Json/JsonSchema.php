@@ -4,7 +4,7 @@ namespace hunomina\DataValidator\Schema\Json;
 
 use hunomina\DataValidator\Data\DataType;
 use hunomina\DataValidator\Data\Json\JsonData;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
+use hunomina\DataValidator\Exception\InvalidDataTypeArgumentException;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Exception\Json\InvalidRuleException;
 use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
@@ -142,12 +142,11 @@ class JsonSchema implements DataSchema
      * @param DataType $dataType
      * @return bool
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function validate(DataType $dataType): bool
     {
         if (!($dataType instanceof JsonData)) {
-            throw new InvalidDataTypeException('JsonSchema only validate JsonData', InvalidDataTypeException::INVALID_DATA_TYPE_USED);
+            throw new InvalidDataTypeArgumentException('JsonSchema only validate JsonData');
         }
 
         if ($dataType->getData() === null) {
@@ -170,7 +169,6 @@ class JsonSchema implements DataSchema
      * @param JsonData $dataType
      * @return bool
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      * Each element must validate the schema
      */
     private function validateList(JsonData $dataType): bool
@@ -196,7 +194,6 @@ class JsonSchema implements DataSchema
     /**
      * @param JsonData $dataType
      * @return bool
-     * @throws InvalidDataTypeException
      * @throws InvalidDataException
      */
     private function validateObject(JsonData $dataType): bool
