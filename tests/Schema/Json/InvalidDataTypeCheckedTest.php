@@ -6,6 +6,7 @@ use hunomina\DataValidator\Exception\InvalidDataTypeArgumentException;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
+use hunomina\DataValidator\Test\Data\TestDataType;
 use PHPUnit\Framework\TestCase;
 
 class InvalidDataTypeCheckedTest extends TestCase
@@ -18,25 +19,9 @@ class InvalidDataTypeCheckedTest extends TestCase
     {
         $this->expectException(InvalidDataTypeArgumentException::class);
 
-        $data = new InvalidDataType(); // not a JsonData
+        $data = new TestDataType(); // not a JsonData
         $schema = new JsonSchema();
 
         $schema->validate($data);
-    }
-}
-
-class InvalidDataType implements DataType
-{
-    public function getData()
-    {
-    }
-
-    public function setData($data): DataType
-    {
-        return $this;
-    }
-
-    public function format($data)
-    {
     }
 }
