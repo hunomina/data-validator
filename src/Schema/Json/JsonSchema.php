@@ -37,7 +37,6 @@ class JsonSchema implements DataSchema
      * JsonSchema constructor.
      * @param array $schema
      * @param string $type
-     * @throws InvalidSchemaException
      */
     public function __construct(array $schema = [], string $type = self::OBJECT_TYPE)
     {
@@ -126,7 +125,6 @@ class JsonSchema implements DataSchema
     /**
      * @param string $type
      * @return JsonSchema
-     * @throws InvalidSchemaException
      */
     public function setType(string $type): JsonSchema
     {
@@ -259,7 +257,6 @@ class JsonSchema implements DataSchema
     /**
      * @param array $schema
      * @return JsonSchema
-     * @throws InvalidSchemaException
      */
     public function setSchema(array $schema): JsonSchema
     {

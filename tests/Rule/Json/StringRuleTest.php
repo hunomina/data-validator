@@ -4,7 +4,6 @@ namespace hunomina\DataValidator\Test\Rule\Json;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +32,6 @@ class StringRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function getTestableData(): array
     {
@@ -46,7 +44,6 @@ class StringRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidStringData(): array
     {
@@ -63,7 +60,6 @@ class StringRuleTest extends TestCase
 
     /**
      * @return array
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
      */
     private static function InvalidStringData(): array

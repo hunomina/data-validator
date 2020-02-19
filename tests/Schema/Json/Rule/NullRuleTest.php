@@ -19,7 +19,6 @@ class NullRuleTest extends TestCase
      * @param bool $success
      * @param JsonData|null $data
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function testNullRule(array $schema, bool $success, ?JsonData $data = null): void
     {

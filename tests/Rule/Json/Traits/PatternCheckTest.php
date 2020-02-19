@@ -4,7 +4,6 @@ namespace hunomina\DataValidator\Test\Rule\Json\Traits;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +33,6 @@ class PatternCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function getTestableData(): array
     {
@@ -50,7 +48,6 @@ class PatternCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function PatternStringCheck(): array
     {
@@ -67,7 +64,6 @@ class PatternCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function PatternStringCheckFail(): array
     {
@@ -84,7 +80,6 @@ class PatternCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function PatternCharCheck(): array
     {
@@ -101,7 +96,6 @@ class PatternCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function PatternCharCheckFail(): array
     {
@@ -119,7 +113,6 @@ class PatternCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function PatternStringListCheck(): array
     {
@@ -141,7 +134,6 @@ class PatternCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function PatternCharListCheck(): array
     {
@@ -162,7 +154,6 @@ class PatternCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function testPatternStringListCheckFail(): void
     {
@@ -196,7 +187,6 @@ class PatternCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function testPatternCharListCheckFail(): void
     {

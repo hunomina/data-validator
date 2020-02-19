@@ -19,7 +19,6 @@ class MaxRuleTest extends TestCase
      * @param bool $success
      * @param JsonData|null $data
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function testMaxRule(array $schema, bool $success, ?JsonData $data = null): void
     {

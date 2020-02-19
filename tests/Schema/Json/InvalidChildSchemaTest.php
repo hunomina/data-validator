@@ -9,9 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class InvalidChildSchemaTest extends TestCase
 {
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testThrowOnInvalidChildSchema(): void
     {
         $this->expectException(InvalidSchemaException::class);

@@ -11,9 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class TwoLevelJsonSchemaWithListTest extends TestCase
 {
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testChildListSchema(): void
     {
         $schema = new JsonSchema([
@@ -47,10 +44,6 @@ class TwoLevelJsonSchemaWithListTest extends TestCase
         $this->assertInstanceOf(StringRule::class, $stringRule);
         $this->assertTrue($stringRule->canBeNull());
     }
-
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testThrowWithListFieldWithoutSchema(): void
     {
         $this->expectExceptionCode(InvalidSchemaException::class);

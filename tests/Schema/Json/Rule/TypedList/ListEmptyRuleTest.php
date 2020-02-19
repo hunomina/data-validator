@@ -19,7 +19,6 @@ class ListEmptyRuleTest extends TestCase
      * @param bool $success
      * @param JsonData|null $data
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function testListEmptyRule(array $schema, bool $success, ?JsonData $data = null): void
     {

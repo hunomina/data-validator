@@ -12,9 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 class TwoLevelJsonSchemaWithObjectTest extends TestCase
 {
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testChildObjectSchema(): void
     {
         $schema = new JsonSchema([
@@ -46,10 +43,6 @@ class TwoLevelJsonSchemaWithObjectTest extends TestCase
         $this->assertInstanceOf(StringRule::class, $objectChild->getRules()['string']);
         $this->assertTrue($objectChild->getRules()['string']->isOptional());
     }
-
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testThrowWithObjectFieldWithoutSchema(): void
     {
         $this->expectExceptionCode(InvalidSchemaException::class);

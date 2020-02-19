@@ -4,7 +4,6 @@ namespace hunomina\DataValidator\Test\Rule\Json\Traits;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +32,6 @@ class EnumCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function getTestableData(): array
     {
@@ -53,7 +51,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForString(): array
     {
@@ -70,7 +67,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForStringFail(): array
     {
@@ -87,7 +83,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForInteger(): array
     {
@@ -104,7 +99,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForIntegerFail(): array
     {
@@ -121,7 +115,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForFloat(): array
     {
@@ -138,7 +131,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForFloatFail(): array
     {
@@ -155,7 +147,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForNumber(): array
     {
@@ -172,7 +163,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForNumberFail(): array
     {
@@ -189,7 +179,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForCharacter(): array
     {
@@ -206,7 +195,6 @@ class EnumCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function EnumForCharacterFail(): array
     {

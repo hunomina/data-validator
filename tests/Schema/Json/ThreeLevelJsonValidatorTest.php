@@ -2,7 +2,6 @@
 
 namespace hunomina\DataValidator\Test\Schema\Json;
 
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\BooleanRule;
 use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
@@ -12,9 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class ThreeLevelJsonValidatorTest extends TestCase
 {
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testThreeLevelSchema(): void
     {
         $schema = new JsonSchema([

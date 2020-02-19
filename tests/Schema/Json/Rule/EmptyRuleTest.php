@@ -19,7 +19,6 @@ class EmptyRuleTest extends TestCase
      * @param bool $success
      * @param JsonData|null $data
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function testEmptyRule(array $schema, bool $success, ?JsonData $data = null): void
     {

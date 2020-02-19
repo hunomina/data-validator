@@ -2,9 +2,9 @@
 
 namespace hunomina\DataValidator\Exception\Json;
 
-use Exception;
+use InvalidArgumentException;
 
-class InvalidSchemaException extends Exception
+class InvalidSchemaException extends InvalidArgumentException
 {
     // thrown when a list schema or object schema is missing
     public const MISSING_SCHEMA = 1;

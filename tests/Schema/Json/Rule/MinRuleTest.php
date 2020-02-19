@@ -19,7 +19,6 @@ class MinRuleTest extends TestCase
      * @param bool $success
      * @param JsonData|null $data
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function testMinRule(array $schema, bool $success, ?JsonData $data = null): void
     {
