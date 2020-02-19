@@ -4,6 +4,11 @@ namespace hunomina\DataValidator\Exception\Json;
 
 use Exception;
 
+/**
+ * Class InvalidDataException
+ * @package hunomina\DataValidator\Exception\Json
+ * Throw when a JsonRule does not validate a JsonData
+ */
 class InvalidDataException extends Exception
 {
     // thrown when the data being validated has an invalid type

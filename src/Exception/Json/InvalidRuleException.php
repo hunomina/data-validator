@@ -4,6 +4,11 @@ namespace hunomina\DataValidator\Exception\Json;
 
 use Exception;
 
+/**
+ * Class InvalidRuleException
+ * @package hunomina\DataValidator\Exception\Json
+ * Thrown when an invalid DataRule is set
+ */
 class InvalidRuleException extends Exception
 {
     // thrown when a rule is created with an invalid type
