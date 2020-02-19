@@ -10,7 +10,7 @@ namespace hunomina\DataValidator\Exception\Json;
 class InvalidSchemaException extends \hunomina\DataValidator\Exception\InvalidSchemaException
 {
     // thrown when a list schema or object schema is missing
-    public const MISSING_SCHEMA = 1;
+    public const MISSING_CHILD_SCHEMA = 1;
 
     // thrown when a rule type is missing
     public const MISSING_TYPE = 2;

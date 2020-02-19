@@ -271,7 +271,7 @@ class JsonSchema implements DataSchema
 
             if ($type === JsonRule::LIST_TYPE || $type === JsonRule::OBJECT_TYPE) {
                 if (!isset($options['schema'])) {
-                    throw new InvalidSchemaException('`list` or `object` type must have a `schema` property', InvalidSchemaException::MISSING_SCHEMA);
+                    throw new InvalidSchemaException('`list` or `object` type must have a `schema` property', InvalidSchemaException::MISSING_CHILD_SCHEMA);
                 }
 
                 $s = $options['schema'];

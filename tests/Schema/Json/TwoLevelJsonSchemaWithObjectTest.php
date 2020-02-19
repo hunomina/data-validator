@@ -46,7 +46,7 @@ class TwoLevelJsonSchemaWithObjectTest extends TestCase
     public function testThrowWithObjectFieldWithoutSchema(): void
     {
         $this->expectExceptionCode(InvalidSchemaException::class);
-        $this->expectExceptionCode(InvalidSchemaException::MISSING_SCHEMA);
+        $this->expectExceptionCode(InvalidSchemaException::MISSING_CHILD_SCHEMA);
 
         new JsonSchema([
             'boolean' => ['type' => JsonRule::BOOLEAN_TYPE],

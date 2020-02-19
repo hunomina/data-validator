@@ -47,7 +47,7 @@ class TwoLevelJsonSchemaWithListTest extends TestCase
     public function testThrowWithListFieldWithoutSchema(): void
     {
         $this->expectExceptionCode(InvalidSchemaException::class);
-        $this->expectExceptionCode(InvalidSchemaException::MISSING_SCHEMA);
+        $this->expectExceptionCode(InvalidSchemaException::MISSING_CHILD_SCHEMA);
 
         new JsonSchema([
             'boolean' => ['type' => JsonRule::BOOLEAN_TYPE],
