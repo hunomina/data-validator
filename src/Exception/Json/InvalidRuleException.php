@@ -4,6 +4,11 @@ namespace hunomina\DataValidator\Exception\Json;
 
 use Exception;
 
+/**
+ * Class InvalidRuleException
+ * @package hunomina\DataValidator\Exception\Json
+ * Thrown when an invalid DataRule is set
+ */
 class InvalidRuleException extends Exception
 {
     // thrown when a rule is created with an invalid type
@@ -28,7 +33,7 @@ class InvalidRuleException extends Exception
     // thrown when an invalid `null` option is encountered
     public const INVALID_NULL_RULE = 17;
     // thrown when an invalid `optional` option is encountered
-    public const INVALID_OPTIONAL_RULE = 25;
+    public const INVALID_OPTIONAL_RULE = 18;
 
     // thrown when an invalid `list-null` rule is encountered
     public const INVALID_LIST_NULL_RULE = 20;

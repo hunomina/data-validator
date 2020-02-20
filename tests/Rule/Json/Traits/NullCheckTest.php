@@ -3,9 +3,7 @@
 namespace hunomina\DataValidator\Test\Rule\Json\Traits;
 
 use hunomina\DataValidator\Data\Json\JsonData;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +16,6 @@ class NullCheckTest extends TestCase
      * @param JsonSchema $schema
      * @param bool $success
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function testNullCheck(JsonData $data, JsonSchema $schema, bool $success): void
     {
@@ -35,7 +32,6 @@ class NullCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function getTestableData(): array
     {
@@ -50,7 +46,6 @@ class NullCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function NullCheck(): array
     {
@@ -68,7 +63,6 @@ class NullCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function NullCheckFail(): array
     {
@@ -86,7 +80,6 @@ class NullCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function NullListCheck(): array
     {
@@ -104,7 +97,6 @@ class NullCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function NullListCheckFail(): array
     {

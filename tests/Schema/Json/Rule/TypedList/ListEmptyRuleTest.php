@@ -3,7 +3,6 @@
 namespace hunomina\DataValidator\Test\Schema\Json\Rule\TypedList;
 
 use hunomina\DataValidator\Data\Json\JsonData;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Exception\Json\InvalidRuleException;
 use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
@@ -20,8 +19,6 @@ class ListEmptyRuleTest extends TestCase
      * @param bool $success
      * @param JsonData|null $data
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
-     * @throws InvalidDataTypeException
      */
     public function testListEmptyRule(array $schema, bool $success, ?JsonData $data = null): void
     {

@@ -4,19 +4,19 @@ namespace hunomina\DataValidator\Schema\Json;
 
 use hunomina\DataValidator\Data\DataType;
 use hunomina\DataValidator\Data\Json\JsonData;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
+use hunomina\DataValidator\Exception\InvalidDataTypeArgumentException;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Exception\Json\InvalidRuleException;
 use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
-use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Rule\Json\Factory\JsonRuleFactory;
+use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\DataSchema;
 
 class JsonSchema implements DataSchema
 {
-    public const OBJECT_TYPE = 'object';
+    public const OBJECT_TYPE = JsonRule::OBJECT_TYPE;
 
-    public const LIST_TYPE = 'list';
+    public const LIST_TYPE = JsonRule::LIST_TYPE;
 
     /** @var string $type */
     private string $type;
@@ -37,7 +37,6 @@ class JsonSchema implements DataSchema
      * JsonSchema constructor.
      * @param array $schema
      * @param string $type
-     * @throws InvalidSchemaException
      */
     public function __construct(array $schema = [], string $type = self::OBJECT_TYPE)
     {
@@ -126,7 +125,6 @@ class JsonSchema implements DataSchema
     /**
      * @param string $type
      * @return JsonSchema
-     * @throws InvalidSchemaException
      */
     public function setType(string $type): JsonSchema
     {
@@ -142,12 +140,11 @@ class JsonSchema implements DataSchema
      * @param DataType $dataType
      * @return bool
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function validate(DataType $dataType): bool
     {
         if (!($dataType instanceof JsonData)) {
-            throw new InvalidDataTypeException('JsonSchema only validate JsonData', InvalidDataTypeException::INVALID_DATA_TYPE_USED);
+            throw new InvalidDataTypeArgumentException('JsonSchema only validate JsonData');
         }
 
         if ($dataType->getData() === null) {
@@ -170,7 +167,6 @@ class JsonSchema implements DataSchema
      * @param JsonData $dataType
      * @return bool
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      * Each element must validate the schema
      */
     private function validateList(JsonData $dataType): bool
@@ -196,7 +192,6 @@ class JsonSchema implements DataSchema
     /**
      * @param JsonData $dataType
      * @return bool
-     * @throws InvalidDataTypeException
      * @throws InvalidDataException
      */
     private function validateObject(JsonData $dataType): bool
@@ -262,7 +257,6 @@ class JsonSchema implements DataSchema
     /**
      * @param array $schema
      * @return JsonSchema
-     * @throws InvalidSchemaException
      */
     public function setSchema(array $schema): JsonSchema
     {
@@ -270,32 +264,17 @@ class JsonSchema implements DataSchema
 
         foreach ($schema as $rule => $options) {
             if (!isset($options['type'])) {
-                throw new InvalidSchemaException('Each field of the schema must have a type', InvalidSchemaException::MISSING_TYPE);
+                throw new InvalidSchemaException('Each field of the schema must have a type', InvalidSchemaException::MISSING_RULE_TYPE);
             }
 
             $type = $options['type'];
 
             if ($type === JsonRule::LIST_TYPE || $type === JsonRule::OBJECT_TYPE) {
-                if (!isset($options['schema'])) {
-                    throw new InvalidSchemaException('`list` or `object` type must have a `schema` property', InvalidSchemaException::MISSING_SCHEMA);
-                }
-
-                $s = $options['schema'];
-                if (!is_array($s)) {
-                    throw new InvalidSchemaException('`schema` option must be an array', InvalidSchemaException::INVALID_CHILD_SCHEMA);
-                }
-
-                $isOptional = isset($options['optional']) ? (bool)$options['optional'] : false;
-                $canBeNull = isset($options['null']) ? (bool)$options['null'] : false;
-
                 try {
-                    $childSchema = new self($s);
+                    $this->children[$rule] = self::createChildSchema($type, $options);
                 } catch (InvalidSchemaException $e) {
-                    throw new InvalidSchemaException('Invalid `' . $rule . '` child schema : ', InvalidSchemaException::INVALID_CHILD_SCHEMA);
+                    throw new InvalidSchemaException('Invalid `' . $rule . '` child schema : ' . $e->getMessage(), InvalidSchemaException::INVALID_CHILD_SCHEMA, $e);
                 }
-
-                $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull);
-                $this->children[$rule] = $childSchema;
             } else {
                 try {
                     $this->rules[$rule] = JsonRuleFactory::create($type, $options);
@@ -306,5 +285,43 @@ class JsonSchema implements DataSchema
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $type
+     * @param array $options
+     * @return static
+     */
+    private static function createChildSchema(string $type, array $options): self
+    {
+        if (!isset($options['schema'])) {
+            throw new InvalidSchemaException('`list` or `object` type must have a `schema` property', InvalidSchemaException::MISSING_CHILD_SCHEMA);
+        }
+
+        $s = $options['schema'];
+        if (!is_array($s)) {
+            throw new InvalidSchemaException('`schema` option must be an array', InvalidSchemaException::INVALID_CHILD_SCHEMA);
+        }
+
+        $isOptional = false;
+        if (isset($options['optional'])) {
+            if (!is_bool($options['optional'])) {
+                throw new InvalidSchemaException('`optional` schema option must be a boolean', InvalidSchemaException::INVALID_SCHEMA_OPTIONAL_FIELD);
+            }
+            $isOptional = $options['optional'];
+        }
+
+        $canBeNull = false;
+        if (isset($options['null'])) {
+            if (!is_bool($options['null'])) {
+                throw new InvalidSchemaException('`null` schema option must be a boolean', InvalidSchemaException::INVALID_SCHEMA_NULLABLE_FIELD);
+            }
+            $canBeNull = $options['null'];
+        }
+
+        $childSchema = new self($s, $type);
+        $childSchema->setOptional($isOptional)->setNullable($canBeNull);
+
+        return $childSchema;
     }
 }

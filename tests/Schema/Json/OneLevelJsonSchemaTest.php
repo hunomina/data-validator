@@ -16,9 +16,6 @@ use PHPUnit\Framework\TestCase;
 
 class OneLevelJsonSchemaTest extends TestCase
 {
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testScalarRuleTypesOnSetSchema(): void
     {
         $schema = new JsonSchema([
@@ -51,10 +48,6 @@ class OneLevelJsonSchemaTest extends TestCase
         $this->assertArrayHasKey('character', $schema->getRules());
         $this->assertInstanceOf(CharacterRule::class, $schema->getRules()['character']);
     }
-
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testListRuleTypesOnSetSchema(): void
     {
         $schema = new JsonSchema([
@@ -105,10 +98,6 @@ class OneLevelJsonSchemaTest extends TestCase
         $this->assertInstanceOf(TypedListRule::class, $characterList);
         $this->assertInstanceOf(CharacterRule::class, $characterList->getChildRule());
     }
-
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testOptionalRuleOnSetSchema(): void
     {
         $schema = new JsonSchema([
@@ -133,10 +122,6 @@ class OneLevelJsonSchemaTest extends TestCase
         $this->assertInstanceOf(StringRule::class, $schema2->getRules()['optional']);
         $this->assertTrue($schema2->getRules()['optional']->isOptional());
     }
-
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testNullRuleOnSetSchema(): void
     {
         $schema = new JsonSchema([
@@ -161,14 +146,10 @@ class OneLevelJsonSchemaTest extends TestCase
         $this->assertInstanceOf(StringRule::class, $schema2->getRules()['null']);
         $this->assertTrue($schema2->getRules()['null']->canBeNull());
     }
-
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testThrowOnFieldWithoutAType(): void
     {
         $this->expectException(InvalidSchemaException::class);
-        $this->expectExceptionCode(InvalidSchemaException::MISSING_TYPE);
+        $this->expectExceptionCode(InvalidSchemaException::MISSING_RULE_TYPE);
 
         new JsonSchema([
             'no-type' => []

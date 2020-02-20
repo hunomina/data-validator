@@ -11,6 +11,7 @@ interface DataSchema
      * @param DataType $data
      * @return mixed
      * Check if the data validates the schema
+     * Should throw InvalidDataTypeArgumentException on invalid $data parameter type
      */
     public function validate(DataType $data): bool;
 

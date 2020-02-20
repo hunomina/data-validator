@@ -4,8 +4,6 @@ namespace hunomina\DataValidator\Test\Rule\Json;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +16,6 @@ class ListRuleTest extends TestCase
      * @param JsonSchema $schema
      * @param bool $success
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function testListType(JsonData $data, JsonSchema $schema, bool $success): void
     {
@@ -35,7 +32,6 @@ class ListRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function getTestableData(): array
     {
@@ -49,7 +45,6 @@ class ListRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidList(): array
     {
@@ -73,7 +68,6 @@ class ListRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function InvalidList(): array
     {
@@ -97,7 +91,6 @@ class ListRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function NotAnObjectList(): array
     {

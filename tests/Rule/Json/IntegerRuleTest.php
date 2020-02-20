@@ -4,8 +4,6 @@ namespace hunomina\DataValidator\Test\Rule\Json;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +16,6 @@ class IntegerRuleTest extends TestCase
      * @param JsonSchema $schema
      * @param bool $success
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function testIntegerType(JsonData $data, JsonSchema $schema, bool $success): void
     {
@@ -35,7 +32,6 @@ class IntegerRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function getTestableData(): array
     {
@@ -48,7 +44,6 @@ class IntegerRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidIntegerData(): array
     {
@@ -65,7 +60,6 @@ class IntegerRuleTest extends TestCase
 
     /**
      * @return array
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
      */
     private static function InvalidIntegerData(): array

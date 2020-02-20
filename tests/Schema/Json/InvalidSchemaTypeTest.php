@@ -8,9 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class InvalidSchemaTypeTest extends TestCase
 {
-    /**
-     * @throws InvalidSchemaException
-     */
     public function testThrowOnInvalidSchemaType(): void
     {
         $this->expectException(InvalidSchemaException::class);

@@ -4,8 +4,6 @@ namespace hunomina\DataValidator\Test\Rule\Json;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +16,6 @@ class NumericRuleTest extends TestCase
      * @param JsonSchema $schema
      * @param bool $success
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function testNumericType(JsonData $data, JsonSchema $schema, bool $success): void
     {
@@ -35,7 +32,6 @@ class NumericRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function getTestableData(): array
     {
@@ -50,7 +46,6 @@ class NumericRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidIntegerData(): array
     {
@@ -68,7 +63,6 @@ class NumericRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidFloatData(): array
     {
@@ -86,7 +80,6 @@ class NumericRuleTest extends TestCase
 
     /**
      * @return array
-     * @throws InvalidSchemaException
      * @throws InvalidDataException
      */
     private static function InvalidNumericData(): array
@@ -105,7 +98,6 @@ class NumericRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function InvalidNumericStringData(): array
     {

@@ -3,9 +3,7 @@
 namespace hunomina\DataValidator\Test\Rule\Json;
 
 use hunomina\DataValidator\Data\Json\JsonData;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +17,6 @@ class TypedListRuleTest extends TestCase
      * @param JsonSchema $schema
      * @param bool $success
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function testTypedListType(JsonData $data, JsonSchema $schema, bool $success): void
     {
@@ -49,7 +46,6 @@ class TypedListRuleTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function getTestableData(): array
     {
@@ -71,7 +67,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidIntegerList(): array
     {
@@ -88,7 +83,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function InvalidIntegerList(): array
     {
@@ -105,7 +99,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidStringList(): array
     {
@@ -122,7 +115,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function InvalidStringList(): array
     {
@@ -139,7 +131,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidCharacterList(): array
     {
@@ -156,7 +147,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function InvalidCharacterList(): array
     {
@@ -173,7 +163,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidBooleanList(): array
     {
@@ -190,7 +179,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function InvalidBooleanList(): array
     {
@@ -207,7 +195,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidFloatList(): array
     {
@@ -224,7 +211,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function InvalidFloatList(): array
     {
@@ -241,7 +227,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function ValidNumericList(): array
     {
@@ -258,7 +243,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function InvalidNumericList(): array
     {
@@ -275,8 +259,6 @@ class TypedListRuleTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
-     * @throws InvalidSchemaException
      */
     public function testInvalidDataList(): void
     {

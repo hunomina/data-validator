@@ -4,8 +4,6 @@ namespace hunomina\DataValidator\Test\Rule\Json\Traits;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\InvalidDataTypeException;
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +16,6 @@ class MinCheckTest extends TestCase
      * @param JsonSchema $schema
      * @param bool $success
      * @throws InvalidDataException
-     * @throws InvalidDataTypeException
      */
     public function testMinCheck(JsonData $data, JsonSchema $schema, bool $success): void
     {
@@ -35,7 +32,6 @@ class MinCheckTest extends TestCase
     /**
      * @return array
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     public function getTestableData(): array
     {
@@ -53,7 +49,6 @@ class MinCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function MinIntegerCheck(): array
     {
@@ -70,7 +65,6 @@ class MinCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function MinIntegerCheckFail(): array
     {
@@ -87,7 +81,6 @@ class MinCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function MinFloatCheck(): array
     {
@@ -104,7 +97,6 @@ class MinCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function MinFloatCheckFail(): array
     {
@@ -121,7 +113,6 @@ class MinCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function MinNumberCheck(): array
     {
@@ -138,7 +129,6 @@ class MinCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function MinNumberCheckFail(): array
     {
@@ -155,7 +145,6 @@ class MinCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function MinSizeTypedListCheck(): array
     {
@@ -172,7 +161,6 @@ class MinCheckTest extends TestCase
 
     /**
      * @throws InvalidDataException
-     * @throws InvalidSchemaException
      */
     private static function MinSizeTypedListCheckFail(): array
     {
