@@ -283,12 +283,12 @@ class JsonSchema implements DataSchema
                 $canBeNull = isset($options['null']) ? (bool)$options['null'] : false;
 
                 try {
-                    $childSchema = new self($s);
+                    $childSchema = new self($s, $type);
                 } catch (InvalidSchemaException $e) {
-                    throw new InvalidSchemaException('Invalid `' . $rule . '` child schema : ', InvalidSchemaException::INVALID_CHILD_SCHEMA);
+                    throw new InvalidSchemaException('Invalid `' . $rule . '` child schema : ', InvalidSchemaException::INVALID_CHILD_SCHEMA, $e);
                 }
 
-                $childSchema->setType($type)->setOptional($isOptional)->setNullable($canBeNull);
+                $childSchema->setOptional($isOptional)->setNullable($canBeNull);
                 $this->children[$rule] = $childSchema;
             } else {
                 try {
