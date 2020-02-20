@@ -270,26 +270,11 @@ class JsonSchema implements DataSchema
             $type = $options['type'];
 
             if ($type === JsonRule::LIST_TYPE || $type === JsonRule::OBJECT_TYPE) {
-                if (!isset($options['schema'])) {
-                    throw new InvalidSchemaException('`list` or `object` type must have a `schema` property', InvalidSchemaException::MISSING_CHILD_SCHEMA);
-                }
-
-                $s = $options['schema'];
-                if (!is_array($s)) {
-                    throw new InvalidSchemaException('`schema` option must be an array', InvalidSchemaException::INVALID_CHILD_SCHEMA);
-                }
-
-                $isOptional = isset($options['optional']) ? (bool)$options['optional'] : false;
-                $canBeNull = isset($options['null']) ? (bool)$options['null'] : false;
-
                 try {
-                    $childSchema = new self($s, $type);
+                    $this->children[$rule] = self::createChildSchema($type, $options);
                 } catch (InvalidSchemaException $e) {
-                    throw new InvalidSchemaException('Invalid `' . $rule . '` child schema : ', InvalidSchemaException::INVALID_CHILD_SCHEMA, $e);
+                    throw new InvalidSchemaException('Invalid `' . $rule . '` child schema : ' . $e->getMessage(), InvalidSchemaException::INVALID_CHILD_SCHEMA, $e);
                 }
-
-                $childSchema->setOptional($isOptional)->setNullable($canBeNull);
-                $this->children[$rule] = $childSchema;
             } else {
                 try {
                     $this->rules[$rule] = JsonRuleFactory::create($type, $options);
@@ -300,5 +285,43 @@ class JsonSchema implements DataSchema
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $type
+     * @param array $options
+     * @return static
+     */
+    private static function createChildSchema(string $type, array $options): self
+    {
+        if (!isset($options['schema'])) {
+            throw new InvalidSchemaException('`list` or `object` type must have a `schema` property', InvalidSchemaException::MISSING_CHILD_SCHEMA);
+        }
+
+        $s = $options['schema'];
+        if (!is_array($s)) {
+            throw new InvalidSchemaException('`schema` option must be an array', InvalidSchemaException::INVALID_CHILD_SCHEMA);
+        }
+
+        $isOptional = false;
+        if (isset($options['optional'])) {
+            if (!is_bool($options['optional'])) {
+                throw new InvalidSchemaException('`optional` schema option must be a boolean', InvalidSchemaException::INVALID_SCHEMA_OPTIONAL_FIELD);
+            }
+            $isOptional = $options['optional'];
+        }
+
+        $canBeNull = false;
+        if (isset($options['null'])) {
+            if (!is_bool($options['null'])) {
+                throw new InvalidSchemaException('`null` schema option must be a boolean', InvalidSchemaException::INVALID_SCHEMA_NULLABLE_FIELD);
+            }
+            $canBeNull = $options['null'];
+        }
+
+        $childSchema = new self($s, $type);
+        $childSchema->setOptional($isOptional)->setNullable($canBeNull);
+
+        return $childSchema;
     }
 }

@@ -20,7 +20,7 @@ class InvalidChildSchemaTest extends TestCase
         ]);
     }
 
-    public function testThrowOnInvalidChildSchema(): void
+    public function testThrowOnInvalidChildSchemaRule(): void
     {
         try {
             new JsonSchema([
@@ -32,7 +32,39 @@ class InvalidChildSchemaTest extends TestCase
 
             $t = $t->getPrevious();
             $this->assertInstanceOf(InvalidSchemaException::class, $t);
-            $this->assertEquals(InvalidSchemaException::MISSING_TYPE, $t->getCode());
+            $this->assertEquals(InvalidSchemaException::MISSING_RULE_TYPE, $t->getCode());
+        }
+    }
+
+    public function testThrowOnInvalidChildSchemaNullableField(): void
+    {
+        try {
+            new JsonSchema([
+                'object' => ['type' => JsonRule::OBJECT_TYPE, 'null' => 'false', 'schema' => []] // invalid schema nullable filed
+            ]);
+        } catch (Throwable $t) {
+            $this->assertInstanceOf(InvalidSchemaException::class, $t);
+            $this->assertEquals(InvalidSchemaException::INVALID_CHILD_SCHEMA, $t->getCode());
+
+            $t = $t->getPrevious();
+            $this->assertInstanceOf(InvalidSchemaException::class, $t);
+            $this->assertEquals(InvalidSchemaException::INVALID_SCHEMA_NULLABLE_FIELD, $t->getCode());
+        }
+    }
+
+    public function testThrowOnInvalidChildSchemaOptionalField(): void
+    {
+        try {
+            new JsonSchema([
+                'object' => ['type' => JsonRule::OBJECT_TYPE, 'optional' => 'false', 'schema' => []] // invalid schema optional filed
+            ]);
+        } catch (Throwable $t) {
+            $this->assertInstanceOf(InvalidSchemaException::class, $t);
+            $this->assertEquals(InvalidSchemaException::INVALID_CHILD_SCHEMA, $t->getCode());
+
+            $t = $t->getPrevious();
+            $this->assertInstanceOf(InvalidSchemaException::class, $t);
+            $this->assertEquals(InvalidSchemaException::INVALID_SCHEMA_OPTIONAL_FIELD, $t->getCode());
         }
     }
 }
