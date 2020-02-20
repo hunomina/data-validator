@@ -149,7 +149,7 @@ class OneLevelJsonSchemaTest extends TestCase
     public function testThrowOnFieldWithoutAType(): void
     {
         $this->expectException(InvalidSchemaException::class);
-        $this->expectExceptionCode(InvalidSchemaException::MISSING_TYPE);
+        $this->expectExceptionCode(InvalidSchemaException::MISSING_RULE_TYPE);
 
         new JsonSchema([
             'no-type' => []

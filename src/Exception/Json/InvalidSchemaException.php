@@ -13,7 +13,7 @@ class InvalidSchemaException extends \hunomina\DataValidator\Exception\InvalidSc
     public const MISSING_CHILD_SCHEMA = 1;
 
     // thrown when a rule type is missing
-    public const MISSING_TYPE = 2;
+    public const MISSING_RULE_TYPE = 1;
 
     // thrown when a schema with an invalid/unknown type is being validated
     public const INVALID_SCHEMA_TYPE = 3;

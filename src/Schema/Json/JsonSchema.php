@@ -264,7 +264,7 @@ class JsonSchema implements DataSchema
 
         foreach ($schema as $rule => $options) {
             if (!isset($options['type'])) {
-                throw new InvalidSchemaException('Each field of the schema must have a type', InvalidSchemaException::MISSING_TYPE);
+                throw new InvalidSchemaException('Each field of the schema must have a type', InvalidSchemaException::MISSING_RULE_TYPE);
             }
 
             $type = $options['type'];
