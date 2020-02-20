@@ -8,15 +8,15 @@ use hunomina\DataValidator\Exception\InvalidDataTypeArgumentException;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Exception\Json\InvalidRuleException;
 use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
-use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Rule\Json\Factory\JsonRuleFactory;
+use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\DataSchema;
 
 class JsonSchema implements DataSchema
 {
-    public const OBJECT_TYPE = 'object';
+    public const OBJECT_TYPE = JsonRule::OBJECT_TYPE;
 
-    public const LIST_TYPE = 'list';
+    public const LIST_TYPE = JsonRule::LIST_TYPE;
 
     /** @var string $type */
     private string $type;
