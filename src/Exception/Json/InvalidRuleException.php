@@ -33,7 +33,7 @@ class InvalidRuleException extends Exception
     // thrown when an invalid `null` option is encountered
     public const INVALID_NULL_RULE = 17;
     // thrown when an invalid `optional` option is encountered
-    public const INVALID_OPTIONAL_RULE = 25;
+    public const INVALID_OPTIONAL_RULE = 18;
 
     // thrown when an invalid `list-null` rule is encountered
     public const INVALID_LIST_NULL_RULE = 20;
