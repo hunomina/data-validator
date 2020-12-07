@@ -51,7 +51,7 @@ class TypedListRule extends JsonRule
             throw new InvalidDataException('Must be an array', InvalidDataException::INVALID_DATA_TYPE);
         }
 
-        if (!$this->validateEmptyness($data)) {
+        if (!$this->validateEmptiness($data)) {
             throw new InvalidDataException('Can not be empty', InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
         }
 
@@ -81,7 +81,7 @@ class TypedListRule extends JsonRule
     /**
      * @inheritDoc
      */
-    public function validateEmptyness(array $data): bool
+    public function validateEmptiness(array $data): bool
     {
         if (($this->empty === false) && $this->minimum !== 0) {
             return count($data) !== 0;

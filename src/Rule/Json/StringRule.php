@@ -37,7 +37,7 @@ class StringRule extends JsonRule
             throw new InvalidDataException('Must be a string', InvalidDataException::INVALID_DATA_TYPE);
         }
 
-        if (!$this->validateEmptyness($data)) {
+        if (!$this->validateEmptiness($data)) {
             throw new InvalidDataException('Can not be empty', InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
         }
 
@@ -64,7 +64,7 @@ class StringRule extends JsonRule
      * @param $data
      * @return bool
      */
-    public function validateEmptyness(string $data): bool
+    public function validateEmptiness(string $data): bool
     {
         if ($this->empty === false) { // can not be an empty value
             return $data !== '';
