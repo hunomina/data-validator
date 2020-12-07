@@ -26,15 +26,15 @@ class ListLengthRuleTest extends TestCase
             try {
                 new JsonSchema($schema);
             } catch (Throwable $t) {
-                $this->assertInstanceOf(InvalidSchemaException::class, $t);
-                $this->assertEquals(InvalidSchemaException::INVALID_SCHEMA_RULE, $t->getCode());
+                self::assertInstanceOf(InvalidSchemaException::class, $t);
+                self::assertEquals(InvalidSchemaException::INVALID_SCHEMA_RULE, $t->getCode());
 
-                $this->assertInstanceOf(InvalidRuleException::class, $t->getPrevious());
-                $this->assertEquals(InvalidRuleException::INVALID_LIST_RULE_FOR_SCALAR_TYPE, $t->getPrevious()->getCode());
+                self::assertInstanceOf(InvalidRuleException::class, $t->getPrevious());
+                self::assertEquals(InvalidRuleException::INVALID_LIST_RULE_FOR_SCALAR_TYPE, $t->getPrevious()->getCode());
             }
         } else {
             $schema = new JsonSchema($schema);
-            $this->assertTrue($schema->validate($data));
+            self::assertTrue($schema->validate($data));
         }
     }
 
@@ -223,16 +223,16 @@ class ListLengthRuleTest extends TestCase
                 'string-list' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-length' => 0]
             ]);
         } catch (Throwable $t) {
-            $this->assertInstanceOf(InvalidSchemaException::class, $t);
-            $this->assertEquals(InvalidSchemaException::INVALID_SCHEMA_RULE, $t->getCode());
+            self::assertInstanceOf(InvalidSchemaException::class, $t);
+            self::assertEquals(InvalidSchemaException::INVALID_SCHEMA_RULE, $t->getCode());
 
             $t = $t->getPrevious();
-            $this->assertInstanceOf(InvalidRuleException::class, $t);
-            $this->assertEquals(InvalidRuleException::INVALID_LIST_LENGTH_RULE, $t->getCode());
+            self::assertInstanceOf(InvalidRuleException::class, $t);
+            self::assertEquals(InvalidRuleException::INVALID_LIST_LENGTH_RULE, $t->getCode());
 
             $t = $t->getPrevious();
-            $this->assertInstanceOf(InvalidRuleException::class, $t);
-            $this->assertEquals(InvalidRuleException::INVALID_LENGTH_RULE, $t->getCode());
+            self::assertInstanceOf(InvalidRuleException::class, $t);
+            self::assertEquals(InvalidRuleException::INVALID_LENGTH_RULE, $t->getCode());
         }
     }
 }

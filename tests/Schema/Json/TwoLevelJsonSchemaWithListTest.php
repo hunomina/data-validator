@@ -22,28 +22,28 @@ class TwoLevelJsonSchemaWithListTest extends TestCase
             ]]
         ]);
 
-        $this->assertCount(1, $schema->getRules());
-        $this->assertCount(1, $schema->getChildren());
+        self::assertCount(1, $schema->getRules());
+        self::assertCount(1, $schema->getChildren());
 
-        $this->assertArrayHasKey('boolean', $schema->getRules());
-        $this->assertInstanceOf(BooleanRule::class, $schema->getRules()['boolean']);
+        self::assertArrayHasKey('boolean', $schema->getRules());
+        self::assertInstanceOf(BooleanRule::class, $schema->getRules()['boolean']);
 
-        $this->assertArrayHasKey('list', $schema->getChildren());
+        self::assertArrayHasKey('list', $schema->getChildren());
         $listChild = $schema->getChildren()['list'];
-        $this->assertEquals(JsonRule::LIST_TYPE, $listChild->getType());
+        self::assertEquals(JsonRule::LIST_TYPE, $listChild->getType());
 
-        $this->assertCount(2, $listChild->getRules());
-        $this->assertCount(0, $listChild->getChildren());
+        self::assertCount(2, $listChild->getRules());
+        self::assertCount(0, $listChild->getChildren());
 
-        $this->assertArrayHasKey('boolean', $listChild->getRules());
-        $this->assertInstanceOf(BooleanRule::class, $listChild->getRules()['boolean']);
-        $this->assertTrue($listChild->getRules()['boolean']->isOptional());
+        self::assertArrayHasKey('boolean', $listChild->getRules());
+        self::assertInstanceOf(BooleanRule::class, $listChild->getRules()['boolean']);
+        self::assertTrue($listChild->getRules()['boolean']->isOptional());
 
-        $this->assertArrayHasKey('string', $listChild->getRules());
+        self::assertArrayHasKey('string', $listChild->getRules());
         /** @var StringRule $stringRule */
         $stringRule = $listChild->getRules()['string'];
-        $this->assertInstanceOf(StringRule::class, $stringRule);
-        $this->assertTrue($stringRule->canBeNull());
+        self::assertInstanceOf(StringRule::class, $stringRule);
+        self::assertTrue($stringRule->canBeNull());
     }
 
     public function testThrowWithListFieldWithoutSchema(): void
@@ -54,12 +54,12 @@ class TwoLevelJsonSchemaWithListTest extends TestCase
                 'list' => ['type' => JsonRule::LIST_TYPE]
             ]);
         } catch (Throwable $t){
-            $this->assertInstanceOf(InvalidSchemaException::class, $t);
-            $this->assertEquals(InvalidSchemaException::INVALID_CHILD_SCHEMA, $t->getCode());
+            self::assertInstanceOf(InvalidSchemaException::class, $t);
+            self::assertEquals(InvalidSchemaException::INVALID_CHILD_SCHEMA, $t->getCode());
 
             $t = $t->getPrevious();
-            $this->assertInstanceOf(InvalidSchemaException::class, $t);
-            $this->assertEquals(InvalidSchemaException::MISSING_CHILD_SCHEMA, $t->getCode());
+            self::assertInstanceOf(InvalidSchemaException::class, $t);
+            self::assertEquals(InvalidSchemaException::MISSING_CHILD_SCHEMA, $t->getCode());
         }
     }
 }

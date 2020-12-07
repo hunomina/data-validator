@@ -17,7 +17,7 @@ class ValidateNullDataTest extends TestCase
         $schema = new JsonSchema();
         $schema->setNullable(true);
 
-        $this->assertTrue($schema->validate(new JsonData()));
+        self::assertTrue($schema->validate(new JsonData()));
     }
 
     /**

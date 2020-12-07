@@ -26,7 +26,7 @@ class PatternCheckTest extends TestCase
 
             $schema->validate($data);
         } else {
-            $this->assertTrue($schema->validate($data));
+            self::assertTrue($schema->validate($data));
         }
     }
 
@@ -172,16 +172,16 @@ class PatternCheckTest extends TestCase
         try {
             $schema->validate($data);
         } catch (Throwable $t) {
-            $this->assertInstanceOf(InvalidDataException::class, $t);
-            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+            self::assertInstanceOf(InvalidDataException::class, $t);
+            self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
             $t = $t->getPrevious();
-            $this->assertInstanceOf(InvalidDataException::class, $t);
-            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+            self::assertInstanceOf(InvalidDataException::class, $t);
+            self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
             $t = $t->getPrevious();
-            $this->assertInstanceOf(InvalidDataException::class, $t);
-            $this->assertEquals(InvalidDataException::PATTERN_NOT_MATCHED, $t->getCode());
+            self::assertInstanceOf(InvalidDataException::class, $t);
+            self::assertEquals(InvalidDataException::PATTERN_NOT_MATCHED, $t->getCode());
         }
     }
 
@@ -205,16 +205,16 @@ class PatternCheckTest extends TestCase
         try {
             $schema->validate($data);
         } catch (Throwable $t) {
-            $this->assertInstanceOf(InvalidDataException::class, $t);
-            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+            self::assertInstanceOf(InvalidDataException::class, $t);
+            self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
             $t = $t->getPrevious();
-            $this->assertInstanceOf(InvalidDataException::class, $t);
-            $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+            self::assertInstanceOf(InvalidDataException::class, $t);
+            self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
             $t = $t->getPrevious();
-            $this->assertInstanceOf(InvalidDataException::class, $t);
-            $this->assertEquals(InvalidDataException::PATTERN_NOT_MATCHED, $t->getCode());
+            self::assertInstanceOf(InvalidDataException::class, $t);
+            self::assertEquals(InvalidDataException::PATTERN_NOT_MATCHED, $t->getCode());
         }
     }
 }

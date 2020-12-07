@@ -25,7 +25,7 @@ class MaxCheckTest extends TestCase
 
             $schema->validate($data);
         } else {
-            $this->assertTrue($schema->validate($data));
+            self::assertTrue($schema->validate($data));
         }
     }
 

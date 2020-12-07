@@ -93,7 +93,7 @@ class DataFormattingTest extends TestCase
     public function testFormatWithValidJson(): void
     {
         $schema = new JsonData();
-        $this->assertIsArray($schema->format('[null]'));
+        self::assertIsArray($schema->format('[null]'));
     }
 
     /**
@@ -103,6 +103,6 @@ class DataFormattingTest extends TestCase
     public function testSetDataWithValidJson(): void
     {
         $schema = new JsonData();
-        $this->assertInstanceOf(JsonData::class, $schema->setData('[null]'));
+        self::assertInstanceOf(JsonData::class, $schema->setData('[null]'));
     }
 }

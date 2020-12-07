@@ -25,21 +25,21 @@ class TypedListRuleTest extends TestCase
                 $schema->validate($data);
             } catch (Throwable $t) {
                 // exception thrown by the schema
-                $this->assertInstanceOf(InvalidDataException::class, $t);
-                $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+                self::assertInstanceOf(InvalidDataException::class, $t);
+                self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
                 // exception thrown by the typed list rule
                 $t = $t->getPrevious();
-                $this->assertInstanceOf(InvalidDataException::class, $t);
-                $this->assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
+                self::assertInstanceOf(InvalidDataException::class, $t);
+                self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
                 // exception thrown by the invalid list element (scalar type)
                 $t = $t->getPrevious();
-                $this->assertInstanceOf(InvalidDataException::class, $t);
-                $this->assertEquals(InvalidDataException::INVALID_DATA_TYPE, $t->getCode());
+                self::assertInstanceOf(InvalidDataException::class, $t);
+                self::assertEquals(InvalidDataException::INVALID_DATA_TYPE, $t->getCode());
             }
         } else {
-            $this->assertTrue($schema->validate($data));
+            self::assertTrue($schema->validate($data));
         }
     }
 
