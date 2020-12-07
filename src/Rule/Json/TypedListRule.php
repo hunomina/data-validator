@@ -178,6 +178,6 @@ class TypedListRule extends JsonRule
      */
     public function getType(): string
     {
-        return $this->childRule . self::LIST_TYPE_SUFFIX;
+        return $this->childRule->getType() . self::LIST_TYPE_SUFFIX;
     }
 }
