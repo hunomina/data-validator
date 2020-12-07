@@ -9,9 +9,6 @@ use JsonException;
 
 class JsonData implements DataType, ArrayAccess
 {
-    /**
-     * @var array $data
-     */
     private ?array $data;
 
     /**

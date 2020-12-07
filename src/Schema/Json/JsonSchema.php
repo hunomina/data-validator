@@ -137,17 +137,17 @@ class JsonSchema implements DataSchema
     }
 
     /**
-     * @param DataType $dataType
+     * @param DataType $data
      * @return bool
      * @throws InvalidDataException
      */
-    public function validate(DataType $dataType): bool
+    public function validate(DataType $data): bool
     {
-        if (!($dataType instanceof JsonData)) {
+        if (!($data instanceof JsonData)) {
             throw new InvalidDataTypeArgumentException('JsonSchema only validate JsonData');
         }
 
-        if ($dataType->getData() === null) {
+        if ($data->getData() === null) {
             if (!$this->nullable) {
                 throw new InvalidDataException('Can not be null', InvalidDataException::NULL_VALUE_NOT_ALLOWED);
             }
@@ -156,11 +156,11 @@ class JsonSchema implements DataSchema
 
         // From here $dataType->getData() is an array
         if ($this->type === self::OBJECT_TYPE) {
-            return $this->validateObject($dataType);
+            return $this->validateObject($data);
         }
 
         // if it's not an object type schema, it's a list type
-        return $this->validateList($dataType);
+        return $this->validateList($data);
     }
 
     /**

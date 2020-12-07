@@ -30,9 +30,6 @@ class DataFormattingTest extends TestCase
         new JsonData(1.0);
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     public function testThrowOnBooleanParameterPassedToTheConstructor(): void
     {
         $this->expectException(InvalidDataException::class);

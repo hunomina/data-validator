@@ -63,22 +63,16 @@ abstract class JsonRuleFactory
         switch ($type) {
             case JsonRule::STRING_TYPE:
                 return new StringRule();
-                break;
             case JsonRule::CHAR_TYPE:
                 return new CharacterRule();
-                break;
             case JsonRule::INTEGER_TYPE:
                 return new IntegerRule();
-                break;
             case JsonRule::FLOAT_TYPE:
                 return new FloatRule();
-                break;
             case JsonRule::NUMERIC_TYPE:
                 return new NumericRule();
-                break;
             case JsonRule::BOOLEAN_TYPE:
                 return new BooleanRule();
-                break;
         }
 
         if (preg_match('/([a-z]+)-list/', $type, $matches)) {
