@@ -174,16 +174,6 @@ class TypedListRule extends JsonRule
     }
 
     /**
-     * @param JsonRule $childRule
-     * @return TypedListRule
-     */
-    public function setChildRule(JsonRule $childRule): TypedListRule
-    {
-        $this->childRule = $childRule;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getType(): string
