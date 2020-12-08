@@ -52,7 +52,7 @@ class IntegerRule extends JsonRule
      * @param int $data
      * @return bool
      */
-    public function validateMaximum(int $data): bool
+    public function validateMaximum($data): bool
     {
         if ($this->maximum === null) {
             return true;
@@ -65,7 +65,7 @@ class IntegerRule extends JsonRule
      * @param int $data
      * @return bool
      */
-    public function validateMinimum(int $data): bool
+    public function validateMinimum($data): bool
     {
         if ($this->minimum === null) {
             return true;

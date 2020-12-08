@@ -81,7 +81,7 @@ class TypedListRule extends JsonRule
     /**
      * @inheritDoc
      */
-    public function validateEmptiness(array $data): bool
+    public function validateEmptiness($data): bool
     {
         if (($this->empty === false) && $this->minimum !== 0) {
             return count($data) !== 0;
@@ -106,7 +106,7 @@ class TypedListRule extends JsonRule
     /**
      * @inheritDoc
      */
-    public function validateLength(array $data): bool
+    public function validateLength($data): bool
     {
         if ($this->length === null) {
             return true;
@@ -131,7 +131,7 @@ class TypedListRule extends JsonRule
      * @param array $data
      * @return bool
      */
-    public function validateMaximum(array $data): bool
+    public function validateMaximum($data): bool
     {
         if ($this->maximum === null) {
             return true;
@@ -156,7 +156,7 @@ class TypedListRule extends JsonRule
      * @param array $data
      * @return bool
      */
-    public function validateMinimum(array $data): bool
+    public function validateMinimum($data): bool
     {
         if ($this->minimum === null) {
             return true;
