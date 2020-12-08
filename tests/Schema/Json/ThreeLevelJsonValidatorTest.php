@@ -9,6 +9,11 @@ use hunomina\DataValidator\Rule\Json\StringRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class ThreeLevelJsonValidatorTest
+ * @package hunomina\DataValidator\Test\Schema\Json
+ * @covers \hunomina\DataValidator\Schema\Json\JsonSchema
+ */
 class ThreeLevelJsonValidatorTest extends TestCase
 {
     public function testThreeLevelSchema(): void

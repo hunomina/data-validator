@@ -14,6 +14,11 @@ use hunomina\DataValidator\Rule\Json\TypedListRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class OneLevelJsonSchemaTest
+ * @package hunomina\DataValidator\Test\Schema\Json
+ * @covers \hunomina\DataValidator\Schema\Json\JsonSchema
+ */
 class OneLevelJsonSchemaTest extends TestCase
 {
     public function testScalarRuleTypesOnSetSchema(): void

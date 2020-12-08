@@ -11,6 +11,11 @@ use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
+/**
+ * Class TwoLevelJsonSchemaWithObjectTest
+ * @package hunomina\DataValidator\Test\Schema\Json
+ * @covers \hunomina\DataValidator\Schema\Json\JsonSchema
+ */
 class TwoLevelJsonSchemaWithObjectTest extends TestCase
 {
     public function testChildObjectSchema(): void

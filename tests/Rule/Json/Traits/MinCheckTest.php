@@ -8,6 +8,11 @@ use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class MinCheckTest
+ * @package hunomina\DataValidator\Test\Rule\Json\Traits
+ * @covers \hunomina\DataValidator\Rule\Json\Traits\MinimumCheckTrait
+ */
 class MinCheckTest extends TestCase
 {
     /**

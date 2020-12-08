@@ -8,6 +8,11 @@ use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
+/**
+ * Class InvalidChildSchemaTest
+ * @package hunomina\DataValidator\Test\Schema\Json
+ * @covers \hunomina\DataValidator\Schema\Json\JsonSchema
+ */
 class InvalidChildSchemaTest extends TestCase
 {
     public function testThrowOnNonArrayChildSchema(): void

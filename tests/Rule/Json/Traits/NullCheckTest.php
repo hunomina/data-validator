@@ -8,6 +8,11 @@ use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class NullCheckTest
+ * @package hunomina\DataValidator\Test\Rule\Json\Traits
+ * @covers \hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait
+ */
 class NullCheckTest extends TestCase
 {
     /**

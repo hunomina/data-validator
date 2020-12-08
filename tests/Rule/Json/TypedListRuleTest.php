@@ -5,10 +5,16 @@ namespace hunomina\DataValidator\Test\Rule\Json;
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
+use hunomina\DataValidator\Rule\Json\TypedListRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
+/**
+ * Class TypedListRuleTest
+ * @package hunomina\DataValidator\Test\Rule\Json
+ * @covers \hunomina\DataValidator\Rule\Json\TypedListRule
+ */
 class TypedListRuleTest extends TestCase
 {
     /**

@@ -9,6 +9,11 @@ use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
+/**
+ * Class PatternCheckTest
+ * @package hunomina\DataValidator\Test\Rule\Json\Traits
+ * @covers \hunomina\DataValidator\Rule\Json\Traits\PatternCheckTrait
+ */
 class PatternCheckTest extends TestCase
 {
     /**
