@@ -21,6 +21,9 @@
             <html outputDirectory="var/coverage/html"/>
         </report>
     </coverage>
+    <php>
+        <env name="XDEBUG_MODE" value="coverage"/>
+    </php>
     <testsuites>
         <testsuite name="Project Test Suite">
             <directory>tests</directory>
