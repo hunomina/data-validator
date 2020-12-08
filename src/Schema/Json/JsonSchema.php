@@ -40,7 +40,7 @@ class JsonSchema implements DataSchema
      */
     public function __construct(array $schema = [], string $type = self::OBJECT_TYPE)
     {
-        $this->setSchema($schema);
+        $this->setRules($schema);
         $this->setType($type);
     }
 
@@ -255,14 +255,14 @@ class JsonSchema implements DataSchema
     }
 
     /**
-     * @param array $schema
+     * @param array $rules
      * @return JsonSchema
      */
-    public function setSchema(array $schema): JsonSchema
+    public function setRules(array $rules): JsonSchema
     {
         $this->reset();
 
-        foreach ($schema as $rule => $options) {
+        foreach ($rules as $rule => $options) {
             if (!isset($options['type'])) {
                 throw new InvalidSchemaException('Each field of the schema must have a type', InvalidSchemaException::MISSING_RULE_TYPE);
             }
