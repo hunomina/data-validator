@@ -6,6 +6,11 @@ use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class DataFormattingTest
+ * @package hunomina\DataValidator\Test\Data\Json
+ * @covers \hunomina\DataValidator\Data\Json\JsonData
+ */
 class DataFormattingTest extends TestCase
 {
     /**
@@ -46,8 +51,7 @@ class DataFormattingTest extends TestCase
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
 
-        $schema = new JsonData();
-        $schema->format(null);
+        (new JsonData())->format(null);
     }
 
     /**
@@ -58,8 +62,7 @@ class DataFormattingTest extends TestCase
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionCode(InvalidDataException::INVALID_JSON_DATA);
 
-        $schema = new JsonData();
-        $schema->format('\\');
+        (new JsonData())->format('\\');
     }
 
     /**
@@ -70,8 +73,7 @@ class DataFormattingTest extends TestCase
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionCode(InvalidDataException::INVALID_JSON_DATA);
 
-        $schema = new JsonData();
-        $schema->format('a');
+        (new JsonData())->format('a');
     }
 
     /**
@@ -82,8 +84,7 @@ class DataFormattingTest extends TestCase
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionCode(InvalidDataException::INVALID_JSON_DATA);
 
-        $schema = new JsonData();
-        $schema->format('null');
+        (new JsonData())->format('null');
     }
 
     /**
@@ -92,8 +93,8 @@ class DataFormattingTest extends TestCase
      */
     public function testFormatWithValidJson(): void
     {
-        $schema = new JsonData();
-        self::assertIsArray($schema->format('[null]'));
+        $data = new JsonData();
+        self::assertIsArray($data->format('[null]'));
     }
 
     /**
@@ -102,7 +103,7 @@ class DataFormattingTest extends TestCase
      */
     public function testSetDataWithValidJson(): void
     {
-        $schema = new JsonData();
-        self::assertInstanceOf(JsonData::class, $schema->setData('[null]'));
+        $data = new JsonData();
+        self::assertInstanceOf(JsonData::class, $data->setData('[null]'));
     }
 }
