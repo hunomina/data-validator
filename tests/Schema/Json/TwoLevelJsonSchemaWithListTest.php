@@ -2,13 +2,11 @@
 
 namespace hunomina\DataValidator\Test\Schema\Json;
 
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\BooleanRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Rule\Json\StringRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
-use Throwable;
 
 /**
  * Class TwoLevelJsonSchemaWithListTest
@@ -49,22 +47,5 @@ class TwoLevelJsonSchemaWithListTest extends TestCase
         $stringRule = $listChild->getRules()['string'];
         self::assertInstanceOf(StringRule::class, $stringRule);
         self::assertTrue($stringRule->canBeNull());
-    }
-
-    public function testThrowWithListFieldWithoutSchema(): void
-    {
-        try {
-            new JsonSchema([
-                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE],
-                'list' => ['type' => JsonRule::LIST_TYPE]
-            ]);
-        } catch (Throwable $t){
-            self::assertInstanceOf(InvalidSchemaException::class, $t);
-            self::assertEquals(InvalidSchemaException::INVALID_CHILD_SCHEMA, $t->getCode());
-
-            $t = $t->getPrevious();
-            self::assertInstanceOf(InvalidSchemaException::class, $t);
-            self::assertEquals(InvalidSchemaException::MISSING_CHILD_SCHEMA, $t->getCode());
-        }
     }
 }

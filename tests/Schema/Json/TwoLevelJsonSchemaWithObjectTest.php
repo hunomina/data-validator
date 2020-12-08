@@ -2,14 +2,12 @@
 
 namespace hunomina\DataValidator\Test\Schema\Json;
 
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\BooleanRule;
 use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Rule\Json\StringRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
-use Throwable;
 
 /**
  * Class TwoLevelJsonSchemaWithObjectTest
@@ -48,22 +46,5 @@ class TwoLevelJsonSchemaWithObjectTest extends TestCase
         self::assertArrayHasKey('string', $objectChild->getRules());
         self::assertInstanceOf(StringRule::class, $objectChild->getRules()['string']);
         self::assertTrue($objectChild->getRules()['string']->isOptional());
-    }
-
-    public function testThrowWithObjectFieldWithoutSchema(): void
-    {
-        try {
-            new JsonSchema([
-                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE],
-                'object' => ['type' => JsonRule::OBJECT_TYPE]
-            ]);
-        } catch (Throwable $t) {
-            self::assertInstanceOf(InvalidSchemaException::class, $t);
-            self::assertEquals(InvalidSchemaException::INVALID_CHILD_SCHEMA, $t->getCode());
-
-            $t = $t->getPrevious();
-            self::assertInstanceOf(InvalidSchemaException::class, $t);
-            self::assertEquals(InvalidSchemaException::MISSING_CHILD_SCHEMA, $t->getCode());
-        }
     }
 }

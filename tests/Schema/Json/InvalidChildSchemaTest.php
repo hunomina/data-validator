@@ -15,6 +15,40 @@ use Throwable;
  */
 class InvalidChildSchemaTest extends TestCase
 {
+    public function testThrowWithListFieldWithoutSchema(): void
+    {
+        try {
+            new JsonSchema([
+                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE],
+                'list' => ['type' => JsonRule::LIST_TYPE]
+            ]);
+        } catch (Throwable $t){
+            self::assertInstanceOf(InvalidSchemaException::class, $t);
+            self::assertEquals(InvalidSchemaException::INVALID_CHILD_SCHEMA, $t->getCode());
+
+            $t = $t->getPrevious();
+            self::assertInstanceOf(InvalidSchemaException::class, $t);
+            self::assertEquals(InvalidSchemaException::MISSING_CHILD_SCHEMA, $t->getCode());
+        }
+    }
+
+    public function testThrowWithObjectFieldWithoutSchema(): void
+    {
+        try {
+            new JsonSchema([
+                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE],
+                'object' => ['type' => JsonRule::OBJECT_TYPE]
+            ]);
+        } catch (Throwable $t) {
+            self::assertInstanceOf(InvalidSchemaException::class, $t);
+            self::assertEquals(InvalidSchemaException::INVALID_CHILD_SCHEMA, $t->getCode());
+
+            $t = $t->getPrevious();
+            self::assertInstanceOf(InvalidSchemaException::class, $t);
+            self::assertEquals(InvalidSchemaException::MISSING_CHILD_SCHEMA, $t->getCode());
+        }
+    }
+
     public function testThrowOnNonArrayChildSchema(): void
     {
         $this->expectException(InvalidSchemaException::class);
