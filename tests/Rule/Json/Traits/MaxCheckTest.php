@@ -4,6 +4,7 @@ namespace hunomina\DataValidator\Test\Rule\Json\Traits;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -178,5 +179,13 @@ class MaxCheckTest extends TestCase
             ]),
             false
         ];
+    }
+
+    public function testMaxOptionIntegerValueCastToFloat(): void
+    {
+        $max = 2;
+        $rule = new IntegerRule();
+        $rule->setMaximum($max);
+        self::assertSame((float)$max, $rule->getMaximum());
     }
 }

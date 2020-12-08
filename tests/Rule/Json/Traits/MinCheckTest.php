@@ -4,6 +4,7 @@ namespace hunomina\DataValidator\Test\Rule\Json\Traits;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -178,5 +179,13 @@ class MinCheckTest extends TestCase
             ]),
             false
         ];
+    }
+
+    public function testMinOptionIntegerValueCastToFloat(): void
+    {
+        $min = 2;
+        $rule = new IntegerRule();
+        $rule->setMinimum($min);
+        self::assertSame((float)$min, $rule->getMinimum());
     }
 }

@@ -4,7 +4,9 @@ namespace hunomina\DataValidator\Test\Rule\Json;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Exception\Json\InvalidRuleException;
 use hunomina\DataValidator\Rule\Json\JsonRule;
+use hunomina\DataValidator\Rule\Json\StringRule;
 use hunomina\DataValidator\Rule\Json\TypedListRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
@@ -279,5 +281,27 @@ class TypedListRuleTest extends TestCase
         ]);
 
         $schema->validate($data);
+    }
+
+    /**
+     * @throws InvalidRuleException
+     */
+    public function testMinOptionIntegerValueCastToFloat(): void
+    {
+        $min = 2;
+        $rule = new TypedListRule(new StringRule());
+        $rule->setMinimum($min);
+        self::assertSame((float)$min, $rule->getMinimum());
+    }
+
+    /**
+     * @throws InvalidRuleException
+     */
+    public function testMaxOptionIntegerValueCastToFloat(): void
+    {
+        $max = 2;
+        $rule = new TypedListRule(new StringRule());
+        $rule->setMaximum($max);
+        self::assertSame((float)$max, $rule->getMaximum());
     }
 }
