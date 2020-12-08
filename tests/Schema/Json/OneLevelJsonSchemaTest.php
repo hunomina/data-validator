@@ -154,14 +154,4 @@ class OneLevelJsonSchemaTest extends TestCase
         self::assertInstanceOf(StringRule::class, $schema2->getRules()['null']);
         self::assertTrue($schema2->getRules()['null']->canBeNull());
     }
-
-    public function testThrowOnFieldWithoutAType(): void
-    {
-        $this->expectException(InvalidSchemaException::class);
-        $this->expectExceptionCode(InvalidSchemaException::MISSING_RULE_TYPE);
-
-        new JsonSchema([
-            'no-type' => []
-        ]);
-    }
 }
