@@ -17,6 +17,7 @@ trait PatternCheckTrait
 
     /**
      * @param string|null $pattern
+     * @codeCoverageIgnore
      */
     public function setPattern(?string $pattern): void
     {

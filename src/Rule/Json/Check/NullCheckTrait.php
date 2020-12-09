@@ -17,6 +17,7 @@ trait NullCheckTrait
 
     /**
      * @param bool $nullable
+     * @codeCoverageIgnore
      */
     public function setNullable(bool $nullable): void
     {

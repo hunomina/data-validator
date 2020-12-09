@@ -19,6 +19,7 @@ trait DateFormatCheckTrait
 
     /**
      * @param string|null $dateFormat
+     * @codeCoverageIgnore
      */
     public function setDateFormat(?string $dateFormat): void
     {

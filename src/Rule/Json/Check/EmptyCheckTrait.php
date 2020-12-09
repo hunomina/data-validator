@@ -17,6 +17,7 @@ trait EmptyCheckTrait
 
     /**
      * @param bool $empty
+     * @codeCoverageIgnore
      */
     public function setEmpty(bool $empty): void
     {

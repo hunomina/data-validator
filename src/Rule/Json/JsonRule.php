@@ -37,6 +37,7 @@ abstract class JsonRule implements DataRule
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      * Is the data optional <=> is it mandatory in the parent schema
      */
     public function isOptional(): bool
@@ -46,6 +47,7 @@ abstract class JsonRule implements DataRule
 
     /**
      * @param bool $optional
+     * @codeCoverageIgnore
      */
     public function setOptional(bool $optional): void
     {
