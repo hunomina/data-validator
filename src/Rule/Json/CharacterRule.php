@@ -3,9 +3,9 @@
 namespace hunomina\DataValidator\Rule\Json;
 
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Rule\Json\Traits\EnumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\PatternCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EnumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\NullCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\PatternCheckTrait;
 
 class CharacterRule extends JsonRule
 {

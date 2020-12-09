@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\DataValidator\Test\Schema\Json\Rule\TypedList;
+namespace hunomina\DataValidator\Test\Rule\Json\Factory\TypedList;
 
 use hunomina\DataValidator\Exception\Json\InvalidRuleException;
 use hunomina\DataValidator\Rule\Json\Factory\JsonRuleFactory;

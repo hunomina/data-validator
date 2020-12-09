@@ -4,12 +4,12 @@ namespace hunomina\DataValidator\Rule\Json;
 
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Exception\Json\InvalidRuleException;
-use hunomina\DataValidator\Rule\Json\Traits\EmptyCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EnumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\LengthCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\MaximumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\MinimumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EmptyCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EnumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\LengthCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\MaximumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\MinimumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\NullCheckTrait;
 
 class TypedListRule extends JsonRule
 {

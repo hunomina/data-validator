@@ -10,14 +10,14 @@ use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Rule\Json\NumericRule;
 use hunomina\DataValidator\Rule\Json\StringRule;
-use hunomina\DataValidator\Rule\Json\Traits\DateFormatCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EmptyCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EnumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\LengthCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\MaximumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\MinimumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\PatternCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\DateFormatCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EmptyCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EnumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\LengthCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\MaximumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\MinimumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\NullCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\PatternCheckTrait;
 use hunomina\DataValidator\Rule\Json\TypedListRule;
 
 abstract class JsonRuleFactory

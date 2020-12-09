@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\DataValidator\Test\Rule\Json\Traits;
+namespace hunomina\DataValidator\Test\Rule\Json\Check;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class DateFormatCheckTest
  * @package hunomina\DataValidator\Test\Rule\Json\Traits
- * @covers \hunomina\DataValidator\Rule\Json\Traits\DateFormatCheckTrait
+ * @covers \hunomina\DataValidator\Rule\Json\Check\DateFormatCheckTrait
  */
 class DateFormatCheckTest extends TestCase
 {

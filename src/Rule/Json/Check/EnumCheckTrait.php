@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\DataValidator\Rule\Json\Traits;
+namespace hunomina\DataValidator\Rule\Json\Check;
 
 use hunomina\DataValidator\Exception\Json\InvalidRuleException;
 

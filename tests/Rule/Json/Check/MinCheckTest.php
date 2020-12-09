@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\DataValidator\Test\Rule\Json\Traits;
+namespace hunomina\DataValidator\Test\Rule\Json\Check;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class MinCheckTest
  * @package hunomina\DataValidator\Test\Rule\Json\Traits
- * @covers \hunomina\DataValidator\Rule\Json\Traits\MinimumCheckTrait
+ * @covers \hunomina\DataValidator\Rule\Json\Check\MinimumCheckTrait
  */
 class MinCheckTest extends TestCase
 {

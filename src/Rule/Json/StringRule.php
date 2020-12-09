@@ -3,12 +3,12 @@
 namespace hunomina\DataValidator\Rule\Json;
 
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Rule\Json\Traits\DateFormatCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EmptyCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EnumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\LengthCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\PatternCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\DateFormatCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EmptyCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EnumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\LengthCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\NullCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\PatternCheckTrait;
 
 class StringRule extends JsonRule
 {

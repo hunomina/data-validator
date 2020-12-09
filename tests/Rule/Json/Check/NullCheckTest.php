@@ -1,6 +1,6 @@
 <?php
 
-namespace hunomina\DataValidator\Test\Rule\Json\Traits;
+namespace hunomina\DataValidator\Test\Rule\Json\Check;
 
 use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
@@ -9,11 +9,11 @@ use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class EmptyCheckTest
+ * Class NullCheckTest
  * @package hunomina\DataValidator\Test\Rule\Json\Traits
- * @covers \hunomina\DataValidator\Rule\Json\Traits\EmptyCheckTrait
+ * @covers \hunomina\DataValidator\Rule\Json\Check\NullCheckTrait
  */
-class EmptyCheckTest extends TestCase
+class NullCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
@@ -22,11 +22,11 @@ class EmptyCheckTest extends TestCase
      * @param bool $success
      * @throws InvalidDataException
      */
-    public function testEmptyCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testNullCheck(JsonData $data, JsonSchema $schema, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
-            $this->expectExceptionCode(InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
+            $this->expectExceptionCode(InvalidDataException::NULL_VALUE_NOT_ALLOWED);
 
             $schema->validate($data);
         } else {
@@ -41,10 +41,10 @@ class EmptyCheckTest extends TestCase
     public function getTestableData(): array
     {
         return [
-            self::EmptyRuleOnString(),
-            self::EmptyRuleOnStringFail(),
-            self::EmptyRuleOnStringTypedList(),
-            self::EmptyRuleOnStringTypedListFail(),
+            self::NullCheck(),
+            self::NullCheckFail(),
+            self::NullListCheck(),
+            self::NullListCheckFail()
         ];
     }
 
@@ -52,14 +52,14 @@ class EmptyCheckTest extends TestCase
      * @return array
      * @throws InvalidDataException
      */
-    private static function EmptyRuleOnString(): array
+    private static function NullCheck(): array
     {
         return [
             new JsonData([
-                'name' => ''
+                'value' => null
             ]),
             new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => true]
+                'value' => ['type' => JsonRule::STRING_TYPE, 'null' => true]
             ]),
             true
         ];
@@ -69,14 +69,14 @@ class EmptyCheckTest extends TestCase
      * @return array
      * @throws InvalidDataException
      */
-    private static function EmptyRuleOnStringFail(): array
+    private static function NullCheckFail(): array
     {
         return [
             new JsonData([
-                'name' => ''
+                'value' => null
             ]),
             new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => false] // default behavior
+                'value' => ['type' => JsonRule::STRING_TYPE, 'null' => false] // default behavior
             ]),
             false
         ];
@@ -86,14 +86,14 @@ class EmptyCheckTest extends TestCase
      * @return array
      * @throws InvalidDataException
      */
-    private static function EmptyRuleOnStringTypedList(): array
+    private static function NullListCheck(): array
     {
         return [
             new JsonData([
-                'list' => []
+                'value' => null
             ]),
             new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-empty' => true]
+                'value' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-null' => true]
             ]),
             true
         ];
@@ -103,14 +103,14 @@ class EmptyCheckTest extends TestCase
      * @return array
      * @throws InvalidDataException
      */
-    private static function EmptyRuleOnStringTypedListFail(): array
+    private static function NullListCheckFail(): array
     {
         return [
             new JsonData([
-                'list' => []
+                'value' => null
             ]),
             new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-empty' => false] // default behavior
+                'value' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-null' => false] // default behavior
             ]),
             false
         ];
