@@ -22,7 +22,7 @@ class JsonData implements DataType, ArrayAccess
     }
 
     /**
-     * @return array
+     * @return array|null
      * @codeCoverageIgnore
      */
     public function getData(): ?array
@@ -75,16 +75,8 @@ class JsonData implements DataType, ArrayAccess
     }
 
     /**
-     * Whether a offset exists
-     * @link https://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
+     * @param mixed $offset
+     * @return bool
      * @codeCoverageIgnore
      */
     public function offsetExists($offset): bool
@@ -93,13 +85,8 @@ class JsonData implements DataType, ArrayAccess
     }
 
     /**
-     * Offset to retrieve
-     * @link https://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
-     * @since 5.0.0
+     * @param mixed $offset
+     * @return mixed|null
      * @codeCoverageIgnore
      */
     public function offsetGet($offset)
@@ -111,16 +98,8 @@ class JsonData implements DataType, ArrayAccess
     }
 
     /**
-     * Offset to set
-     * @link https://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
-     * @since 5.0.0
+     * @param mixed $offset
+     * @param mixed $value
      * @codeCoverageIgnore
      */
     public function offsetSet($offset, $value): void
@@ -129,13 +108,7 @@ class JsonData implements DataType, ArrayAccess
     }
 
     /**
-     * Offset to unset
-     * @link https://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
-     * @since 5.0.0
+     * @param mixed $offset
      * @codeCoverageIgnore
      */
     public function offsetUnset($offset): void
