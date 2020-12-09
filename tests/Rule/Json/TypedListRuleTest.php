@@ -2,13 +2,15 @@
 
 namespace hunomina\DataValidator\Test\Rule\Json;
 
-use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Exception\Json\InvalidRuleException;
+use hunomina\DataValidator\Rule\Json\BooleanRule;
+use hunomina\DataValidator\Rule\Json\CharacterRule;
+use hunomina\DataValidator\Rule\Json\FloatRule;
+use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
+use hunomina\DataValidator\Rule\Json\NumericRule;
 use hunomina\DataValidator\Rule\Json\StringRule;
 use hunomina\DataValidator\Rule\Json\TypedListRule;
-use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
@@ -21,23 +23,19 @@ class TypedListRuleTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
-     * @param JsonData $data
-     * @param JsonSchema $schema
+     * @param JsonRule $childRule
+     * @param $data
      * @param bool $success
      * @throws InvalidDataException
      */
-    public function testTypedListType(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testTypedListType(JsonRule $childRule, $data, bool $success): void
     {
+        $rule = new TypedListRule($childRule);
         if (!$success) {
             try {
-                $schema->validate($data);
+                $rule->validate($data);
             } catch (Throwable $t) {
-                // exception thrown by the schema
-                self::assertInstanceOf(InvalidDataException::class, $t);
-                self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
-
                 // exception thrown by the typed list rule
-                $t = $t->getPrevious();
                 self::assertInstanceOf(InvalidDataException::class, $t);
                 self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
 
@@ -47,14 +45,10 @@ class TypedListRuleTest extends TestCase
                 self::assertEquals(InvalidDataException::INVALID_DATA_TYPE, $t->getCode());
             }
         } else {
-            self::assertTrue($schema->validate($data));
+            self::assertTrue($rule->validate($data));
         }
     }
 
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
     public function getTestableData(): array
     {
         return [
@@ -73,196 +67,64 @@ class TypedListRuleTest extends TestCase
         ];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function ValidIntegerList(): array
     {
-        return [
-            new JsonData([
-                'integers' => [1, 2, 3, 4]
-            ]),
-            new JsonSchema([
-                'integers' => ['type' => JsonRule::INTEGER_LIST_TYPE]
-            ]),
-            true
-        ];
+        return [new IntegerRule(), [1, 2, 3, 4], true];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function InvalidIntegerList(): array
     {
-        return [
-            new JsonData([
-                'integers' => [1, 2.89, 3.14158, 4.0]
-            ]),
-            new JsonSchema([
-                'integers' => ['type' => JsonRule::INTEGER_LIST_TYPE]
-            ]),
-            false
-        ];
+        return [new IntegerRule(), [1, 2.89, 3.14158, 4.0], false];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function ValidStringList(): array
     {
-        return [
-            new JsonData([
-                'strings' => ['I', 'am', 'testing']
-            ]),
-            new JsonSchema([
-                'strings' => ['type' => JsonRule::STRING_LIST_TYPE]
-            ]),
-            true
-        ];
+        return [new StringRule(), ['I', 'am', 'testing'], true];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function InvalidStringList(): array
     {
-        return [
-            new JsonData([
-                'strings' => ['I', 'am', 'testing', 'for', 'the', 2, 'nd', 'time']
-            ]),
-            new JsonSchema([
-                'strings' => ['type' => JsonRule::STRING_LIST_TYPE]
-            ]),
-            false
-        ];
+        return [new StringRule(), ['I', 'am', 'testing', 2, 'times'], false];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function ValidCharacterList(): array
     {
-        return [
-            new JsonData([
-                'characters' => ['a', 'b', 'c', 'd']
-            ]),
-            new JsonSchema([
-                'characters' => ['type' => JsonRule::CHAR_LIST_TYPE]
-            ]),
-            true
-        ];
+        return [new CharacterRule(), ['a', 'b', 'c'], true];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function InvalidCharacterList(): array
     {
-        return [
-            new JsonData([
-                'characters' => ['a', 'bc', 'd', 'e']
-            ]),
-            new JsonSchema([
-                'characters' => ['type' => JsonRule::CHAR_LIST_TYPE]
-            ]),
-            false
-        ];
+        return [new CharacterRule(), ['a', 'b', 3], false];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function ValidBooleanList(): array
     {
-        return [
-            new JsonData([
-                'booleans' => [true, false, false, true]
-            ]),
-            new JsonSchema([
-                'booleans' => ['type' => JsonRule::BOOLEAN_LIST_TYPE]
-            ]),
-            true
-        ];
+        return [new BooleanRule(), [true, false], true];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function InvalidBooleanList(): array
     {
-        return [
-            new JsonData([
-                'booleans' => [true, false, 0, true]
-            ]),
-            new JsonSchema([
-                'booleans' => ['type' => JsonRule::BOOLEAN_LIST_TYPE]
-            ]),
-            false
-        ];
+        return [new BooleanRule(), [true, 0], false];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function ValidFloatList(): array
     {
-        return [
-            new JsonData([
-                'users' => [1.1, 2.2, 3.3, 4.4]
-            ]),
-            new JsonSchema([
-                'users' => ['type' => JsonRule::FLOAT_LIST_TYPE]
-            ]),
-            true
-        ];
+        return [new FloatRule(), [1.1, 2.2, 3.3], true];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function InvalidFloatList(): array
     {
-        return [
-            new JsonData([
-                'users' => [1, 2.2, 3.3, 4.4]
-            ]),
-            new JsonSchema([
-                'users' => ['type' => JsonRule::FLOAT_LIST_TYPE]
-            ]),
-            false
-        ];
+        return [new FloatRule(), [1.1, 2.2, 3], false];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function ValidNumericList(): array
     {
-        return [
-            new JsonData([
-                'users' => [1, 2.89, 3.14158, 4.0]
-            ]),
-            new JsonSchema([
-                'users' => ['type' => JsonRule::NUMERIC_LIST_TYPE]
-            ]),
-            true
-        ];
+        return [new NumericRule(), [1.1, 2.2, 3], true];
     }
 
-    /**
-     * @throws InvalidDataException
-     */
     private static function InvalidNumericList(): array
     {
-        return [
-            new JsonData([
-                'users' => ['a', 2.89, 3.14158, 4.0]
-            ]),
-            new JsonSchema([
-                'users' => ['type' => JsonRule::NUMERIC_LIST_TYPE]
-            ]),
-            false
-        ];
+        return [new NumericRule(), [1, 2.2, '3'], false];
     }
 
     /**
@@ -273,35 +135,29 @@ class TypedListRuleTest extends TestCase
         $this->expectException(InvalidDataException::class);
         $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
 
-        $data = new JsonData([
-            'users' => 'not-a-list'
-        ]);
-        $schema = new JsonSchema([
-            'users' => ['type' => JsonRule::NUMERIC_LIST_TYPE]
-        ]);
-
-        $schema->validate($data);
+        $rule = new TypedListRule(new StringRule());
+        $rule->validate('not an array');
     }
 
     /**
-     * @throws InvalidRuleException
+     * @param JsonRule $childRule
+     * @dataProvider getScalarRules
      */
-    public function testMinOptionIntegerValueCastToFloat(): void
+    public function testGetType(JsonRule $childRule): void
     {
-        $min = 2;
-        $rule = new TypedListRule(new StringRule());
-        $rule->setMinimum($min);
-        self::assertSame((float)$min, $rule->getMinimum());
+        $rule = new TypedListRule($childRule);
+        self::assertSame($childRule->getType() . TypedListRule::LIST_TYPE_SUFFIX, $rule->getType());
     }
 
-    /**
-     * @throws InvalidRuleException
-     */
-    public function testMaxOptionIntegerValueCastToFloat(): void
+    public function getScalarRules(): array
     {
-        $max = 2;
-        $rule = new TypedListRule(new StringRule());
-        $rule->setMaximum($max);
-        self::assertSame((float)$max, $rule->getMaximum());
+        return [
+            [new StringRule()],
+            [new CharacterRule()],
+            [new IntegerRule()],
+            [new FloatRule()],
+            [new NumericRule()],
+            [new BooleanRule()]
+        ];
     }
 }

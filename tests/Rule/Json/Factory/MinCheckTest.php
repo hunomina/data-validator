@@ -62,12 +62,4 @@ class MinCheckTest extends TestCase
         /** @var IntegerRule $rule */
         self::assertSame($min, $rule->getMinimum());
     }
-
-    public function testMinOptionIntegerValueCastToFloat(): void
-    {
-        $min = 2;
-        $rule = new IntegerRule();
-        $rule->setMinimum($min);
-        self::assertSame((float)$min, $rule->getMinimum());
-    }
 }

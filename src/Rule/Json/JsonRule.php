@@ -25,7 +25,7 @@ abstract class JsonRule implements DataRule
     public const LIST_TYPE = 'list';
     public const OBJECT_TYPE = 'object';
 
-    protected const LIST_TYPE_SUFFIX = '-list';
+    public const LIST_TYPE_SUFFIX = '-list';
 
     protected bool $optional = false;
 

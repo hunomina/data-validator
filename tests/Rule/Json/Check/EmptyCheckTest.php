@@ -2,117 +2,92 @@
 
 namespace hunomina\DataValidator\Test\Rule\Json\Check;
 
-use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
-use hunomina\DataValidator\Schema\Json\JsonSchema;
+use hunomina\DataValidator\Rule\Json\StringRule;
+use hunomina\DataValidator\Rule\Json\TypedListRule;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class EmptyCheckTest
  * @package hunomina\DataValidator\Test\Rule\Json\Traits
- * @covers \hunomina\DataValidator\Rule\Json\Check\EmptyCheckTrait
  */
 class EmptyCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
-     * @param JsonData $data
-     * @param JsonSchema $schema
+     * @param JsonRule $rule
+     * @param $data
      * @param bool $success
      * @throws InvalidDataException
      */
-    public function testEmptyCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testEmptyCheck(JsonRule $rule, $data, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
             $this->expectExceptionCode(InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
 
-            $schema->validate($data);
+            $rule->validate($data);
         } else {
-            self::assertTrue($schema->validate($data));
+            self::assertTrue($rule->validate($data));
         }
     }
 
     /**
-     * @return array
-     * @throws InvalidDataException
+     * @return array[]
      */
     public function getTestableData(): array
     {
         return [
             self::EmptyRuleOnString(),
             self::EmptyRuleOnStringFail(),
-            self::EmptyRuleOnStringTypedList(),
-            self::EmptyRuleOnStringTypedListFail(),
+            self::EmptyRuleOnTypedList(),
+            self::EmptyRuleOnTypedListFail(),
         ];
     }
 
     /**
      * @return array
-     * @throws InvalidDataException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
     private static function EmptyRuleOnString(): array
     {
-        return [
-            new JsonData([
-                'name' => ''
-            ]),
-            new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => true]
-            ]),
-            true
-        ];
+        $rule = new StringRule();
+        $rule->setEmpty(true);
+        return [$rule, '', true];
     }
 
     /**
      * @return array
-     * @throws InvalidDataException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
     private static function EmptyRuleOnStringFail(): array
     {
-        return [
-            new JsonData([
-                'name' => ''
-            ]),
-            new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'empty' => false] // default behavior
-            ]),
-            false
-        ];
+        $rule = new StringRule();
+        $rule->setEmpty(false);
+        return [$rule, '', false];
     }
 
     /**
      * @return array
-     * @throws InvalidDataException
+     * @covers \hunomina\DataValidator\Rule\Json\TypedListRule
      */
-    private static function EmptyRuleOnStringTypedList(): array
+    private static function EmptyRuleOnTypedList(): array
     {
-        return [
-            new JsonData([
-                'list' => []
-            ]),
-            new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-empty' => true]
-            ]),
-            true
-        ];
+        $rule = new TypedListRule(new IntegerRule());
+        $rule->setEmpty(true);
+        return [$rule, [], true];
     }
 
     /**
      * @return array
-     * @throws InvalidDataException
+     * @covers \hunomina\DataValidator\Rule\Json\TypedListRule
      */
-    private static function EmptyRuleOnStringTypedListFail(): array
+    private static function EmptyRuleOnTypedListFail(): array
     {
-        return [
-            new JsonData([
-                'list' => []
-            ]),
-            new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-empty' => false] // default behavior
-            ]),
-            false
-        ];
+        $rule = new TypedListRule(new IntegerRule());
+        $rule->setEmpty(false);
+        return [$rule, [], false];
     }
 }

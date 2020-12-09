@@ -2,47 +2,57 @@
 
 namespace hunomina\DataValidator\Test\Rule\Json\Check;
 
-use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Rule\Json\CharacterRule;
+use hunomina\DataValidator\Rule\Json\FloatRule;
+use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
-use hunomina\DataValidator\Schema\Json\JsonSchema;
+use hunomina\DataValidator\Rule\Json\NumericRule;
+use hunomina\DataValidator\Rule\Json\StringRule;
+use hunomina\DataValidator\Rule\Json\TypedListRule;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class NullCheckTest
  * @package hunomina\DataValidator\Test\Rule\Json\Traits
- * @covers \hunomina\DataValidator\Rule\Json\Check\NullCheckTrait
  */
 class NullCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
-     * @param JsonData $data
-     * @param JsonSchema $schema
+     * @param JsonRule $rule
+     * @param $data
      * @param bool $success
      * @throws InvalidDataException
      */
-    public function testNullCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testNullCheck(JsonRule $rule, $data, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
             $this->expectExceptionCode(InvalidDataException::NULL_VALUE_NOT_ALLOWED);
 
-            $schema->validate($data);
+            $rule->validate($data);
         } else {
-            self::assertTrue($schema->validate($data));
+            self::assertTrue($rule->validate($data));
         }
     }
 
     /**
-     * @return array
-     * @throws InvalidDataException
+     * @return array[]
      */
     public function getTestableData(): array
     {
         return [
-            self::NullCheck(),
-            self::NullCheckFail(),
+            self::NullStringCheck(),
+            self::NullStringCheckFail(),
+            self::NullCharCheck(),
+            self::NullCharCheckFail(),
+            self::NullIntegerCheck(),
+            self::NullIntegerCheckFail(),
+            self::NullFloatCheck(),
+            self::NullFloatCheckFail(),
+            self::NullNumericCheck(),
+            self::NullNumericCheckFail(),
             self::NullListCheck(),
             self::NullListCheckFail()
         ];
@@ -50,69 +60,123 @@ class NullCheckTest extends TestCase
 
     /**
      * @return array
-     * @throws InvalidDataException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
-    private static function NullCheck(): array
+    private static function NullStringCheck(): array
     {
-        return [
-            new JsonData([
-                'value' => null
-            ]),
-            new JsonSchema([
-                'value' => ['type' => JsonRule::STRING_TYPE, 'null' => true]
-            ]),
-            true
-        ];
+        $rule = new StringRule();
+        $rule->setNullable(true);
+        return [$rule, null, true];
     }
 
     /**
      * @return array
-     * @throws InvalidDataException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
-    private static function NullCheckFail(): array
+    private static function NullStringCheckFail(): array
     {
-        return [
-            new JsonData([
-                'value' => null
-            ]),
-            new JsonSchema([
-                'value' => ['type' => JsonRule::STRING_TYPE, 'null' => false] // default behavior
-            ]),
-            false
-        ];
+        return [new StringRule(), null, false];
     }
 
     /**
      * @return array
-     * @throws InvalidDataException
+     * @covers \hunomina\DataValidator\Rule\Json\CharacterRule
+     */
+    private static function NullCharCheck(): array
+    {
+        $rule = new CharacterRule();
+        $rule->setNullable(true);
+        return [$rule, null, true];
+    }
+
+    /**
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\CharacterRule
+     */
+    private static function NullCharCheckFail(): array
+    {
+        return [new CharacterRule(), null, false];
+    }
+
+    /**
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\IntegerRule
+     */
+    private static function NullIntegerCheck(): array
+    {
+        $rule = new IntegerRule();
+        $rule->setNullable(true);
+        return [$rule, null, true];
+    }
+
+    /**
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\IntegerRule
+     */
+    private static function NullIntegerCheckFail(): array
+    {
+        return [new IntegerRule(), null, false];
+    }
+
+    /**
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\FloatRule
+     */
+    private static function NullFloatCheck(): array
+    {
+        $rule = new FloatRule();
+        $rule->setNullable(true);
+        return [$rule, null, true];
+    }
+
+    /**
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\FloatRule
+     */
+    private static function NullFloatCheckFail(): array
+    {
+        return [new FloatRule(), null, false];
+    }
+
+    /**
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\NumericRule
+     */
+    private static function NullNumericCheck(): array
+    {
+        $rule = new NumericRule();
+        $rule->setNullable(true);
+        return [$rule, null, true];
+    }
+
+    /**
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\NumericRule
+     */
+    private static function NullNumericCheckFail(): array
+    {
+        return [new NumericRule(), null, false];
+    }
+
+    /**
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\TypedListRule
      */
     private static function NullListCheck(): array
     {
-        return [
-            new JsonData([
-                'value' => null
-            ]),
-            new JsonSchema([
-                'value' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-null' => true]
-            ]),
-            true
-        ];
+        $rule = new TypedListRule(new StringRule());
+        $rule->setNullable(true);
+        return [$rule, null, true];
     }
 
     /**
      * @return array
-     * @throws InvalidDataException
+     * @covers \hunomina\DataValidator\Rule\Json\TypedListRule
      */
     private static function NullListCheckFail(): array
     {
-        return [
-            new JsonData([
-                'value' => null
-            ]),
-            new JsonSchema([
-                'value' => ['type' => JsonRule::STRING_LIST_TYPE, 'list-null' => false] // default behavior
-            ]),
-            false
-        ];
+        $rule = new TypedListRule(new StringRule());
+        $rule->setNullable(false);
+        return [$rule, null, false];
     }
 }

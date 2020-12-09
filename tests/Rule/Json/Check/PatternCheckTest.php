@@ -2,42 +2,39 @@
 
 namespace hunomina\DataValidator\Test\Rule\Json\Check;
 
-use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Rule\Json\CharacterRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
-use hunomina\DataValidator\Schema\Json\JsonSchema;
+use hunomina\DataValidator\Rule\Json\StringRule;
 use PHPUnit\Framework\TestCase;
-use Throwable;
 
 /**
  * Class PatternCheckTest
  * @package hunomina\DataValidator\Test\Rule\Json\Traits
- * @covers \hunomina\DataValidator\Rule\Json\Check\PatternCheckTrait
  */
 class PatternCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
-     * @param JsonData $data
-     * @param JsonSchema $schema
+     * @param JsonRule $rule
+     * @param $data
      * @param bool $success
      * @throws InvalidDataException
      */
-    public function testPatternCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testPatternCheck(JsonRule $rule, $data, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
             $this->expectExceptionCode(InvalidDataException::PATTERN_NOT_MATCHED);
 
-            $schema->validate($data);
+            $rule->validate($data);
         } else {
-            self::assertTrue($schema->validate($data));
+            self::assertTrue($rule->validate($data));
         }
     }
 
     /**
-     * @return array
-     * @throws InvalidDataException
+     * @return array[]
      */
     public function getTestableData(): array
     {
@@ -46,180 +43,50 @@ class PatternCheckTest extends TestCase
             self::PatternStringCheckFail(),
             self::PatternCharCheck(),
             self::PatternCharCheckFail(),
-            self::PatternStringListCheck(),
-            self::PatternCharListCheck()
         ];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
     private static function PatternStringCheck(): array
     {
-        return [
-            new JsonData([
-                'name' => 'test'
-            ]),
-            new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'pattern' => '/^[a-z]+$/']
-            ]),
-            true
-        ];
+        $rule = new StringRule();
+        $rule->setPattern('/^[a-z]+$/');
+        return [$rule, 'azertyuiop', true];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
     private static function PatternStringCheckFail(): array
     {
-        return [
-            new JsonData([
-                'name' => 'test2'
-            ]),
-            new JsonSchema([
-                'name' => ['type' => JsonRule::STRING_TYPE, 'pattern' => '/^[a-z]+$/']
-            ]),
-            false
-        ];
+        $rule = new StringRule();
+        $rule->setPattern('/^[a-z]+$/');
+        return [$rule, '1234567890', false];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\CharacterRule
      */
     private static function PatternCharCheck(): array
     {
-        return [
-            new JsonData([
-                'blood_type' => 'O'
-            ]),
-            new JsonSchema([
-                'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'pattern' => '/^[ABO]$/']
-            ]),
-            true
-        ];
+        $rule = new CharacterRule();
+        $rule->setPattern('/^[a-z]$/');
+        return [$rule, 'a', true];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @covers \hunomina\DataValidator\Rule\Json\CharacterRule
      */
     private static function PatternCharCheckFail(): array
     {
-        return [
-            new JsonData([
-                'blood_type' => 'C'
-            ]),
-            new JsonSchema([
-                'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'pattern' => '/^[ABO]$/']
-            ]),
-            false
-        ];
-    }
-
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
-    private static function PatternStringListCheck(): array
-    {
-        return [
-            new JsonData([
-                'list' => [
-                    'hello',
-                    'love',
-                    'test'
-                ]
-            ]),
-            new JsonSchema([
-                'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'pattern' => '/^[a-zA-Z]+$/']
-            ]),
-            true
-        ];
-    }
-
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
-    private static function PatternCharListCheck(): array
-    {
-        return [
-            new JsonData([
-                'list' => [
-                    'A',
-                    'B',
-                    'O'
-                ]
-            ]),
-            new JsonSchema([
-                'list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[ABO]+$/']
-            ]),
-            true
-        ];
-    }
-
-    /**
-     * @throws InvalidDataException
-     */
-    public function testPatternStringListCheckFail(): void
-    {
-        $data = new JsonData([
-            'list' => [
-                'won\'t',
-                'work',
-                'sorry'
-            ]
-        ]);
-
-        $schema = new JsonSchema([
-            'list' => ['type' => JsonRule::STRING_LIST_TYPE, 'pattern' => '/^[a-zA-Z]+$/']
-        ]);
-
-        try {
-            $schema->validate($data);
-        } catch (Throwable $t) {
-            self::assertInstanceOf(InvalidDataException::class, $t);
-            self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
-
-            $t = $t->getPrevious();
-            self::assertInstanceOf(InvalidDataException::class, $t);
-            self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
-
-            $t = $t->getPrevious();
-            self::assertInstanceOf(InvalidDataException::class, $t);
-            self::assertEquals(InvalidDataException::PATTERN_NOT_MATCHED, $t->getCode());
-        }
-    }
-
-    /**
-     * @throws InvalidDataException
-     */
-    public function testPatternCharListCheckFail(): void
-    {
-        $data = new JsonData([
-            'list' => [
-                'A',
-                'B',
-                'C'
-            ]
-        ]);
-
-        $schema = new JsonSchema([
-            'list' => ['type' => JsonRule::CHAR_LIST_TYPE, 'pattern' => '/^[ABO]+$/']
-        ]);
-
-        try {
-            $schema->validate($data);
-        } catch (Throwable $t) {
-            self::assertInstanceOf(InvalidDataException::class, $t);
-            self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
-
-            $t = $t->getPrevious();
-            self::assertInstanceOf(InvalidDataException::class, $t);
-            self::assertEquals(InvalidDataException::INVALID_TYPED_LIST_ELEMENT, $t->getCode());
-
-            $t = $t->getPrevious();
-            self::assertInstanceOf(InvalidDataException::class, $t);
-            self::assertEquals(InvalidDataException::PATTERN_NOT_MATCHED, $t->getCode());
-        }
+        $rule = new CharacterRule();
+        $rule->setPattern('/^[a-z]$/');
+        return [$rule, '0', false];
     }
 }

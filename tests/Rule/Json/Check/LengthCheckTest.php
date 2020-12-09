@@ -2,41 +2,42 @@
 
 namespace hunomina\DataValidator\Test\Rule\Json\Check;
 
-use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Exception\Json\InvalidRuleException;
+use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
-use hunomina\DataValidator\Schema\Json\JsonSchema;
+use hunomina\DataValidator\Rule\Json\StringRule;
+use hunomina\DataValidator\Rule\Json\TypedListRule;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class LengthCheckTest
  * @package hunomina\DataValidator\Test\Rule\Json\Traits
- * @covers \hunomina\DataValidator\Rule\Json\Check\LengthCheckTrait
  */
 class LengthCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
-     * @param JsonData $data
-     * @param JsonSchema $schema
+     * @param JsonRule $rule
+     * @param $data
      * @param bool $success
      * @throws InvalidDataException
      */
-    public function testLengthCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testLengthCheck(JsonRule $rule, $data, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
             $this->expectExceptionCode(InvalidDataException::INVALID_LENGTH);
 
-            $schema->validate($data);
+            $rule->validate($data);
         } else {
-            self::assertTrue($schema->validate($data));
+            self::assertTrue($rule->validate($data));
         }
     }
 
     /**
-     * @return array
-     * @throws InvalidDataException
+     * @return array[]
+     * @throws InvalidRuleException
      */
     public function getTestableData(): array
     {
@@ -49,66 +50,116 @@ class LengthCheckTest extends TestCase
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
     private static function StringLengthCheck(): array
     {
-        return [
-            new JsonData([
-                'username' => 'test'
-            ]),
-            new JsonSchema([
-                'username' => ['type' => JsonRule::STRING_TYPE, 'length' => 4]
-            ]),
-            true
-        ];
+        $rule = new StringRule();
+        $rule->setLength(4);
+        return [$rule, 'test', true];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
     private static function StringLengthCheckFail(): array
     {
-        return [
-            new JsonData([
-                'username' => 'test2'
-            ]),
-            new JsonSchema([
-                'username' => ['type' => JsonRule::STRING_TYPE, 'length' => 4]
-            ]),
-            false
-        ];
+        $rule = new StringRule();
+        $rule->setLength(4);
+        return [$rule, 'tests', false];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\TypedListRule
      */
     private static function TypedListLengthCheck(): array
     {
-        return [
-            new JsonData([
-                'users' => [1, 2, 3, 4]
-            ]),
-            new JsonSchema([
-                'users' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'list-length' => 4]
-            ]),
-            true
-        ];
+        $rule = new TypedListRule(new IntegerRule());
+        $rule->setLength(4);
+        return [$rule, [1, 2, 3, 4], true];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\TypedListRule
      */
     private static function TypedListLengthCheckFail(): array
     {
-        return [
-            new JsonData([
-                'users' => [1, 2, 3, 4, 5]
-            ]),
-            new JsonSchema([
-                'users' => ['type' => JsonRule::INTEGER_LIST_TYPE, 'list-length' => 4]
-            ]),
-            false
-        ];
+        $rule = new TypedListRule(new IntegerRule());
+        $rule->setLength(4);
+        return [$rule, [1, 2, 3, 4, 5], false];
+    }
+
+    /**
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
+     */
+    public function testThrowOnScalarLengthEqualsZero(): void
+    {
+        $this->expectException(InvalidRuleException::class);
+        $this->expectExceptionCode(InvalidRuleException::INVALID_LENGTH_RULE);
+
+        $rule = new StringRule();
+        $rule->setLength(0);
+    }
+
+    /**
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
+     */
+    public function testThrowOnScalarLengthInferiorToOne(): void
+    {
+        $this->expectException(InvalidRuleException::class);
+        $this->expectExceptionCode(InvalidRuleException::INVALID_LENGTH_RULE);
+
+        $rule = new StringRule();
+        $rule->setLength(-1);
+    }
+
+    /**
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
+     */
+    public function testCreation(): void
+    {
+        $length = 1;
+
+        $rule = new StringRule();
+        $rule->setLength($length);
+
+        self::assertSame($length, $rule->getLength());
+    }
+
+    /**
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\TypedListRule
+     */
+    public function testThrowOnListLengthEqualsZero(): void
+    {
+        $this->expectException(InvalidRuleException::class);
+        $this->expectExceptionCode(InvalidRuleException::INVALID_LIST_LENGTH_RULE);
+
+        $rule = new TypedListRule(new StringRule());
+        $rule->setLength(0);
+    }
+
+    /**
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\TypedListRule
+     */
+    public function testThrowOnListLengthInferiorToOne(): void
+    {
+        $this->expectException(InvalidRuleException::class);
+        $this->expectExceptionCode(InvalidRuleException::INVALID_LIST_LENGTH_RULE);
+
+        $rule = new TypedListRule(new StringRule());
+        $rule->setLength(-1);
     }
 }

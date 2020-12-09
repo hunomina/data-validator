@@ -2,41 +2,44 @@
 
 namespace hunomina\DataValidator\Test\Rule\Json\Check;
 
-use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Exception\Json\InvalidRuleException;
+use hunomina\DataValidator\Rule\Json\CharacterRule;
+use hunomina\DataValidator\Rule\Json\FloatRule;
+use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
-use hunomina\DataValidator\Schema\Json\JsonSchema;
+use hunomina\DataValidator\Rule\Json\NumericRule;
+use hunomina\DataValidator\Rule\Json\StringRule;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class EnumCheckTest
  * @package hunomina\DataValidator\Test\Rule\Json\Traits
- * @covers \hunomina\DataValidator\Rule\Json\Check\EnumCheckTrait
  */
 class EnumCheckTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
-     * @param JsonData $data
-     * @param JsonSchema $schema
+     * @param JsonRule $rule
+     * @param $data
      * @param bool $success
      * @throws InvalidDataException
      */
-    public function testEnumCheck(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testEnumCheck(JsonRule $rule, $data, bool $success): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
             $this->expectExceptionCode(InvalidDataException::UNAUTHORIZED_VALUE);
 
-            $schema->validate($data);
+            $rule->validate($data);
         } else {
-            self::assertTrue($schema->validate($data));
+            self::assertTrue($rule->validate($data));
         }
     }
 
     /**
-     * @return array
-     * @throws InvalidDataException
+     * @return array[]
+     * @throws InvalidRuleException
      */
     public function getTestableData(): array
     {
@@ -55,162 +58,144 @@ class EnumCheckTest extends TestCase
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
     private static function EnumForString(): array
     {
-        return [
-            new JsonData([
-                'gender' => 'female'
-            ]),
-            new JsonSchema([
-                'gender' => ['type' => JsonRule::STRING_TYPE, 'enum' => ['male', 'female']]
-            ]),
-            true
-        ];
+        $rule = new StringRule();
+        $rule->setEnum(['male', 'female']);
+        return [$rule, 'female', true];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\StringRule
      */
     private static function EnumForStringFail(): array
     {
-        return [
-            new JsonData([
-                'gender' => 'fish'
-            ]),
-            new JsonSchema([
-                'gender' => ['type' => JsonRule::STRING_TYPE, 'enum' => ['male', 'female']]
-            ]),
-            false
-        ];
+        $rule = new StringRule();
+        $rule->setEnum(['male', 'female']);
+        return [$rule, 'fish', false];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\IntegerRule
      */
     private static function EnumForInteger(): array
     {
-        return [
-            new JsonData([
-                'feet' => 2
-            ]),
-            new JsonSchema([
-                'feet' => ['type' => JsonRule::INTEGER_TYPE, 'enum' => [2, 3, 4]]
-            ]),
-            true
-        ];
+        $rule = new IntegerRule();
+        $rule->setEnum([2, 3, 4]);
+        return [$rule, 2, true];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\IntegerRule
      */
     private static function EnumForIntegerFail(): array
     {
-        return [
-            new JsonData([
-                'feet' => 5
-            ]),
-            new JsonSchema([
-                'feet' => ['type' => JsonRule::INTEGER_TYPE, 'enum' => [2, 3, 4]]
-            ]),
-            false
-        ];
+        $rule = new IntegerRule();
+        $rule->setEnum([2, 3, 4]);
+        return [$rule, 1, false];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\FloatRule
      */
     private static function EnumForFloat(): array
     {
-        return [
-            new JsonData([
-                'feet' => 2.0
-            ]),
-            new JsonSchema([
-                'feet' => ['type' => JsonRule::FLOAT_TYPE, 'enum' => [2.0, 3.0, 4.0]]
-            ]),
-            true
-        ];
+        $rule = new FloatRule();
+        $rule->setEnum([2.0, 3.0, 4.0]);
+        return [$rule, 2.0, true];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\FloatRule
      */
     private static function EnumForFloatFail(): array
     {
-        return [
-            new JsonData([
-                'feet' => 5.0
-            ]),
-            new JsonSchema([
-                'feet' => ['type' => JsonRule::FLOAT_TYPE, 'enum' => [2.0, 3.0, 4.0]]
-            ]),
-            false
-        ];
+        $rule = new FloatRule();
+        $rule->setEnum([2.0, 3.0, 4.0]);
+        return [$rule, 1.0, false];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\NumericRule
      */
     private static function EnumForNumber(): array
     {
-        return [
-            new JsonData([
-                'feet' => 2.0
-            ]),
-            new JsonSchema([
-                'feet' => ['type' => JsonRule::NUMERIC_TYPE, 'enum' => [2.0, 3, 4.0]]
-            ]),
-            true
-        ];
+        $rule = new NumericRule();
+        $rule->setEnum([2.0, 3, 4.0]);
+        return [$rule, 2.0, true];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\NumericRule
      */
     private static function EnumForNumberFail(): array
     {
-        return [
-            new JsonData([
-                'feet' => 5.0
-            ]),
-            new JsonSchema([
-                'feet' => ['type' => JsonRule::NUMERIC_TYPE, 'enum' => [2.0, 3, 4.0]]
-            ]),
-            false
-        ];
+        $rule = new NumericRule();
+        $rule->setEnum([2.0, 3, 4.0]);
+        return [$rule, 1, false];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\CharacterRule
      */
     private static function EnumForCharacter(): array
     {
-        return [
-            new JsonData([
-                'blood_type' => 'A'
-            ]),
-            new JsonSchema([
-                'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'enum' => ['A', 'B', 'O']]
-            ]),
-            true
-        ];
+        $rule = new CharacterRule();
+        $rule->setEnum(['A', 'B', 'O']);
+        return [$rule, 'A', true];
     }
 
     /**
-     * @throws InvalidDataException
+     * @return array
+     * @throws InvalidRuleException
+     * @covers \hunomina\DataValidator\Rule\Json\CharacterRule
      */
     private static function EnumForCharacterFail(): array
     {
-        return [
-            new JsonData([
-                'blood_type' => 'C'
-            ]),
-            new JsonSchema([
-                'blood_type' => ['type' => JsonRule::CHAR_TYPE, 'enum' => ['A', 'B', 'O']]
-            ]),
-            false
-        ];
+        $rule = new CharacterRule();
+        $rule->setEnum(['A', 'B', 'O']);
+        return [$rule, 'C', false];
+    }
+
+    public function testThrowOnEmptyEnum(): void
+    {
+        $this->expectException(InvalidRuleException::class);
+        $this->expectExceptionCode(InvalidRuleException::INVALID_ENUM_RULE);
+
+        $rule = new StringRule();
+        $rule->setEnum([]);
+    }
+
+    /**
+     * @throws InvalidRuleException
+     */
+    public function testRuleCreation(): void
+    {
+        $enum = [1, 2, 3];
+
+        $rule = new StringRule();
+        $rule->setEnum($enum);
+
+        self::assertSame($enum, $rule->getEnum());
     }
 }

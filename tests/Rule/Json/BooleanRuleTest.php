@@ -2,10 +2,9 @@
 
 namespace hunomina\DataValidator\Test\Rule\Json;
 
-use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Rule\Json\BooleanRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
-use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,66 +16,34 @@ class BooleanRuleTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
-     * @param JsonData $data
-     * @param JsonSchema $schema
+     * @param $data
      * @param bool $success
      * @throws InvalidDataException
      */
-    public function testBooleanRule(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testBooleanRule($data, bool $success): void
     {
+        $rule = new BooleanRule();
         if (!$success) {
             $this->expectException(InvalidDataException::class);
             $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
 
-            $schema->validate($data);
+            $rule->validate($data);
         } else {
-            self::assertTrue($schema->validate($data));
+            self::assertTrue($rule->validate($data));
         }
     }
 
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
     public function getTestableData(): array
     {
         return [
-            self::ValidBooleanData(),
-            self::InvalidBooleanData()
+            [true, true],
+            ['not a boolean', false]
         ];
     }
 
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
-    private static function ValidBooleanData(): array
+    public function testGetType(): void
     {
-        return [
-            new JsonData([
-                'boolean' => true
-            ]),
-            new JsonSchema([
-                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE]
-            ]),
-            true
-        ];
-    }
-
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
-    private static function InvalidBooleanData(): array
-    {
-        return [
-            new JsonData([
-                'boolean' => 'not-a-boolean'
-            ]),
-            new JsonSchema([
-                'boolean' => ['type' => JsonRule::BOOLEAN_TYPE]
-            ]),
-            false
-        ];
+        $rule = new BooleanRule();
+        self::assertSame(JsonRule::BOOLEAN_TYPE, $rule->getType());
     }
 }
