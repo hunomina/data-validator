@@ -7,6 +7,11 @@ use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class ValidateNullDataTest
+ * @package hunomina\DataValidator\Test\Schema\Json
+ * @covers \hunomina\DataValidator\Schema\Json\JsonSchema
+ */
 class ValidateNullDataTest extends TestCase
 {
     /**
@@ -17,7 +22,7 @@ class ValidateNullDataTest extends TestCase
         $schema = new JsonSchema();
         $schema->setNullable(true);
 
-        $this->assertTrue($schema->validate(new JsonData()));
+        self::assertTrue($schema->validate(new JsonData()));
     }
 
     /**

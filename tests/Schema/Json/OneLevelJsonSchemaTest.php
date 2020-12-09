@@ -14,6 +14,11 @@ use hunomina\DataValidator\Rule\Json\TypedListRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class OneLevelJsonSchemaTest
+ * @package hunomina\DataValidator\Test\Schema\Json
+ * @covers \hunomina\DataValidator\Schema\Json\JsonSchema
+ */
 class OneLevelJsonSchemaTest extends TestCase
 {
     public function testScalarRuleTypesOnSetSchema(): void
@@ -27,27 +32,28 @@ class OneLevelJsonSchemaTest extends TestCase
             'character' => ['type' => JsonRule::CHAR_TYPE]
         ]);
 
-        $this->assertCount(6, $schema->getRules());
-        $this->assertCount(0, $schema->getChildren());
+        self::assertCount(6, $schema->getRules());
+        self::assertCount(0, $schema->getChildren());
 
-        $this->assertArrayHasKey('boolean', $schema->getRules());
-        $this->assertInstanceOf(BooleanRule::class, $schema->getRules()['boolean']);
+        self::assertArrayHasKey('boolean', $schema->getRules());
+        self::assertInstanceOf(BooleanRule::class, $schema->getRules()['boolean']);
 
-        $this->assertArrayHasKey('string', $schema->getRules());
-        $this->assertInstanceOf(StringRule::class, $schema->getRules()['string']);
+        self::assertArrayHasKey('string', $schema->getRules());
+        self::assertInstanceOf(StringRule::class, $schema->getRules()['string']);
 
-        $this->assertArrayHasKey('integer', $schema->getRules());
-        $this->assertInstanceOf(IntegerRule::class, $schema->getRules()['integer']);
+        self::assertArrayHasKey('integer', $schema->getRules());
+        self::assertInstanceOf(IntegerRule::class, $schema->getRules()['integer']);
 
-        $this->assertArrayHasKey('float', $schema->getRules());
-        $this->assertInstanceOf(FloatRule::class, $schema->getRules()['float']);
+        self::assertArrayHasKey('float', $schema->getRules());
+        self::assertInstanceOf(FloatRule::class, $schema->getRules()['float']);
 
-        $this->assertArrayHasKey('number', $schema->getRules());
-        $this->assertInstanceOf(NumericRule::class, $schema->getRules()['number']);
+        self::assertArrayHasKey('number', $schema->getRules());
+        self::assertInstanceOf(NumericRule::class, $schema->getRules()['number']);
 
-        $this->assertArrayHasKey('character', $schema->getRules());
-        $this->assertInstanceOf(CharacterRule::class, $schema->getRules()['character']);
+        self::assertArrayHasKey('character', $schema->getRules());
+        self::assertInstanceOf(CharacterRule::class, $schema->getRules()['character']);
     }
+
     public function testListRuleTypesOnSetSchema(): void
     {
         $schema = new JsonSchema([
@@ -59,45 +65,46 @@ class OneLevelJsonSchemaTest extends TestCase
             'character-list' => ['type' => JsonRule::CHAR_LIST_TYPE]
         ]);
 
-        $this->assertCount(6, $schema->getRules());
-        $this->assertCount(0, $schema->getChildren());
+        self::assertCount(6, $schema->getRules());
+        self::assertCount(0, $schema->getChildren());
 
-        $this->assertArrayHasKey('boolean-list', $schema->getRules());
+        self::assertArrayHasKey('boolean-list', $schema->getRules());
         /** @var TypedListRule $booleanList */
         $booleanList = $schema->getRules()['boolean-list'];
-        $this->assertInstanceOf(TypedListRule::class, $booleanList);
-        $this->assertInstanceOf(BooleanRule::class, $booleanList->getChildRule());
+        self::assertInstanceOf(TypedListRule::class, $booleanList);
+        self::assertInstanceOf(BooleanRule::class, $booleanList->getChildRule());
 
-        $this->assertArrayHasKey('string-list', $schema->getRules());
+        self::assertArrayHasKey('string-list', $schema->getRules());
         /** @var TypedListRule $stringList */
         $stringList = $schema->getRules()['string-list'];
-        $this->assertInstanceOf(TypedListRule::class, $stringList);
-        $this->assertInstanceOf(StringRule::class, $stringList->getChildRule());
+        self::assertInstanceOf(TypedListRule::class, $stringList);
+        self::assertInstanceOf(StringRule::class, $stringList->getChildRule());
 
-        $this->assertArrayHasKey('integer-list', $schema->getRules());
+        self::assertArrayHasKey('integer-list', $schema->getRules());
         /** @var TypedListRule $integerList */
         $integerList = $schema->getRules()['integer-list'];
-        $this->assertInstanceOf(TypedListRule::class, $integerList);
-        $this->assertInstanceOf(IntegerRule::class, $integerList->getChildRule());
+        self::assertInstanceOf(TypedListRule::class, $integerList);
+        self::assertInstanceOf(IntegerRule::class, $integerList->getChildRule());
 
-        $this->assertArrayHasKey('float-list', $schema->getRules());
+        self::assertArrayHasKey('float-list', $schema->getRules());
         /** @var TypedListRule $floatList */
         $floatList = $schema->getRules()['float-list'];
-        $this->assertInstanceOf(TypedListRule::class, $floatList);
-        $this->assertInstanceOf(FloatRule::class, $floatList->getChildRule());
+        self::assertInstanceOf(TypedListRule::class, $floatList);
+        self::assertInstanceOf(FloatRule::class, $floatList->getChildRule());
 
-        $this->assertArrayHasKey('number-list', $schema->getRules());
+        self::assertArrayHasKey('number-list', $schema->getRules());
         /** @var TypedListRule $numberList */
         $numberList = $schema->getRules()['number-list'];
-        $this->assertInstanceOf(TypedListRule::class, $numberList);
-        $this->assertInstanceOf(NumericRule::class, $numberList->getChildRule());
+        self::assertInstanceOf(TypedListRule::class, $numberList);
+        self::assertInstanceOf(NumericRule::class, $numberList->getChildRule());
 
-        $this->assertArrayHasKey('character-list', $schema->getRules());
+        self::assertArrayHasKey('character-list', $schema->getRules());
         /** @var TypedListRule $characterList */
         $characterList = $schema->getRules()['character-list'];
-        $this->assertInstanceOf(TypedListRule::class, $characterList);
-        $this->assertInstanceOf(CharacterRule::class, $characterList->getChildRule());
+        self::assertInstanceOf(TypedListRule::class, $characterList);
+        self::assertInstanceOf(CharacterRule::class, $characterList->getChildRule());
     }
+
     public function testOptionalRuleOnSetSchema(): void
     {
         $schema = new JsonSchema([
@@ -108,20 +115,21 @@ class OneLevelJsonSchemaTest extends TestCase
             'optional' => ['type' => JsonRule::STRING_TYPE, 'optional' => true],
         ]);
 
-        $this->assertCount(1, $schema->getRules());
-        $this->assertCount(0, $schema->getChildren());
+        self::assertCount(1, $schema->getRules());
+        self::assertCount(0, $schema->getChildren());
 
-        $this->assertArrayHasKey('optional', $schema->getRules());
-        $this->assertInstanceOf(StringRule::class, $schema->getRules()['optional']);
-        $this->assertFalse($schema->getRules()['optional']->isOptional());
+        self::assertArrayHasKey('optional', $schema->getRules());
+        self::assertInstanceOf(StringRule::class, $schema->getRules()['optional']);
+        self::assertFalse($schema->getRules()['optional']->isOptional());
 
-        $this->assertCount(1, $schema2->getRules());
-        $this->assertCount(0, $schema2->getChildren());
+        self::assertCount(1, $schema2->getRules());
+        self::assertCount(0, $schema2->getChildren());
 
-        $this->assertArrayHasKey('optional', $schema2->getRules());
-        $this->assertInstanceOf(StringRule::class, $schema2->getRules()['optional']);
-        $this->assertTrue($schema2->getRules()['optional']->isOptional());
+        self::assertArrayHasKey('optional', $schema2->getRules());
+        self::assertInstanceOf(StringRule::class, $schema2->getRules()['optional']);
+        self::assertTrue($schema2->getRules()['optional']->isOptional());
     }
+
     public function testNullRuleOnSetSchema(): void
     {
         $schema = new JsonSchema([
@@ -132,27 +140,18 @@ class OneLevelJsonSchemaTest extends TestCase
             'null' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
         ]);
 
-        $this->assertCount(1, $schema->getRules());
-        $this->assertCount(0, $schema->getChildren());
+        self::assertCount(1, $schema->getRules());
+        self::assertCount(0, $schema->getChildren());
 
-        $this->assertArrayHasKey('null', $schema->getRules());
-        $this->assertInstanceOf(StringRule::class, $schema->getRules()['null']);
-        $this->assertFalse($schema->getRules()['null']->canBeNull());
+        self::assertArrayHasKey('null', $schema->getRules());
+        self::assertInstanceOf(StringRule::class, $schema->getRules()['null']);
+        self::assertFalse($schema->getRules()['null']->canBeNull());
 
-        $this->assertCount(1, $schema2->getRules());
-        $this->assertCount(0, $schema2->getChildren());
+        self::assertCount(1, $schema2->getRules());
+        self::assertCount(0, $schema2->getChildren());
 
-        $this->assertArrayHasKey('null', $schema2->getRules());
-        $this->assertInstanceOf(StringRule::class, $schema2->getRules()['null']);
-        $this->assertTrue($schema2->getRules()['null']->canBeNull());
-    }
-    public function testThrowOnFieldWithoutAType(): void
-    {
-        $this->expectException(InvalidSchemaException::class);
-        $this->expectExceptionCode(InvalidSchemaException::MISSING_RULE_TYPE);
-
-        new JsonSchema([
-            'no-type' => []
-        ]);
+        self::assertArrayHasKey('null', $schema2->getRules());
+        self::assertInstanceOf(StringRule::class, $schema2->getRules()['null']);
+        self::assertTrue($schema2->getRules()['null']->canBeNull());
     }
 }

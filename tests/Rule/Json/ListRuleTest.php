@@ -8,6 +8,11 @@ use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class ListRuleTest
+ * @package hunomina\DataValidator\Test\Rule\Json
+ * @covers \hunomina\DataValidator\Schema\Json\JsonSchema
+ */
 class ListRuleTest extends TestCase
 {
     /**
@@ -25,7 +30,7 @@ class ListRuleTest extends TestCase
 
             $schema->validate($data);
         } else {
-            $this->assertTrue($schema->validate($data));
+            self::assertTrue($schema->validate($data));
         }
     }
 

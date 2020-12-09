@@ -10,14 +10,14 @@ use hunomina\DataValidator\Rule\Json\IntegerRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Rule\Json\NumericRule;
 use hunomina\DataValidator\Rule\Json\StringRule;
-use hunomina\DataValidator\Rule\Json\Traits\DateFormatCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EmptyCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EnumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\LengthCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\MaximumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\MinimumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\PatternCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\DateFormatCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EmptyCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EnumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\LengthCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\MaximumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\MinimumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\NullCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\PatternCheckTrait;
 use hunomina\DataValidator\Rule\Json\TypedListRule;
 
 abstract class JsonRuleFactory
@@ -63,22 +63,16 @@ abstract class JsonRuleFactory
         switch ($type) {
             case JsonRule::STRING_TYPE:
                 return new StringRule();
-                break;
             case JsonRule::CHAR_TYPE:
                 return new CharacterRule();
-                break;
             case JsonRule::INTEGER_TYPE:
                 return new IntegerRule();
-                break;
             case JsonRule::FLOAT_TYPE:
                 return new FloatRule();
-                break;
             case JsonRule::NUMERIC_TYPE:
                 return new NumericRule();
-                break;
             case JsonRule::BOOLEAN_TYPE:
                 return new BooleanRule();
-                break;
         }
 
         if (preg_match('/([a-z]+)-list/', $type, $matches)) {
@@ -95,7 +89,7 @@ abstract class JsonRuleFactory
      */
     private static function setScalarTypeOptions(JsonRule $rule, array $options): void
     {
-        if (count(preg_grep('/^list-/', array_keys($options)))) {
+        if (count(preg_grep('/^list-/', array_keys($options))) > 0) {
             throw new InvalidRuleException('`' . $rule->getType() . '` type does not support `list-` options', InvalidRuleException::INVALID_LIST_RULE_FOR_SCALAR_TYPE);
         }
 

@@ -14,7 +14,7 @@ class InvalidRuleException extends Exception
     // thrown when a rule is created with an invalid type
     public const INVALID_RULE_TYPE = 1;
     // thrown when a scalar type rule with a list type rule is encountered
-    public const INVALID_LIST_RULE_FOR_SCALAR_TYPE = 1;
+    public const INVALID_LIST_RULE_FOR_SCALAR_TYPE = 2;
 
     // thrown when an invalid `length` option is encountered
     public const INVALID_LENGTH_RULE = 10;

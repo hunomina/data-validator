@@ -8,6 +8,11 @@ use hunomina\DataValidator\Rule\Json\JsonRule;
 use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class OptionalCheckTest
+ * @package hunomina\DataValidator\Test\Rule\Json
+ * @covers \hunomina\DataValidator\Rule\Json\JsonRule
+ */
 class OptionalCheckTest extends TestCase
 {
     /**
@@ -25,7 +30,7 @@ class OptionalCheckTest extends TestCase
 
             $schema->validate($data);
         } else {
-            $this->assertTrue($schema->validate($data));
+            self::assertTrue($schema->validate($data));
         }
     }
 

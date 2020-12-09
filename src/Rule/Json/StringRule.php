@@ -3,12 +3,12 @@
 namespace hunomina\DataValidator\Rule\Json;
 
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
-use hunomina\DataValidator\Rule\Json\Traits\DateFormatCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EmptyCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EnumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\LengthCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\PatternCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\DateFormatCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EmptyCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EnumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\LengthCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\NullCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\PatternCheckTrait;
 
 class StringRule extends JsonRule
 {
@@ -37,7 +37,7 @@ class StringRule extends JsonRule
             throw new InvalidDataException('Must be a string', InvalidDataException::INVALID_DATA_TYPE);
         }
 
-        if (!$this->validateEmptyness($data)) {
+        if (!$this->validateEmptiness($data)) {
             throw new InvalidDataException('Can not be empty', InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
         }
 
@@ -64,7 +64,7 @@ class StringRule extends JsonRule
      * @param $data
      * @return bool
      */
-    public function validateEmptyness(string $data): bool
+    public function validateEmptiness($data): bool
     {
         if ($this->empty === false) { // can not be an empty value
             return $data !== '';
@@ -77,7 +77,7 @@ class StringRule extends JsonRule
      * @param $data
      * @return bool
      */
-    public function validateLength(string $data): bool
+    public function validateLength($data): bool
     {
         if ($this->length === null) {
             return true;

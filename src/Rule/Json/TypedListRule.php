@@ -4,12 +4,12 @@ namespace hunomina\DataValidator\Rule\Json;
 
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
 use hunomina\DataValidator\Exception\Json\InvalidRuleException;
-use hunomina\DataValidator\Rule\Json\Traits\EmptyCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\EnumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\LengthCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\MaximumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\MinimumCheckTrait;
-use hunomina\DataValidator\Rule\Json\Traits\NullCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EmptyCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\EnumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\LengthCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\MaximumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\MinimumCheckTrait;
+use hunomina\DataValidator\Rule\Json\Check\NullCheckTrait;
 
 class TypedListRule extends JsonRule
 {
@@ -51,7 +51,7 @@ class TypedListRule extends JsonRule
             throw new InvalidDataException('Must be an array', InvalidDataException::INVALID_DATA_TYPE);
         }
 
-        if (!$this->validateEmptyness($data)) {
+        if (!$this->validateEmptiness($data)) {
             throw new InvalidDataException('Can not be empty', InvalidDataException::EMPTY_VALUE_NOT_ALLOWED);
         }
 
@@ -81,7 +81,7 @@ class TypedListRule extends JsonRule
     /**
      * @inheritDoc
      */
-    public function validateEmptyness(array $data): bool
+    public function validateEmptiness($data): bool
     {
         if (($this->empty === false) && $this->minimum !== 0) {
             return count($data) !== 0;
@@ -106,7 +106,7 @@ class TypedListRule extends JsonRule
     /**
      * @inheritDoc
      */
-    public function validateLength(array $data): bool
+    public function validateLength($data): bool
     {
         if ($this->length === null) {
             return true;
@@ -131,7 +131,7 @@ class TypedListRule extends JsonRule
      * @param array $data
      * @return bool
      */
-    public function validateMaximum(array $data): bool
+    public function validateMaximum($data): bool
     {
         if ($this->maximum === null) {
             return true;
@@ -156,7 +156,7 @@ class TypedListRule extends JsonRule
      * @param array $data
      * @return bool
      */
-    public function validateMinimum(array $data): bool
+    public function validateMinimum($data): bool
     {
         if ($this->minimum === null) {
             return true;
@@ -174,20 +174,10 @@ class TypedListRule extends JsonRule
     }
 
     /**
-     * @param JsonRule $childRule
-     * @return TypedListRule
-     */
-    public function setChildRule(JsonRule $childRule): TypedListRule
-    {
-        $this->childRule = $childRule;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getType(): string
     {
-        return $this->childRule . self::LIST_TYPE_SUFFIX;
+        return $this->childRule->getType() . self::LIST_TYPE_SUFFIX;
     }
 }

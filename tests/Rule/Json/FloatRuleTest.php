@@ -2,76 +2,49 @@
 
 namespace hunomina\DataValidator\Test\Rule\Json;
 
-use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Rule\Json\FloatRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
-use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class FloatRuleTest
+ * @package hunomina\DataValidator\Test\Rule\Json
+ * @covers \hunomina\DataValidator\Rule\Json\FloatRule
+ */
 class FloatRuleTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
-     * @param JsonData $data
-     * @param JsonSchema $schema
+     * @param FloatRule $rule
+     * @param $data
      * @param bool $success
+     * @param int|null $expectedExceptionCode
      * @throws InvalidDataException
      */
-    public function testFloatType(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testFloatType(FloatRule $rule, $data, bool $success = true, ?int $expectedExceptionCode = null): void
     {
         if (!$success) {
             $this->expectException(InvalidDataException::class);
-            $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
+            $this->expectExceptionCode($expectedExceptionCode);
 
-            $schema->validate($data);
+            $rule->validate($data);
         } else {
-            $this->assertTrue($schema->validate($data));
+            self::assertTrue($rule->validate($data));
         }
     }
 
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
     public function getTestableData(): array
     {
         return [
-            self::ValidFloatData(),
-            self::InvalidFloatData()
+            [new FloatRule(), 1.0],
+            [new FloatRule(), 1, false, InvalidDataException::INVALID_DATA_TYPE]
         ];
     }
 
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
-    private static function ValidFloatData(): array
+    public function testGetType(): void
     {
-        return [
-            new JsonData([
-                'float' => 1.0
-            ]),
-            new JsonSchema([
-                'float' => ['type' => JsonRule::FLOAT_TYPE]
-            ]),
-            true
-        ];
-    }
-
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
-    private static function InvalidFloatData(): array
-    {
-        return [
-            new JsonData([
-                'float' => 1
-            ]),
-            new JsonSchema([
-                'float' => ['type' => JsonRule::FLOAT_TYPE]
-            ]),
-            false
-        ];
+        $rule = new FloatRule();
+        self::assertSame(JsonRule::FLOAT_TYPE, $rule->getType());
     }
 }

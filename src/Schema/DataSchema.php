@@ -16,10 +16,10 @@ interface DataSchema
     public function validate(DataType $data): bool;
 
     /**
-     * @param array $schema
+     * @param array $rules
      * @return $this
      */
-    public function setSchema(array $schema): self;
+    public function setRules(array $rules): self;
 
     /**
      * @return DataRule[]|array

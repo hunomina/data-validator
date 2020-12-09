@@ -25,7 +25,7 @@ abstract class JsonRule implements DataRule
     public const LIST_TYPE = 'list';
     public const OBJECT_TYPE = 'object';
 
-    protected const LIST_TYPE_SUFFIX = '-list';
+    public const LIST_TYPE_SUFFIX = '-list';
 
     protected bool $optional = false;
 
@@ -37,6 +37,7 @@ abstract class JsonRule implements DataRule
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      * Is the data optional <=> is it mandatory in the parent schema
      */
     public function isOptional(): bool
@@ -46,6 +47,7 @@ abstract class JsonRule implements DataRule
 
     /**
      * @param bool $optional
+     * @codeCoverageIgnore
      */
     public function setOptional(bool $optional): void
     {

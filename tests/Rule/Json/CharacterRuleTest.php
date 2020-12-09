@@ -2,76 +2,49 @@
 
 namespace hunomina\DataValidator\Test\Rule\Json;
 
-use hunomina\DataValidator\Data\Json\JsonData;
 use hunomina\DataValidator\Exception\Json\InvalidDataException;
+use hunomina\DataValidator\Rule\Json\CharacterRule;
 use hunomina\DataValidator\Rule\Json\JsonRule;
-use hunomina\DataValidator\Schema\Json\JsonSchema;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class CharacterRuleTest
+ * @package hunomina\DataValidator\Test\Rule\Json
+ * @covers \hunomina\DataValidator\Rule\Json\CharacterRule
+ */
 class CharacterRuleTest extends TestCase
 {
     /**
      * @dataProvider getTestableData
-     * @param JsonData $data
-     * @param JsonSchema $schema
+     * @param $data
      * @param bool $success
      * @throws InvalidDataException
      */
-    public function testCharacterType(JsonData $data, JsonSchema $schema, bool $success): void
+    public function testCharacterType($data, bool $success): void
     {
+        $rule = new CharacterRule();
         if (!$success) {
             $this->expectException(InvalidDataException::class);
             $this->expectExceptionCode(InvalidDataException::INVALID_DATA_TYPE);
 
-            $schema->validate($data);
+            $rule->validate($data);
         } else {
-            $this->assertTrue($schema->validate($data));
+            self::assertTrue($rule->validate($data));
         }
     }
 
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
     public function getTestableData(): array
     {
         return [
-            self::ValidCharacterData(),
-            self::InvalidCharacterData()
+            ['a', true],
+            ['abcde', false],
+            [123, false],
         ];
     }
 
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
-    private static function ValidCharacterData(): array
+    public function testGetType(): void
     {
-        return [
-            new JsonData([
-                'character' => 'a'
-            ]),
-            new JsonSchema([
-                'character' => ['type' => JsonRule::CHAR_TYPE]
-            ]),
-            true
-        ];
-    }
-
-    /**
-     * @return array
-     * @throws InvalidDataException
-     */
-    private static function InvalidCharacterData(): array
-    {
-        return [
-            new JsonData([
-                'character' => 'not-a-character'
-            ]),
-            new JsonSchema([
-                'character' => ['type' => JsonRule::CHAR_TYPE]
-            ]),
-            false
-        ];
+        $rule = new CharacterRule();
+        self::assertSame(JsonRule::CHAR_TYPE, $rule->getType());
     }
 }
