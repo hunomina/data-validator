@@ -2,7 +2,6 @@
 
 namespace hunomina\DataValidator\Test\Schema\Json;
 
-use hunomina\DataValidator\Exception\Json\InvalidSchemaException;
 use hunomina\DataValidator\Rule\Json\BooleanRule;
 use hunomina\DataValidator\Rule\Json\CharacterRule;
 use hunomina\DataValidator\Rule\Json\FloatRule;
@@ -136,16 +135,16 @@ class OneLevelJsonSchemaTest extends TestCase
             'null' => ['type' => JsonRule::STRING_TYPE]
         ]);
 
-        $schema2 = new JsonSchema([
-            'null' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
-        ]);
-
         self::assertCount(1, $schema->getRules());
         self::assertCount(0, $schema->getChildren());
 
         self::assertArrayHasKey('null', $schema->getRules());
         self::assertInstanceOf(StringRule::class, $schema->getRules()['null']);
         self::assertFalse($schema->getRules()['null']->canBeNull());
+
+        $schema2 = new JsonSchema([
+            'null' => ['type' => JsonRule::STRING_TYPE, 'null' => true],
+        ]);
 
         self::assertCount(1, $schema2->getRules());
         self::assertCount(0, $schema2->getChildren());

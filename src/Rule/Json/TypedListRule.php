@@ -26,11 +26,8 @@ class TypedListRule extends JsonRule
     use EnumCheckTrait;
     use EmptyCheckTrait;
 
-    private JsonRule $childRule;
-
-    public function __construct(JsonRule $childRule)
+    public function __construct(private JsonRule $childRule)
     {
-        $this->childRule = $childRule;
     }
 
     /**
@@ -81,7 +78,7 @@ class TypedListRule extends JsonRule
     /**
      * @inheritDoc
      */
-    public function validateEmptiness($data): bool
+    private function validateEmptiness($data): bool
     {
         if (($this->empty === false) && $this->minimum !== 0) {
             return count($data) !== 0;
@@ -106,7 +103,7 @@ class TypedListRule extends JsonRule
     /**
      * @inheritDoc
      */
-    public function validateLength($data): bool
+    private function validateLength($data): bool
     {
         if ($this->length === null) {
             return true;
@@ -131,7 +128,7 @@ class TypedListRule extends JsonRule
      * @param array $data
      * @return bool
      */
-    public function validateMaximum($data): bool
+    private function validateMaximum($data): bool
     {
         if ($this->maximum === null) {
             return true;
@@ -156,7 +153,7 @@ class TypedListRule extends JsonRule
      * @param array $data
      * @return bool
      */
-    public function validateMinimum($data): bool
+    private function validateMinimum($data): bool
     {
         if ($this->minimum === null) {
             return true;

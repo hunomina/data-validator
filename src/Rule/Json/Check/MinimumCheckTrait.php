@@ -29,5 +29,5 @@ trait MinimumCheckTrait
      * Return true if the value is greater or equals to $this->minimum
      * For integer check => Cast the parameter
      */
-    abstract public function validateMinimum($data): bool;
+    abstract private function validateMinimum($data): bool;
 }

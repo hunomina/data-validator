@@ -52,7 +52,7 @@ class FloatRule extends JsonRule
      * @param $data
      * @return bool
      */
-    public function validateMaximum($data): bool
+    private function validateMaximum($data): bool
     {
         if ($this->maximum === null) {
             return true;
@@ -65,7 +65,7 @@ class FloatRule extends JsonRule
      * @param $data
      * @return bool
      */
-    public function validateMinimum($data): bool
+    private function validateMinimum($data): bool
     {
         if ($this->minimum === null) {
             return true;

@@ -89,7 +89,7 @@ class JsonData implements DataType, ArrayAccess
      * @return mixed|null
      * @codeCoverageIgnore
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if ($this->offsetExists($offset)) {
             return $this->data[$offset];

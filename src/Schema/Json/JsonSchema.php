@@ -207,6 +207,7 @@ class JsonSchema implements DataSchema
                     } catch (InvalidDataException $e) {
                         throw new InvalidDataException('`' . $field . '` does not validate the schema. ' . $e->getMessage(), $e->getCode(), $e);
                     }
+                    break;
                 }
             }
 

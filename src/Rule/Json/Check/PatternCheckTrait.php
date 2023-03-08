@@ -30,7 +30,7 @@ trait PatternCheckTrait
      * Return true if the string data match the pattern
      * Regular expressions only apply to string that's why this method is not abstract
      */
-    public function validatePattern(string $data): bool
+    private function validatePattern(string $data): bool
     {
         if ($this->pattern === null) {
             return true;

@@ -8,6 +8,8 @@
          forceCoversAnnotation="true"
          stderr="true"
          verbose="true"
+         executionOrder="random"
+         resolveDependencies="true"
 >
     <coverage processUncoveredFiles="true">
         <include>

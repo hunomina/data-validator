@@ -30,5 +30,5 @@ trait EmptyCheckTrait
      * Return true if the value is "empty" (string, list) and can
      * Or if the value is not empty
      */
-    abstract public function validateEmptiness($data): bool;
+    abstract private function validateEmptiness($data): bool;
 }

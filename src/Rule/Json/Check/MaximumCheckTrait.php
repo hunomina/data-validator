@@ -29,5 +29,5 @@ trait MaximumCheckTrait
      * Return true if the value is lower or equals to $this->maximum
      * For integer check => Cast the parameter
      */
-    abstract public function validateMaximum($data): bool;
+    abstract private function validateMaximum($data): bool;
 }

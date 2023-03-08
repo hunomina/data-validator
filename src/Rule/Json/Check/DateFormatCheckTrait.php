@@ -31,7 +31,7 @@ trait DateFormatCheckTrait
      * @return bool
      * Return true if the string data match the date format $this->dateFormat
      */
-    public function validateDateFormat(string $data): bool
+    private function validateDateFormat(string $data): bool
     {
         if ($this->dateFormat === null) {
             return true;
