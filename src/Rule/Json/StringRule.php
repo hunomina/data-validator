@@ -64,7 +64,7 @@ class StringRule extends JsonRule
      * @param $data
      * @return bool
      */
-    public function validateEmptiness($data): bool
+    private function validateEmptiness($data): bool
     {
         if ($this->empty === false) { // can not be an empty value
             return $data !== '';
@@ -77,7 +77,7 @@ class StringRule extends JsonRule
      * @param $data
      * @return bool
      */
-    public function validateLength($data): bool
+    private function validateLength($data): bool
     {
         if ($this->length === null) {
             return true;

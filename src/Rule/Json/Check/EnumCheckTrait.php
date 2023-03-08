@@ -35,7 +35,7 @@ trait EnumCheckTrait
      * @return bool
      * Return true if the data can be found in $this->enum
      */
-    public function validateEnum($data): bool
+    private function validateEnum($data): bool
     {
         if ($this->enum === null) {
             return true;

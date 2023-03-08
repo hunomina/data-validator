@@ -32,7 +32,7 @@ abstract class JsonRuleFactory
     {
         try {
             $rule = self::getRuleObjectFromType($type);
-        } catch (InvalidRuleException $e) {
+        } catch (InvalidRuleException) {
             throw new InvalidRuleException('Invalid rule type : `' . $type . '`', InvalidRuleException::INVALID_RULE_TYPE);
         }
 
